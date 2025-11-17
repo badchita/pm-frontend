@@ -1,5 +1,5 @@
 <nz-card>
-  <form nz-form [formGroup]="loginForm" class="login-form">
+  <form nz-form [formGroup]="registerForm" class="login-form">
     <h1 class="login-heading">Login to Your Account</h1>
     <nz-form-item>
       <nz-form-control nzErrorTip="Please input your Email!">
@@ -15,7 +15,9 @@
         </nz-input-wrapper>
       </nz-form-control>
     </nz-form-item>
-    <button nz-button class="login-form-button" [nzType]="'primary'" nzSize="large" nzShape="round">Log in</button>
+    <button nz-button class="login-form-button" [nzType]="'primary'" nzSize="large" nzShape="round">
+      Log in
+    </button>
     <div class="link-texts">
       <span nz-typography>
         <a href="/login" target="_blank">Forgot Password?</a>
