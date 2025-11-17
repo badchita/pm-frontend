@@ -1,0 +1,21 @@
+<form [formGroup]="loginForm" nz-form>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzRequired>Email</nz-form-label>
+    <nz-form-control [nzSpan]="14" nzErrorTip="Please enter a valid email">
+      <input nz-input formControlName="email" placeholder="Email" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6" nzRequired>Password</nz-form-label>
+    <nz-form-control [nzSpan]="14" nzErrorTip="Password is required">
+      <input nz-input type="password" formControlName="password" placeholder="Password" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control [nzSpan]="14" [nzOffset]="6">
+      <button nz-button nzType="primary" type="submit" [disabled]="loginForm.invalid">Login</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>
