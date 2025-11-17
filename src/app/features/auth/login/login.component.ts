@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -15,7 +16,8 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
     NzButtonModule,
     NzCardComponent,
     NzTypographyModule,
-  ],
+    RouterLink
+],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
