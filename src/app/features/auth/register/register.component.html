@@ -1,29 +1,39 @@
 <nz-card>
-  <form nz-form [formGroup]="registerForm" class="login-form">
-    <h1 class="login-heading">Login to Your Account</h1>
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your Email!">
-        <nz-input-wrapper>
-          <input type="text" nz-input formControlName="email" placeholder="Email" nzSize="large" />
-        </nz-input-wrapper>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your Password!">
-        <nz-input-wrapper>
-          <input nz-input formControlName="password" placeholder="Password" nzSize="large" />
-        </nz-input-wrapper>
-      </nz-form-control>
-    </nz-form-item>
-    <button nz-button class="login-form-button" [nzType]="'primary'" nzSize="large" nzShape="round">
-      Log in
+  <form nz-form [formGroup]="registerForm" class="register-form">
+    <h1 class="register-heading">Create Your Account</h1>
+    <nz-form-label nzNoColon="true"> Name </nz-form-label>
+    <nz-form-control nzErrorTip="Please input your Name!">
+      <nz-input-wrapper>
+        <input type="text" nz-input formControlName="name" nzSize="large" />
+      </nz-input-wrapper>
+    </nz-form-control>
+    <nz-form-label nzNoColon="true"> Email </nz-form-label>
+    <nz-form-control nzErrorTip="Please input your Email!">
+      <nz-input-wrapper>
+        <input type="text" nz-input formControlName="email" nzSize="large" />
+      </nz-input-wrapper>
+    </nz-form-control>
+    <nz-form-label nzNoColon="true"> Password </nz-form-label>
+    <nz-form-control nzErrorTip="Please input your Password!">
+      <nz-input-wrapper>
+        <input nz-input formControlName="password" placeholder="Password" nzSize="large" />
+      </nz-input-wrapper>
+    </nz-form-control>
+    <button
+      nz-button
+      class="register-form-button"
+      [nzType]="'primary'"
+      nzSize="large"
+      nzShape="round"
+    >
+      Register
     </button>
     <div class="link-texts">
       <span nz-typography>
-        <a href="/login" target="_blank">Forgot Password?</a>
-      </span>
-      <span nz-typography>
-        <a routerLink="/register">Register</a>
+        Already have an account?
+        <u>
+          <a routerLink="/login"> Login Here </a>
+        </u>
       </span>
     </div>
   </form>

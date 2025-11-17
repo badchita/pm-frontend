@@ -1,20 +1,24 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
-import { NzFormItemComponent } from 'ng-zorro-antd/form';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzColDirective } from 'ng-zorro-antd/grid';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
+import { NzTypographyComponent } from 'ng-zorro-antd/typography';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   imports: [
     NzCardComponent,
-    NzFormItemComponent,
     NzColDirective,
     NzInputModule,
     NzButtonComponent,
     ReactiveFormsModule,
+    NzFormModule,
+    NzTypographyComponent,
+    RouterLink,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
