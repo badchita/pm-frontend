@@ -5,7 +5,7 @@
   justify-content: center;
 
   nz-card {
-    background-color: #e3cef2;
+    background-color: var(--pm-primary);
     width: 450px;
     height: 392px;
     border-radius: 24px;
@@ -24,8 +24,7 @@
 
       .login-form-button {
         width: 100%;
-        // border-radius: 24px;
-        background-color: #840BDC;
+        background-color: var(--pm-secondary);
         height: 44px;
       }
 
