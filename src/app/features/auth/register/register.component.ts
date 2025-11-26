@@ -6,7 +6,7 @@ import { NzColDirective } from 'ng-zorro-antd/grid';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzTypographyComponent } from 'ng-zorro-antd/typography';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/shared/services/api/auth.service';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { Subject, takeUntil } from 'rxjs';
@@ -42,6 +42,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private modalService = inject(NzModalService);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
 
   private _destroying$ = new Subject<void>();
   registerForm!: FormGroup;
@@ -78,7 +79,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
       .subscribe(
         (response) => {
           this.isLoading = false;
-          this.hasError = true;
+          this.hasError = false;
+
+          if (response) {
+            this.registerSucessful(response.name);
+          }
         },
         (error) => {
           this.isLoading = false;
@@ -120,6 +125,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
       nzContent: `Welcome, ${name}. Your registration is complete. Please proceed to login using your email and password.`,
       nzClassName: 'register-success-modal',
       nzOkText: 'Proceed to Login',
+      nzOnOk: () => {
+        this.router.navigate(['/login']);
+      },
     });
   }
 
