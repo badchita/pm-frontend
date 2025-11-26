@@ -20,4 +20,19 @@
       border-radius: 24px;
     }
   }
+
+  .register-success-modal {
+    .ant-modal-content {
+      border-radius: 24px;
+    }
+
+    .ant-modal-confirm-btns {
+      button {
+        width: 100%;
+        background-color: var(--pm-primary);
+        height: 34px;
+        border-radius: 44px;
+      }
+    }
+  }
 }

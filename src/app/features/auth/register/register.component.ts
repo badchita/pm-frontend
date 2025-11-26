@@ -10,7 +10,12 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '@app/shared/services/api/auth.service';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { Subject, takeUntil } from 'rxjs';
-import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import {
+  ALERT_DESCRIPTION,
+  ALERT_MESAGE,
+  MODAL_TITLE,
+  SPINNER_TIP,
+} from '@app/shared/constants/ui.constants';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
@@ -45,6 +50,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   SPINNER_TIP = SPINNER_TIP;
   ALERT_MESAGE = ALERT_MESAGE;
   ALERT_DESCRIPTION = ALERT_DESCRIPTION;
+  MODAL_TITLE = MODAL_TITLE;
 
   alertDetails: AlertType = {
     type: 'info',
@@ -108,10 +114,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
       );
   }
 
-  registerSucessful() {
+  registerSucessful(name: string) {
     this.modalService.success({
-      nzTitle: 'This is a success message',
-      nzContent: 'some messages...some messages...',
+      nzTitle: this.MODAL_TITLE.AccountCreated,
+      nzContent: `Welcome, ${name}. Your registration is complete. Please proceed to login using your email and password.`,
+      nzClassName: 'register-success-modal',
+      nzOkText: 'Proceed to Login',
     });
   }
 
