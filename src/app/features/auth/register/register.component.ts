@@ -131,7 +131,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this._destroying$.next(undefined);
     this._destroying$.complete();
   }
