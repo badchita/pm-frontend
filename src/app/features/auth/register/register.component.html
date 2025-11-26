@@ -1,6 +1,8 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.CreatingYourAccount">
   @if (hasError) {
     <nz-alert
+      class="auth-alert"
+      nzBanner
       [nzType]="alertDetails.type"
       [nzMessage]="alertDetails.message"
       [nzDescription]="alertDetails.description"

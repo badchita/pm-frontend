@@ -10,4 +10,14 @@
   .ant-spin {
     color: var(--pm-primary);
   }
+
+  .ant-alert-message {
+    font-weight: 500;
+  }
+
+  .auth-alert {
+    .ant-alert-error {
+      border-radius: 24px;
+    }
+  }
 }
