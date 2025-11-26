@@ -1,4 +1,12 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.CreatingYourAccount">
+  @if (hasError) {
+    <nz-alert
+      [nzType]="alertDetails.type"
+      [nzMessage]="alertDetails.message"
+      [nzDescription]="alertDetails.description"
+      nzShowIcon
+    ></nz-alert>
+  }
   <nz-card>
     <form nz-form [formGroup]="registerForm" class="register-form">
       <h1 class="register-heading">Create Your Account</h1>
