@@ -1,4 +1,15 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.LoggingYouIn">
+  @if (hasError) {
+    <nz-alert
+      class="auth-alert"
+      nzBanner
+      [nzType]="alertDetails.type"
+      [nzMessage]="alertDetails.message"
+      [nzDescription]="alertDetails.description"
+      nzShowIcon
+    ></nz-alert>
+  }
+
   <nz-card>
     <form nz-form [formGroup]="loginForm" class="login-form">
       <h1 class="login-heading">Login to Your Account</h1>

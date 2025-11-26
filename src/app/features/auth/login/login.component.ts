@@ -1,8 +1,10 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { AlertType } from '@app/shared/models/alert.model';
 import { AuthService } from '@app/shared/services/api/auth.service';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -22,6 +24,7 @@ import { Subject, takeUntil } from 'rxjs';
     NzTypographyModule,
     RouterLink,
     NzSpinModule,
+    NzAlertModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -36,6 +39,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   isLoading = false;
 
   SPINNER_TIP = SPINNER_TIP;
+  ALERT_MESAGE = ALERT_MESAGE;
+  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
+
+  alertDetails: AlertType = {
+    type: 'info',
+    message: '',
+    description: '',
+  };
+  hasError = false;
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -51,11 +63,44 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService
       .login(payload)
       .pipe(takeUntil(this._destroying$))
-      .subscribe((response) => {
-        this.isLoading = false;
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
 
-        console.log('Login response:', response);
-      });
+          console.log('Login response:', response);
+        },
+        (error) => {
+          this.isLoading = false;
+          this.hasError = true;
+
+          switch (error.status) {
+            case 0:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.NoInternetConnection,
+                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
+              };
+
+              break;
+            case 401:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.LoginFailed,
+                description: ALERT_DESCRIPTION.LoginFailedMessage,
+              };
+
+              break;
+            case 500:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
+                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
+              };
+
+              break;
+          }
+        }
+      );
   }
 
   ngOnDestroy() {
