@@ -69,10 +69,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
       .subscribe(
         (response) => {
           this.isLoading = false;
+          this.hasError = true;
         },
         (error) => {
           this.isLoading = false;
           this.hasError = true;
+
+          console.log(error)
 
           switch (error.status) {
             case 409:
@@ -82,7 +85,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
                 description: ALERT_DESCRIPTION.EmailAlreadyRegistered,
               };
 
-              break
+              break;
+            case 500:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
+                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
+              };
+
+              break;
           }
         }
       );
