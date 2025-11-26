@@ -10,7 +10,9 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '@app/shared/services/api/auth.service';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { Subject, takeUntil } from 'rxjs';
-import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { AlertType } from '@app/shared/models/alert.model';
 
 @Component({
   selector: 'app-register',
@@ -24,6 +26,7 @@ import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
     NzTypographyComponent,
     RouterLink,
     NzSpinModule,
+    NzAlertModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -37,6 +40,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
   isLoading = false;
 
   SPINNER_TIP = SPINNER_TIP;
+  ALERT_MESAGE = ALERT_MESAGE;
+  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
+
+  alertDetails: AlertType = {
+    type: 'info',
+    message: '',
+    description: '',
+  };
+  hasError = false;
 
   ngOnInit() {
     this.registerForm = this.fb.group({
@@ -48,14 +60,49 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   register() {
     this.isLoading = true;
+    this.hasError = false;
     const payload = this.registerForm.getRawValue();
 
     this.authService
       .register(payload)
       .pipe(takeUntil(this._destroying$))
-      .subscribe((response) => {
-        this.isLoading = false;
-      });
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          this.hasError = true;
+        },
+        (error) => {
+          this.isLoading = false;
+          this.hasError = true;
+
+          switch (error.status) {
+            case 0:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.NoInternetConnection,
+                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
+              };
+
+              break;
+            case 409:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.EmailAlreadyExists,
+                description: ALERT_DESCRIPTION.ThisEmailIsAlreadyInUse,
+              };
+
+              break;
+            case 500:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
+                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
+              };
+
+              break;
+          }
+        }
+      );
   }
 
   ngOnDestroy(): void {
