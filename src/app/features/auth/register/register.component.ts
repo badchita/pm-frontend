@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -8,6 +8,9 @@ import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzTypographyComponent } from 'ng-zorro-antd/typography';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '@app/services/api/auth.service';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { Subject, takeUntil } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-register',
@@ -20,15 +23,18 @@ import { AuthService } from '@app/services/api/auth.service';
     NzFormModule,
     NzTypographyComponent,
     RouterLink,
+    NzSpinModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
-export class RegisterComponent implements OnInit {
-  private authService = inject(AuthService)
-  registerForm!: FormGroup;
-
+export class RegisterComponent implements OnInit, OnDestroy {
+  private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+
+  private _destroying$ = new Subject<void>();
+  registerForm!: FormGroup;
+  isLoading = false;
 
   ngOnInit() {
     this.registerForm = this.fb.group({
@@ -39,10 +45,19 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
+    this.isLoading = true;
     const payload = this.registerForm.getRawValue();
 
-    this.authService.register(payload).subscribe(response => {
-      console.log(response)
-    })
+    this.authService
+      .register(payload)
+      .pipe(takeUntil(this._destroying$))
+      .subscribe((response) => {
+        this.isLoading = false;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
 }
