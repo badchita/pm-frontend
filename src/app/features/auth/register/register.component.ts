@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '@app/shared/services/api/auth.service';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { Subject, takeUntil } from 'rxjs';
+import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
 
 @Component({
   selector: 'app-register',
@@ -34,6 +35,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private _destroying$ = new Subject<void>();
   registerForm!: FormGroup;
   isLoading = false;
+
+  SPINNER_TIP = SPINNER_TIP;
 
   ngOnInit() {
     this.registerForm = this.fb.group({

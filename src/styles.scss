@@ -1,5 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-  --pm-primary: #e3cef2;
-  --pm-secondary: #840BDC;
+  --pm-primary: #840bdc;
+  --pm-secondary: #e3cef2;
+
+  .ant-spin-dot-item {
+    background-color: var(--pm-primary);
+  }
+
+  .ant-spin {
+    color: var(--pm-primary);
+  }
 }
