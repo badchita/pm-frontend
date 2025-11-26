@@ -14,3 +14,7 @@ export const ALERT_DESCRIPTION = {
     'An unexpected error occurred. Please try again later.',
   PleaseCheckYourNetworkAndTryAgain: 'Please check your network and try again.',
 };
+
+export const MODAL_TITLE = {
+  AccountCreated: '🎉 Account Successfully Created',
+}
