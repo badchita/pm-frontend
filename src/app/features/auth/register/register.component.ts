@@ -13,6 +13,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { AlertType } from '@app/shared/models/alert.model';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-register',
@@ -27,12 +28,14 @@ import { AlertType } from '@app/shared/models/alert.model';
     RouterLink,
     NzSpinModule,
     NzAlertModule,
+    NzModalModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
+  private modalService = inject(NzModalService);
   private fb = inject(FormBuilder);
 
   private _destroying$ = new Subject<void>();
@@ -103,6 +106,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
           }
         }
       );
+  }
+
+  registerSucessful() {
+    this.modalService.success({
+      nzTitle: 'This is a success message',
+      nzContent: 'some messages...some messages...',
+    });
   }
 
   ngOnDestroy(): void {
