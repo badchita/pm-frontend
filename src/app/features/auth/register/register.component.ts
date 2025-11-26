@@ -75,9 +75,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.hasError = true;
 
-          console.log(error)
-
           switch (error.status) {
+            case 0:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.NoInternetConnection,
+                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
+              };
+
+              break;
             case 409:
               this.alertDetails = {
                 type: 'error',
