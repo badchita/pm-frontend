@@ -1,5 +1,6 @@
 export const SPINNER_TIP = {
   CreatingYourAccount: 'Creating your account...',
+  LoggingYouIn: 'Logging you in...',
 };
 
 export const ALERT_MESAGE = {
@@ -17,4 +18,4 @@ export const ALERT_DESCRIPTION = {
 
 export const MODAL_TITLE = {
   AccountCreated: '🎉 Account Successfully Created',
-}
+};

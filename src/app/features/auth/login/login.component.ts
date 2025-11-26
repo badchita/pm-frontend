@@ -1,11 +1,13 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { AuthService } from '@app/shared/services/api/auth.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -19,6 +21,7 @@ import { Subject, takeUntil } from 'rxjs';
     NzCardComponent,
     NzTypographyModule,
     RouterLink,
+    NzSpinModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -30,6 +33,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   private _destroying$ = new Subject<void>();
 
   loginForm!: FormGroup;
+  isLoading = false;
+
+  SPINNER_TIP = SPINNER_TIP;
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -39,12 +45,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
+    this.isLoading = true;
     const payload = this.loginForm.getRawValue();
 
     this.authService
       .login(payload)
       .pipe(takeUntil(this._destroying$))
       .subscribe((response) => {
+        this.isLoading = false;
+
         console.log('Login response:', response);
       });
   }
