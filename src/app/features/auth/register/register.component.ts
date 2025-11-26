@@ -88,7 +88,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
               this.alertDetails = {
                 type: 'error',
                 message: ALERT_MESAGE.EmailAlreadyExists,
-                description: ALERT_DESCRIPTION.EmailAlreadyRegistered,
+                description: ALERT_DESCRIPTION.ThisEmailIsAlreadyInUse,
               };
 
               break;

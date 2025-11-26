@@ -9,7 +9,7 @@ export const ALERT_MESAGE = {
 };
 
 export const ALERT_DESCRIPTION = {
-  EmailAlreadyRegistered: 'Email Already Registered',
+  ThisEmailIsAlreadyInUse: 'This email is already in use.',
   AnUnexpectedErrorOccurredPleaseTryAgainLater:
     'An unexpected error occurred. Please try again later.',
   PleaseCheckYourNetworkAndTryAgain: 'Please check your network and try again.',
