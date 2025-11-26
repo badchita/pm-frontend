@@ -7,7 +7,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzTypographyComponent } from 'ng-zorro-antd/typography';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '@app/services/api/auth.service';
+import { AuthService } from '@app/shared/services/api/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -25,7 +25,7 @@ import { AuthService } from '@app/services/api/auth.service';
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent implements OnInit {
-  private authService = inject(AuthService)
+  private authService = inject(AuthService);
   registerForm!: FormGroup;
 
   private fb = inject(FormBuilder);
@@ -41,8 +41,8 @@ export class RegisterComponent implements OnInit {
   register() {
     const payload = this.registerForm.getRawValue();
 
-    this.authService.register(payload).subscribe(response => {
-      console.log(response)
-    })
+    this.authService.register(payload).subscribe((response) => {
+      console.log(response);
+    });
   }
 }
