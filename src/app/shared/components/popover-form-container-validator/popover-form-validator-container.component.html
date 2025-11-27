@@ -1,0 +1,14 @@
+<div class="validator-popover">
+  @if (errors()) {
+    @for (err of getErrorMessages(); track err) {
+      <div>{{ err }}</div>
+    }
+  }
+</div>
+<!-- @if (asString; as string) {
+  {{ string }}
+}
+
+@if (asTemplate; as template) {
+  <ng-template [ngTemplateOutlet]="template"></ng-template>
+} -->

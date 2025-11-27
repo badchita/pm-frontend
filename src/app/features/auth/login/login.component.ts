@@ -2,6 +2,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { AlertType } from '@app/shared/models/alert.model';
 import { AuthService } from '@app/shared/services/api/auth.service';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
@@ -25,6 +26,7 @@ import { Subject, takeUntil } from 'rxjs';
     RouterLink,
     NzSpinModule,
     NzAlertModule,
+    PopoverFormValidatorDirective,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
