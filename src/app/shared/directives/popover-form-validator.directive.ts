@@ -96,14 +96,10 @@ export class PopoverFormValidatorDirective implements OnDestroy {
       popover.style.setProperty('--arrow-top', `${arrowTop}%`);
     };
 
-    // Initial positioning
     update();
 
-    // Observe content changes
     const observer = new ResizeObserver(update);
     observer.observe(popover);
-
-    // Optionally disconnect when hiding popover
   }
 
   private listenToPositionChanges() {
