@@ -21,7 +21,6 @@
 :host::after {
   content: '';
   position: absolute;
-  // top: 50%;
   top: var(--arrow-top, 50%);
   left: -7px;
   transform: translateY(-50%);
