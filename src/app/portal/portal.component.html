@@ -1,8 +1,21 @@
-<nz-layout>
-  <div class="header">
+<nz-layout class="layout-container">
+  <nz-header class="header">
     <app-header></app-header>
-  </div>
-  <div class="content">
-    <router-outlet></router-outlet>
-  </div>
+  </nz-header>
+
+  <nz-layout>
+    <nz-sider nzWidth="256px" nzTheme="light" class="side-bar">
+      <ul nz-menu class="sider-menu">
+        <li nz-menu-item class="sider-menu-item">
+          <nz-icon nzType="dashboard" nzTheme="fill" />
+          <span>Dashboard</span>
+        </li>
+      </ul>
+    </nz-sider>
+    <nz-layout class="inner-layout">
+      <nz-content class="content">
+        <router-outlet></router-outlet>
+      </nz-content>
+    </nz-layout>
+  </nz-layout>
 </nz-layout>
