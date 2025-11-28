@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzColDirective } from 'ng-zorro-antd/grid';
@@ -19,6 +19,12 @@ import {
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
+import {
+  EmailValidator,
+  PasswordValidators,
+  RequiredValidator,
+} from '@app/shared/constants/validators';
 
 @Component({
   selector: 'app-register',
@@ -34,6 +40,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
     NzSpinModule,
     NzAlertModule,
     NzModalModule,
+    PopoverFormValidatorDirective,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -62,9 +69,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.registerForm = this.fb.group({
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      name: ['', [...RequiredValidator]],
+      email: ['', [...RequiredValidator, EmailValidator]],
+      password: ['', PasswordValidators],
     });
   }
 

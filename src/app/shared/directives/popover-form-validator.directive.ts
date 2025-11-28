@@ -74,7 +74,7 @@ export class PopoverFormValidatorDirective implements OnDestroy {
       const popoverRect = popover.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const spacing = 12;
-      const arrowTop = popoverRect.height > 55 ? 30 : 50;
+      const arrowTop = popoverRect.height > 55 ? 35 : 50;
 
       let top = inputRect.top;
       let left = inputRect.right + spacing;
