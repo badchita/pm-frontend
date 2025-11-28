@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import {
   EmailValidator,
@@ -39,6 +39,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class LoginComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
 
   private _destroying$ = new Subject<void>();
 
@@ -66,21 +67,19 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
     this.isLoading = true;
     const payload = this.loginForm.getRawValue();
-
     this.authService
       .login(payload)
       .pipe(takeUntil(this._destroying$))
       .subscribe(
         (response) => {
           this.isLoading = false;
-
           this.authService.setAccessToken(response.token);
           this.authService.setUserDetails(response.user);
+          this.router.navigate(['/portal']);
         },
         (error) => {
           this.isLoading = false;
           this.hasError = true;
-
           switch (error.status) {
             case 0:
               this.alertDetails = {
@@ -88,7 +87,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                 message: ALERT_MESAGE.NoInternetConnection,
                 description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
               };
-
               break;
             case 401:
               this.alertDetails = {
@@ -96,7 +94,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                 message: ALERT_MESAGE.LoginFailed,
                 description: ALERT_DESCRIPTION.LoginFailedMessage,
               };
-
               break;
             case 500:
               this.alertDetails = {
@@ -104,7 +101,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                 message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
                 description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
               };
-
               break;
           }
         }
