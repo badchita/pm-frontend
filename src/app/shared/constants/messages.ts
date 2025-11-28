@@ -132,8 +132,7 @@ export const FIELD_ERROR = {
   newMobileNumberIsEqualToCurrent: 'Current and new mobile number must be different.',
   newsLetterEmailExisting: MESSAGE.NEWS_LETTER_SUBSCRIPTION_EMAIL_EXISTING,
   numeric: 'Only numbers are allowed.',
-  passwordPattern:
-    'Passwords shall require a combination of alpha (uppercase and lowercase), numeric and special characters.',
+  passwordPattern: 'Must contain letters, numbers, and special characters.',
   passwordsMismatch: 'Passwords do not match.',
   passwordTooShort: 'Use 8 characters or more for your password.',
   projectNameUnitNoEquals: 'Project Name and Unit No cannot be the same value.',

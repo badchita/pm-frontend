@@ -1,13 +1,13 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.LoggingYouIn">
   @if (hasError) {
-    <nz-alert
-      class="auth-alert"
-      nzBanner
-      [nzType]="alertDetails.type"
-      [nzMessage]="alertDetails.message"
-      [nzDescription]="alertDetails.description"
-      nzShowIcon
-    ></nz-alert>
+  <nz-alert
+    class="auth-alert"
+    nzBanner
+    [nzType]="alertDetails.type"
+    [nzMessage]="alertDetails.message"
+    [nzDescription]="alertDetails.description"
+    nzShowIcon
+  ></nz-alert>
   }
 
   <nz-card>
@@ -28,7 +28,7 @@
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-control nzErrorTip="Please input your Password!">
+        <nz-form-control>
           <nz-input-wrapper>
             <input
               nz-input
