@@ -7,29 +7,28 @@ import {
   inject,
   Injector,
   createComponent,
+  OnDestroy,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
+import { fromEvent, merge, Subscription } from 'rxjs';
 import { PopoverFormValidatorContainerComponent } from '../components/popover-form-container-validator/popover-form-validator-container.component';
 
 @Directive({
   selector: '[appPopoverFormValidator]',
   standalone: true,
 })
-export class PopoverFormValidatorDirective {
+export class PopoverFormValidatorDirective implements OnDestroy {
   private el = inject(ElementRef);
   private control = inject(NgControl, { optional: true });
   private injector = inject(Injector);
   private appRef = inject(ApplicationRef);
 
   private componentRef?: ComponentRef<PopoverFormValidatorContainerComponent>;
+  private positionSub?: Subscription;
 
   @HostListener('keydown.enter')
-  onEnter() {
-    this.showIfInvalid();
-  }
-
   @HostListener('input')
-  onInput() {
+  onInteraction() {
     this.showIfInvalid();
   }
 
@@ -41,9 +40,15 @@ export class PopoverFormValidatorDirective {
 
     if (!this.componentRef) {
       this.create();
+      this.listenToPositionChanges();
     }
 
-    this.componentRef?.setInput('errors', this.control?.errors);
+    this.componentRef?.setInput('control', this.control);
+
+    const popover = this.getPopoverElement();
+    if (popover) {
+      this.position(popover);
+    }
   }
 
   private create() {
@@ -54,20 +59,56 @@ export class PopoverFormValidatorDirective {
 
     this.appRef.attachView(this.componentRef.hostView);
 
-    const domElem = (this.componentRef.hostView as any).rootNodes[0] as HTMLElement;
-    domElem.classList.add('custom-popover');
+    const popover = this.getPopoverElement();
+    popover?.classList.add('custom-popover');
 
-    document.body.appendChild(domElem);
-    this.position(domElem);
+    document.body.appendChild(popover!);
+  }
+
+  private getPopoverElement(): HTMLElement | null {
+    return (this.componentRef?.hostView as any)?.rootNodes?.[0] ?? null;
   }
 
   private position(popover: HTMLElement) {
-    const rect = this.el.nativeElement.getBoundingClientRect();
+    const inputRect = this.el.nativeElement.getBoundingClientRect();
+    const popoverRect = popover.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+
+    const spacing = 12;
+
+    // ✅ CENTER the popover to the input vertically
+    let top = inputRect.top + inputRect.height / 2 - popoverRect.height / 2;
+
+    // Default on the right
+    let left = inputRect.right + spacing;
+
+    // Flip to left if no space
+    if (left + popoverRect.width > viewportWidth) {
+      left = inputRect.left - popoverRect.width - spacing;
+
+      // Optional class swap for arrow direction
+      popover.classList.add('left');
+      popover.classList.remove('right');
+    } else {
+      popover.classList.add('right');
+      popover.classList.remove('left');
+    }
 
     popover.style.position = 'fixed';
-    popover.style.top = `${rect.top + 8}px`;
-    popover.style.left = `${rect.right + 20}px`;
-    // popover.style.zIndex = '9999';
+    popover.style.top = `${top}px`;
+    popover.style.left = `${left}px`;
+    popover.style.zIndex = '9999';
+  }
+
+  private listenToPositionChanges() {
+    this.positionSub = merge(fromEvent(window, 'scroll'), fromEvent(window, 'resize')).subscribe(
+      () => {
+        const popover = this.getPopoverElement();
+        if (popover) {
+          this.position(popover);
+        }
+      }
+    );
   }
 
   private hide() {
@@ -76,8 +117,16 @@ export class PopoverFormValidatorDirective {
       this.componentRef.destroy();
       this.componentRef = undefined;
     }
+
+    this.positionSub?.unsubscribe();
+    this.positionSub = undefined;
+  }
+
+  ngOnDestroy() {
+    this.hide();
   }
 }
+
 // import {
 //   ConnectedPosition,
 //   FlexibleConnectedPositionStrategy,

@@ -1,14 +1,20 @@
 <div class="validator-popover">
-  @if (errors()) {
-    @for (err of getErrorMessages(); track err) {
-      <div>{{ err }}</div>
-    }
+  @if (control()) {
+    <div class="title">Please Fix the following Error(s):</div>
+    <ul>
+      @for (validator of validators; track validator) {
+        @switch (true) {
+          @case (control()?.hasError(validator)) {
+            <li>
+              {{
+                control()?.errors?.[validator]?.message
+                  ?? validationMessages[validator]
+                  ?? validator
+              }}
+            </li>
+          }
+        }
+      }
+    </ul>
   }
 </div>
-<!-- @if (asString; as string) {
-  {{ string }}
-}
-
-@if (asTemplate; as template) {
-  <ng-template [ngTemplateOutlet]="template"></ng-template>
-} -->

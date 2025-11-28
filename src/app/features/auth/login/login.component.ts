@@ -2,6 +2,11 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import {
+  EmailValidator,
+  PasswordValidators,
+  RequiredValidator,
+} from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { AlertType } from '@app/shared/models/alert.model';
 import { AuthService } from '@app/shared/services/api/auth.service';
@@ -53,8 +58,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      email: ['', [...RequiredValidator, EmailValidator]],
+      password: ['', PasswordValidators],
     });
   }
 
