@@ -14,21 +14,39 @@
     <form nz-form [formGroup]="registerForm" class="register-form">
       <h1 class="register-heading">Create Your Account</h1>
       <nz-form-label nzNoColon="true"> Name </nz-form-label>
-      <nz-form-control nzErrorTip="Please input your Name!">
+      <nz-form-control>
         <nz-input-wrapper>
-          <input type="text" nz-input formControlName="name" nzSize="large" />
+          <input
+            type="text"
+            nz-input
+            formControlName="name"
+            nzSize="large"
+            appPopoverFormValidator
+          />
         </nz-input-wrapper>
       </nz-form-control>
       <nz-form-label nzNoColon="true"> Email </nz-form-label>
-      <nz-form-control nzErrorTip="Please input your Email!">
+      <nz-form-control>
         <nz-input-wrapper>
-          <input type="text" nz-input formControlName="email" nzSize="large" />
+          <input
+            type="text"
+            nz-input
+            formControlName="email"
+            nzSize="large"
+            appPopoverFormValidator
+          />
         </nz-input-wrapper>
       </nz-form-control>
       <nz-form-label nzNoColon="true"> Password </nz-form-label>
-      <nz-form-control nzErrorTip="Please input your Password!">
+      <nz-form-control>
         <nz-input-wrapper>
-          <input nz-input formControlName="password" type="password" nzSize="large" />
+          <input
+            nz-input
+            formControlName="password"
+            type="password"
+            nzSize="large"
+            appPopoverFormValidator
+          />
         </nz-input-wrapper>
       </nz-form-control>
       <button
