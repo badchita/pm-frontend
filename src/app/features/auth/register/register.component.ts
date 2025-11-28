@@ -41,7 +41,7 @@ import {
     NzAlertModule,
     NzModalModule,
     PopoverFormValidatorDirective,
-  ],
+],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })

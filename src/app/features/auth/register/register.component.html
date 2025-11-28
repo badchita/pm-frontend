@@ -56,6 +56,7 @@
         nzSize="large"
         nzShape="round"
         (click)="register()"
+        [disabled]="registerForm.invalid"
       >
         Register
       </button>
