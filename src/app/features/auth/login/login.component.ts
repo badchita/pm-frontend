@@ -74,7 +74,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         (response) => {
           this.isLoading = false;
 
-          console.log('Login response:', response);
+          this.authService.setAccessToken(response.token);
+          this.authService.setUserDetails(response.user);
         },
         (error) => {
           this.isLoading = false;

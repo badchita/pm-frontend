@@ -19,4 +19,12 @@ export class AuthService {
   login(loginForm: LoginForm): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.api}/login`, loginForm);
   }
+
+  setAccessToken(token: string) {
+    sessionStorage.setItem('access_token', token);
+  }
+
+  setUserDetails(user: User) {
+    sessionStorage.setItem('user_details', JSON.stringify(user));
+  }
 }
