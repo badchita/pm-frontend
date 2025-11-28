@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzColDirective } from 'ng-zorro-antd/grid';
@@ -41,7 +41,7 @@ import {
     NzAlertModule,
     NzModalModule,
     PopoverFormValidatorDirective,
-],
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
