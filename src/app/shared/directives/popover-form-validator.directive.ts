@@ -70,30 +70,40 @@ export class PopoverFormValidatorDirective implements OnDestroy {
   }
 
   private position(popover: HTMLElement) {
-    const inputRect = this.el.nativeElement.getBoundingClientRect();
-    const popoverRect = popover.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
+    const update = () => {
+      const inputRect = this.el.nativeElement.getBoundingClientRect();
+      const popoverRect = popover.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const spacing = 12;
+      const arrowTop = popoverRect.height > 55 ? 20 : 50;
 
-    const spacing = 12;
+      let top = inputRect.top;
+      let left = inputRect.right + spacing;
 
-    let top = inputRect.top + inputRect.height / 2 - popoverRect.height / 2;
+      if (left + popoverRect.width > viewportWidth) {
+        left = inputRect.left - popoverRect.width - spacing;
+        popover.classList.add('left');
+        popover.classList.remove('right');
+      } else {
+        popover.classList.add('right');
+        popover.classList.remove('left');
+      }
 
-    let left = inputRect.right + spacing;
+      popover.style.position = 'fixed';
+      popover.style.top = `${top}px`;
+      popover.style.left = `${left}px`;
+      popover.style.zIndex = '9999';
+      popover.style.setProperty('--arrow-top', `${arrowTop}%`);
+    };
 
-    if (left + popoverRect.width > viewportWidth) {
-      left = inputRect.left - popoverRect.width - spacing;
+    // Initial positioning
+    update();
 
-      popover.classList.add('left');
-      popover.classList.remove('right');
-    } else {
-      popover.classList.add('right');
-      popover.classList.remove('left');
-    }
+    // Observe content changes
+    const observer = new ResizeObserver(update);
+    observer.observe(popover);
 
-    popover.style.position = 'fixed';
-    popover.style.top = `${top}px`;
-    popover.style.left = `${left}px`;
-    popover.style.zIndex = '9999';
+    // Optionally disconnect when hiding popover
   }
 
   private listenToPositionChanges() {

@@ -8,7 +8,10 @@
             <li>
               {{
                 control()?.errors?.[validator]?.message
-                  ?? validationMessages[validator]
+                  ?? format(
+                      validationMessages[validator],
+                      control()?.errors?.[validator]?.requiredLength
+                    )
                   ?? validator
               }}
             </li>
