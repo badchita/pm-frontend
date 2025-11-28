@@ -1,20 +1,20 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.LoggingYouIn">
   @if (hasError) {
-    <nz-alert
-      class="auth-alert"
-      nzBanner
-      [nzType]="alertDetails.type"
-      [nzMessage]="alertDetails.message"
-      [nzDescription]="alertDetails.description"
-      nzShowIcon
-    ></nz-alert>
+  <nz-alert
+    class="auth-alert"
+    nzBanner
+    [nzType]="alertDetails.type"
+    [nzMessage]="alertDetails.message"
+    [nzDescription]="alertDetails.description"
+    nzShowIcon
+  ></nz-alert>
   }
 
   <nz-card>
     <form nz-form [formGroup]="loginForm" class="login-form">
       <h1 class="login-heading">Login to Your Account</h1>
       <nz-form-item>
-        <nz-form-control nzErrorTip="Please input your Email!">
+        <nz-form-control>
           <nz-input-wrapper>
             <input
               type="text"
@@ -22,12 +22,13 @@
               formControlName="email"
               placeholder="Email"
               nzSize="large"
+              appPopoverFormValidator
             />
           </nz-input-wrapper>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-control nzErrorTip="Please input your Password!">
+        <nz-form-control>
           <nz-input-wrapper>
             <input
               nz-input
@@ -35,6 +36,7 @@
               placeholder="Password"
               nzSize="large"
               type="password"
+              appPopoverFormValidator
             />
           </nz-input-wrapper>
         </nz-form-control>
@@ -46,6 +48,7 @@
         nzSize="large"
         nzShape="round"
         (click)="login()"
+        [disabled]="loginForm.invalid"
       >
         Log in
       </button>

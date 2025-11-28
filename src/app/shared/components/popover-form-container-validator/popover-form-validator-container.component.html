@@ -1,0 +1,23 @@
+<div class="validator-popover">
+  @if (control()) {
+    <div class="title">Please Fix the following Error(s):</div>
+    <ul>
+      @for (validator of validators; track validator) {
+        @switch (true) {
+          @case (control()?.hasError(validator)) {
+            <li>
+              {{
+                control()?.errors?.[validator]?.message
+                  ?? format(
+                      validationMessages[validator],
+                      control()?.errors?.[validator]?.requiredLength
+                    )
+                  ?? validator
+              }}
+            </li>
+          }
+        }
+      }
+    </ul>
+  }
+</div>
