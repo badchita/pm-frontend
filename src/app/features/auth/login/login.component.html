@@ -48,6 +48,7 @@
         nzSize="large"
         nzShape="round"
         (click)="login()"
+        [disabled]="loginForm.invalid"
       >
         Log in
       </button>

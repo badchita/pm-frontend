@@ -26,7 +26,6 @@ export class PopoverFormValidatorDirective implements OnDestroy {
   private componentRef?: ComponentRef<PopoverFormValidatorContainerComponent>;
   private positionSub?: Subscription;
 
-  @HostListener('keydown.enter')
   @HostListener('input')
   onInteraction() {
     this.showIfInvalid();
@@ -75,7 +74,7 @@ export class PopoverFormValidatorDirective implements OnDestroy {
       const popoverRect = popover.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const spacing = 12;
-      const arrowTop = popoverRect.height > 55 ? 20 : 50;
+      const arrowTop = popoverRect.height > 55 ? 30 : 50;
 
       let top = inputRect.top;
       let left = inputRect.right + spacing;
