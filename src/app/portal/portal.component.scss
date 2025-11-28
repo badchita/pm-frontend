@@ -15,6 +15,10 @@
     .sider-menu {
       background-color: var(--pm-grey);
 
+      nz-icon {
+        padding-right: 10px;
+      }
+
       .ant-menu-item:hover {
         color: white;
         background-color: transparent;

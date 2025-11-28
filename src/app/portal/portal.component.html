@@ -6,10 +6,12 @@
   <nz-layout>
     <nz-sider nzWidth="256px" nzTheme="light" class="side-bar">
       <ul nz-menu class="sider-menu">
-        <li nz-menu-item class="sider-menu-item">
-          <nz-icon nzType="dashboard" nzTheme="fill" />
-          <span>Dashboard</span>
+        @for (nav of navItem; track nav) {
+        <li nz-menu-item class="sider-menu-item" (click)="navigate(nav.route)">
+          <nz-icon [nzType]="nav.icon" nzTheme="outline" />
+          <span>{{ nav.title }}</span>
         </li>
+        }
       </ul>
     </nz-sider>
     <nz-layout class="inner-layout">
