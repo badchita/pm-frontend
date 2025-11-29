@@ -12,27 +12,61 @@
     background-color: var(--pm-grey);
     padding-top: 24px;
 
-    .sider-menu {
-      background-color: var(--pm-grey);
+    .sidebar-items {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      .sider-menu {
+        margin-bottom: auto;
+        background-color: var(--pm-grey);
 
-      nz-icon {
-        padding-right: 10px;
+        nz-icon {
+          padding-right: 10px;
+        }
+
+        .ant-menu-item:hover {
+          color: white;
+          background-color: transparent;
+          color: var(--pm-primary);
+        }
+
+        .ant-menu-item-selected {
+          height: 100%;
+          background-color: transparent;
+          color: var(--pm-primary);
+        }
+
+        .ant-menu-item-selected::after {
+          border-right: none;
+        }
       }
 
-      .ant-menu-item:hover {
-        color: white;
-        background-color: transparent;
-        color: var(--pm-primary);
+      .border-line {
+        border-top: 2px solid var(--pm-primary);
+        margin-right: 16px;
+        margin-left: 16px;
       }
 
-      .ant-menu-item-selected {
-        height: 100%;
-        background-color: transparent;
-        color: var(--pm-primary);
+      .border-line-collapse-close {
+        margin-right: 10px;
+        margin-left: 10px;
       }
 
-      .ant-menu-item-selected::after {
-        border-right: none;
+      .collapse-button-container {
+        padding-bottom: 16px;
+        padding-right: 16px;
+        padding-top: 16px;
+        display: flex;
+        justify-content: end;
+
+        button {
+          font-size: 14px;
+        }
+      }
+
+      .collapse-close {
+        justify-content: center;
+        padding-right: 0;
       }
     }
   }
