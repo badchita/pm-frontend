@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
+import { AuthorizedGuard } from '@app/core/guards/authorized.guard';
 
 export const routes: Routes = [
   {
     path: 'portal',
     loadChildren: () => import('@app/portal/portal.routes').then((m) => m.routes),
+    canActivate: [AuthorizedGuard],
   },
   {
     path: 'login',

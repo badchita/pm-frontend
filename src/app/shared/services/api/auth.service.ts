@@ -27,4 +27,8 @@ export class AuthService {
   setUserDetails(user: User) {
     sessionStorage.setItem('user_details', JSON.stringify(user));
   }
+
+  isLoggedIn(): boolean {
+    return !!sessionStorage.getItem('access_token');
+  }
 }
