@@ -2,6 +2,7 @@
 :root {
   --pm-primary: #840bdc;
   --pm-secondary: #e3cef2;
+  --pm-grey: #d3d3d3;
 
   .ant-spin-dot-item {
     background-color: var(--pm-primary);
@@ -34,5 +35,20 @@
         border-radius: 44px;
       }
     }
+  }
+
+  .ant-btn-primary {
+    background-color: var(--pm-primary);
+    border-color: var(--pm-primary);
+  }
+
+  .ant-btn-primary[disabled] {
+    color: white;
+    opacity: .5;
+  }
+
+  .ant-btn-primary[disabled]:hover {
+    background-color: var(--pm-primary);
+    border-color: var(--pm-primary);
   }
 }
