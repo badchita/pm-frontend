@@ -8,6 +8,7 @@ export const ALERT_MESAGE = {
   UnexpectedErroIinternalServerError: 'Unexpected error / internal server error',
   NoInternetConnection: 'No Internet Connection',
   LoginFailed: 'Login Failed',
+  NotAuthorized: 'Not Authorized',
 };
 
 export const ALERT_DESCRIPTION = {
@@ -17,6 +18,7 @@ export const ALERT_DESCRIPTION = {
   PleaseCheckYourNetworkAndTryAgain: 'Please check your network and try again.',
   LoginFailedMessage:
     'The email or password you entered is incorrect. Please try again or reset your password if you’ve forgotten it',
+  NotAuthorizedMessage: 'You must be logged in to access this page. Please log in and try again.',
 };
 
 export const MODAL_TITLE = {

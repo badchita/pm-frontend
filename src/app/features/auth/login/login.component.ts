@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import {
   EmailValidator,
@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   private _destroying$ = new Subject<void>();
 
@@ -56,6 +57,20 @@ export class LoginComponent implements OnInit, OnDestroy {
     description: '',
   };
   hasError = false;
+  showNotAuthAlert = false;
+
+  constructor() {
+    this.route.queryParams.subscribe((params) => {
+      if (params['message'] === 'not-authenticated') {
+        this.showNotAuthAlert = true;
+        this.alertDetails = {
+          type: 'error',
+          message: ALERT_MESAGE.NotAuthorized,
+          description: ALERT_DESCRIPTION.NotAuthorizedMessage,
+        };
+      }
+    });
+  }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -66,7 +81,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login() {
     this.isLoading = true;
+    this.showNotAuthAlert = false;
     const payload = this.loginForm.getRawValue();
+
     this.authService
       .login(payload)
       .pipe(takeUntil(this._destroying$))

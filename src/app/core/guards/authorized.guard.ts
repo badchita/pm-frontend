@@ -7,7 +7,9 @@ export const AuthorizedGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   if (!auth.isLoggedIn()) {
-    router.navigate(['/login']);
+    router.navigate(['/login'], {
+      queryParams: { message: 'not-authenticated' },
+    });
     return false;
   }
 
