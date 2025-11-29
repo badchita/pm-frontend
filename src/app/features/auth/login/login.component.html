@@ -1,13 +1,14 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.LoggingYouIn">
-  @if (hasError) {
-  <nz-alert
-    class="auth-alert"
-    nzBanner
-    [nzType]="alertDetails.type"
-    [nzMessage]="alertDetails.message"
-    [nzDescription]="alertDetails.description"
-    nzShowIcon
-  ></nz-alert>
+  @if (hasError || showNotAuthAlert) {
+    <nz-alert
+      class="auth-alert"
+      nzBanner
+      nzShowIcon
+      [nzCloseable]="showNotAuthAlert"
+      [nzType]="alertDetails.type"
+      [nzMessage]="alertDetails.message"
+      [nzDescription]="alertDetails.description"
+    ></nz-alert>
   }
 
   <nz-card>
