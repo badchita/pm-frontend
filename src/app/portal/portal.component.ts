@@ -60,9 +60,4 @@ export class PortalComponent {
   navigate(url: string) {
     this.router.navigate([url]);
   }
-
-  onCollapse() {
-    this.isCollapsed = !this.isCollapsed;
-    this.collapseButtonContainerRef.nativeElement.style.ju = 'yellow';
-  }
 }
