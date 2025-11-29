@@ -8,7 +8,7 @@
       <div class="sidebar-items">
         <ul nz-menu class="sider-menu" nzMode="inline">
           @for (nav of navItem; track nav) {
-            <li nz-menu-item class="sider-menu-item" (click)="navigate(nav.route)">
+            <li nz-menu-item class="sider-menu-item" (click)="navigate(nav.route)" [nzSelected]="nav.title === 'Dashboard'">
               <nz-icon [nzType]="nav.icon" nzTheme="outline" />
               <span>{{ nav.title }}</span>
             </li>
