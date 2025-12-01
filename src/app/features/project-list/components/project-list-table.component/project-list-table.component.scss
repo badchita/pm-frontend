@@ -1,5 +1,15 @@
 :host {
   .table-container {
     padding-top: 34px;
+
+    .action-buttons {
+      nz-divider {
+        border-color: var(--pm-primary);
+      }
+
+      .edit-button {
+        color: #1890ff;
+      }
+    }
   }
 }
