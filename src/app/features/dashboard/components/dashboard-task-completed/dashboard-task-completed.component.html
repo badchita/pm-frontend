@@ -1,0 +1,21 @@
+<div class="container">
+  <nz-card>
+    <div class="card-title">Task Completed</div>
+    <div class="chart-container">
+      <canvas
+        baseChart
+        [data]="chartData"
+        [options]="{
+          indexAxis: 'y',
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }"
+        [type]="'line'"
+      >
+      </canvas>
+    </div>
+  </nz-card>
+</div>

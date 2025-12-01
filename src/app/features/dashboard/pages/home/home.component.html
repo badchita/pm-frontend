@@ -1,1 +1,16 @@
-<p>home.component works!</p>
+<div class="container">
+  <div class="header">
+    <span>Dashboard</span>
+    <button nz-button nzShape="round" nzType="primary">Add New Project</button>
+  </div>
+
+  <div class="content">
+    <div class="data-contents">
+      <app-dashboard-active-projects></app-dashboard-active-projects>
+      <app-dashboard-upcoming-deadlines></app-dashboard-upcoming-deadlines>
+      <app-dashboard-task-completed></app-dashboard-task-completed>
+    </div>
+
+    <app-dashboard-quick-access></app-dashboard-quick-access>
+  </div>
+</div>

@@ -9,6 +9,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideNzIcons } from 'ng-zorro-antd/icon';
 import * as AllIcons from '@ant-design/icons-angular/icons';
 import { routes } from './shared/app.routes';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 registerLocaleData(en);
 
 export const appConfig: ApplicationConfig = {
@@ -19,5 +20,7 @@ export const appConfig: ApplicationConfig = {
 
     { provide: NZ_I18N, useValue: en_US },
     provideNzIcons(Object.values(AllIcons)),
+
+    provideCharts(withDefaultRegisterables()),
   ],
 };
