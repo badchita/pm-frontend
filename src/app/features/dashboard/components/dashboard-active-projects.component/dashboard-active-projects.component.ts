@@ -3,12 +3,12 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
-  selector: 'app-active-projects',
+  selector: 'app-dashboard-active-projects',
   imports: [NzCardModule, BaseChartDirective],
-  templateUrl: './active-projects.component.html',
-  styleUrl: './active-projects.component.scss',
+  templateUrl: './dashboard-active-projects.component.html',
+  styleUrl: './dashboard-active-projects.component.scss',
 })
-export class ActiveProjectsComponent {
+export class DashboardActiveProjectsComponent {
   chartData = {
     labels: ['Angular', 'Vue', 'Reactjs'],
     datasets: [

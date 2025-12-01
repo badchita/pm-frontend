@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { ActiveProjectsComponent } from '../../components/active-projects.component/active-projects.component';
+import { DashboardActiveProjectsComponent } from '../../components/dashboard-active-projects.component/dashboard-active-projects.component';
 
 @Component({
   selector: 'app-home',
-  imports: [ActiveProjectsComponent],
+  imports: [DashboardActiveProjectsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
