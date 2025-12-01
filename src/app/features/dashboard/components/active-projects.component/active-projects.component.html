@@ -1,11 +1,24 @@
 <div class="container">
   <nz-card>
-    <div class="card-title">
-      Active Projects
-    </div>
+    <div class="card-title">Active Projects</div>
 
-    <div class="total-active-projects">
-      12
+    <div class="total-active-projects">12</div>
+
+    <div class="chart-container">
+      <canvas
+        baseChart
+        [data]="chartData"
+        [options]="{
+          indexAxis: 'y',
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }"
+        [type]="'bar'"
+      >
+      </canvas>
     </div>
   </nz-card>
 </div>
