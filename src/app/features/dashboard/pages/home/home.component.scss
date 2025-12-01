@@ -7,6 +7,12 @@
 
     .content {
       padding-top: 34px;
+
+      .data-contents {
+        border: 1px solid black;
+        display: flex;
+        justify-content: space-between;
+      }
     }
   }
 }

@@ -1,0 +1,23 @@
+:host {
+  nz-card {
+    width: 358px;
+    height: 258px;
+    background-color: var(--pm-grey);
+    border-radius: 24px;
+
+    .card-title {
+      font-size: 20px;
+      line-height: 28px;
+    }
+
+    .upcoming-deadlines-content {
+      line-height: 20px;
+      display: flex;
+      flex-direction: column;
+
+      span {
+        padding-bottom: 10px;
+      }
+    }
+  }
+}
