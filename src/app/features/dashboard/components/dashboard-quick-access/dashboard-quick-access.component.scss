@@ -1,0 +1,29 @@
+:host {
+  nz-card {
+    width: 100%;
+    min-height: 128px;
+    background-color: var(--pm-grey);
+    border-radius: 24px;
+
+    .card-title {
+      font-size: 20px;
+      line-height: 28px;
+    }
+
+    .card-content {
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+
+      button {
+        width: 85px;
+        height: 36px;
+      }
+
+      span {
+        padding-left: 20px
+      }
+    }
+  }
+}
