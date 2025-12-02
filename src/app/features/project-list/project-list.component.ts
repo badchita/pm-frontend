@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { ProjectListTableComponent } from './components/project-list-table.component/project-list-table.component';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @Component({
   selector: 'app-project-list',
-  imports: [ProjectListTableComponent],
+  imports: [ProjectListTableComponent, NzButtonModule],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
 })
@@ -28,8 +29,7 @@ export class ProjectListComponent {
     {
       id: 3,
       projectName: 'Vuejs',
-      description:
-        'An approachable, performant and versatile framework.',
+      description: 'An approachable, performant and versatile framework.',
       progress: 85,
       dueDate: 'Oct 20, 2025',
     },
