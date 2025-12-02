@@ -1,7 +1,7 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.CreatingProject">
   <form class="create-project-form" nz-form nzLayout="vertical" [formGroup]="createProjectForm">
     <nz-form-item>
-      <nz-form-label class="portal-input-label">Project Name</nz-form-label>
+      <nz-form-label class="portal-input-label" nzRequired>Project Name</nz-form-label>
       <nz-form-control>
         <nz-input-wrapper>
           <input
@@ -16,7 +16,7 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label class="portal-input-label">Descripton</nz-form-label>
+      <nz-form-label class="portal-input-label" nzRequired>Descripton</nz-form-label>
       <nz-form-control>
         <nz-textarea-count [nzMaxCharacterCount]="2000">
           <textarea
