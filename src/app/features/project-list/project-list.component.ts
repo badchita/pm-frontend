@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ProjectListTableComponent } from './components/project-list-table.component/project-list-table.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { CreateProjectModalComponent } from './modals/create-project-modal/create-project-modal.component';
 
 @Component({
   selector: 'app-project-list',
-  imports: [ProjectListTableComponent, NzButtonModule],
+  imports: [ProjectListTableComponent, NzButtonModule, NzModalModule],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
 })
 export class ProjectListComponent {
+  private modalService = inject(NzModalService);
+
   projectListData = [
     {
       id: 1,
@@ -34,4 +38,10 @@ export class ProjectListComponent {
       dueDate: 'Oct 20, 2025',
     },
   ];
+
+  addNewProject() {
+    this.modalService.create({
+      nzContent: CreateProjectModalComponent,
+    });
+  }
 }
