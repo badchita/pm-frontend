@@ -2,6 +2,13 @@
   .table-container {
     padding-top: 34px;
 
+    .description {
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
     .action-buttons {
       nz-divider {
         border-color: var(--pm-primary);

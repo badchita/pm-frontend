@@ -13,7 +13,24 @@
       @for (data of table.data; track data) {
         <tr>
           <td>{{ data.projectName }}</td>
-          <td nzEllipsis>{{ data.description }}</td>
+          <td
+            #description
+            class="description"
+            nzEllipsis
+            nz-tooltip
+            nzTooltipPlacement="top"
+            [nzTooltipTitle]="showTooltipDescription ? data.description : null"
+            [nzTooltipVisible]="false"
+            [nzTooltipArrowPointAtCenter]="true"
+            [nzTooltipOverlayStyle]="{
+              'max-width': '600px',
+              'white-space': 'normal',
+              'word-break': 'break-word'
+            }"
+            (mouseenter)="checkOverflow(description)"
+          >
+            {{ data.description }}
+          </td>
           <td nzAlign="center">{{ data.progress }}</td>
           <td nzAlign="center">{{ data.dueDate }}</td>
           <td class="action-buttons" nzAlign="center">

@@ -29,7 +29,7 @@ export class ProjectListComponent {
       id: 3,
       projectName: 'Vuejs',
       description:
-        'An approachable, performant and versatile framework for building web user interfaces.',
+        'An approachable, performant and versatile framework.',
       progress: 85,
       dueDate: 'Oct 20, 2025',
     },
