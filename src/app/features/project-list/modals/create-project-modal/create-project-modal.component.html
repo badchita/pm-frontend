@@ -28,7 +28,14 @@
   </nz-form-item>
 
   <div class="buttons-form-container">
-    <button nz-button class="create-button" [nzType]="'primary'" nzSize="large" nzShape="round">
+    <button
+      nz-button
+      class="create-button"
+      [nzType]="'primary'"
+      nzSize="large"
+      nzShape="round"
+      (click)="create()"
+    >
       Create
     </button>
     <button nz-button class="reset-button" nzSize="large" nzShape="round" (click)="reset()">
