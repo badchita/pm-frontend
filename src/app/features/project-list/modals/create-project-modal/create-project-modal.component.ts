@@ -8,10 +8,19 @@ import { Subject, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import { RequiredValidator } from '@app/shared/constants/validators';
+import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 
 @Component({
   selector: 'app-create-project-modal',
-  imports: [ReactiveFormsModule, NzFormModule, NzInputModule, NzButtonModule, NzSpinModule],
+  imports: [
+    ReactiveFormsModule,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzSpinModule,
+    PopoverFormValidatorDirective,
+  ],
   templateUrl: './create-project-modal.component.html',
   styleUrl: './create-project-modal.component.scss',
 })
@@ -28,8 +37,8 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.createProjectForm = this.formBuilder.group({
-      projectName: [''],
-      description: [''],
+      projectName: ['', RequiredValidator],
+      description: ['', RequiredValidator],
     });
   }
 
