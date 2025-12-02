@@ -1,20 +1,22 @@
 <div class="table-container">
-  <nz-table #table class="table" [nzData]="listOfData">
+  <nz-table #table class="table" nzTableLayout="fixed" [nzData]="tableData()">
     <thead class="">
       <tr>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Address</th>
-        <th>Action</th>
+        <th nzWidth="15%">Project Name</th>
+        <th nzWidth="30%">Description</th>
+        <th nzWidth="15%" nzAlign="center">Progress</th>
+        <th nzWidth="15%" nzAlign="center">Due Date</th>
+        <th nzWidth="10%" nzAlign="center">Actions</th>
       </tr>
     </thead>
     <tbody>
       @for (data of table.data; track data) {
         <tr>
-          <td>{{ data.name }}</td>
-          <td>{{ data.age }}</td>
-          <td>{{ data.address }}</td>
-          <td class="action-buttons">
+          <td>{{ data.projectName }}</td>
+          <td nzEllipsis>{{ data.description }}</td>
+          <td nzAlign="center">{{ data.progress }}</td>
+          <td nzAlign="center">{{ data.dueDate }}</td>
+          <td class="action-buttons" nzAlign="center">
             <button class="edit-button" nz-button nzType="link">
               <nz-icon nzType="edit" nzTheme="outline" />
             </button>
