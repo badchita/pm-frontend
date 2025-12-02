@@ -38,7 +38,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.loginForm = this.fb.group({
+    this.loginForm = this.formBuilder.group({
       email: ['', [...RequiredValidator, EmailValidator]],
       password: ['', PasswordValidators],
     });

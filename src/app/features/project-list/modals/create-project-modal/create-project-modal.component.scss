@@ -1,0 +1,18 @@
+:host {
+  .create-project-form {
+    .buttons-form-container {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+
+      .create-button,
+      .reset-button {
+        height: 44px;
+      }
+
+      .reset-button {
+        margin-left: 10px;
+      }
+    }
+  }
+}
