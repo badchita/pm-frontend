@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@app/core/layout/header/header.component';
 import { NavItem } from '@app/shared/models/nav-item.model';
@@ -22,7 +22,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
   templateUrl: './portal.component.html',
   styleUrl: './portal.component.scss',
 })
-export class PortalComponent {
+export class PortalComponent implements OnInit {
   private router = inject(Router);
 
   @ViewChild('collapseButtonContainer') collapseButtonContainerRef!: ElementRef;
@@ -36,7 +36,7 @@ export class PortalComponent {
     {
       title: 'Project List',
       icon: 'unordered-list',
-      route: '/portal/project',
+      route: '/portal/project-list',
     },
     {
       title: 'Task Board',
@@ -56,7 +56,12 @@ export class PortalComponent {
   ];
 
   isCollapsed = false;
+  currentRoute!: string;
 
+  ngOnInit() {
+    const currentUrl = this.router.url;
+    this.currentRoute = currentUrl;
+  }
   navigate(url: string) {
     this.router.navigate([url]);
   }

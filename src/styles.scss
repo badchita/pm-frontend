@@ -43,12 +43,25 @@
   }
 
   .ant-btn-primary[disabled] {
-    color: white;
-    opacity: .5;
+    color: #fff;
+    opacity: 0.5;
   }
 
   .ant-btn-primary[disabled]:hover {
     background-color: var(--pm-primary);
     border-color: var(--pm-primary);
+  }
+
+  .ant-table-thead > tr > th {
+    background: var(--pm-primary);
+    color: #fff;
+  }
+
+  .ant-pagination-item-active {
+    background: #fff;
+    border-color: var(--pm-primary);
+    a {
+      color: var(--pm-primary);
+    }
   }
 }

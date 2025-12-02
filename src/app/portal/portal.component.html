@@ -8,21 +8,20 @@
       <div class="sidebar-items">
         <ul nz-menu class="sider-menu" nzMode="inline">
           @for (nav of navItem; track nav) {
-            <li nz-menu-item class="sider-menu-item" (click)="navigate(nav.route)" [nzSelected]="nav.title === 'Dashboard'">
+            <li
+              nz-menu-item
+              class="sider-menu-item"
+              (click)="navigate(nav.route)"
+              [nzSelected]="nav.route === currentRoute"
+            >
               <nz-icon [nzType]="nav.icon" nzTheme="outline" />
               <span>{{ nav.title }}</span>
             </li>
           }
         </ul>
 
-        <div
-          class="border-line"
-          [ngClass]="isCollapsed ? 'border-line-collapse-close' : ''"
-        ></div>
-        <div
-          class="collapse-button-container"
-          [ngClass]="isCollapsed ? 'collapse-close' : ''"
-        >
+        <div class="border-line" [ngClass]="isCollapsed ? 'border-line-collapse-close' : ''"></div>
+        <div class="collapse-button-container" [ngClass]="isCollapsed ? 'collapse-close' : ''">
           <button nz-button nzType="primary" (click)="isCollapsed = !isCollapsed" nzSize="small">
             <nz-icon [nzType]="isCollapsed ? 'arrow-right' : 'arrow-left'" />
           </button>
