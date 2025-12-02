@@ -64,4 +64,34 @@
       color: var(--pm-primary);
     }
   }
+
+  .create-modal {
+    .ant-modal-content {
+      border-radius: 24px;
+    }
+
+    .ant-modal-header {
+      border-radius: 24px;
+      .ant-modal-title {
+        color: #840bdc;
+      }
+    }
+  }
+
+  .portal-input-form,
+  .portal-input-textarea-form {
+    border-color: var(--pm-primary);
+    border-radius: 10px;
+  }
+
+  .portal-input-form {
+    height: 52px;
+  }
+
+  .portal-input-label {
+    label {
+      color: var(--pm-primary);
+      font-weight: 500;
+    }
+  }
 }

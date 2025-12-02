@@ -42,6 +42,9 @@ export class ProjectListComponent {
   addNewProject() {
     this.modalService.create({
       nzContent: CreateProjectModalComponent,
+      nzTitle: 'Create new Project',
+      nzClassName: 'create-modal',
+      nzFooter: null,
     });
   }
 }
