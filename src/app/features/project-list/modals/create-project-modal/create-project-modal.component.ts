@@ -21,4 +21,8 @@ export class CreateProjectModalComponent implements OnInit {
       description: [''],
     });
   }
+
+  reset() {
+    this.createProjectForm.reset();
+  }
 }
