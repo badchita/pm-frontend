@@ -1,6 +1,5 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { en_US, NZ_I18N } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
