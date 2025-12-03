@@ -13,6 +13,11 @@
       .reset-button {
         margin-left: 10px;
       }
+
+      .reset-button:hover {
+        border-color: var(--pm-primary);
+        color: var(--pm-primary);
+      }
     }
   }
 }

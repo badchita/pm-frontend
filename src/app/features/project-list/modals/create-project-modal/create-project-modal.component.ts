@@ -6,12 +6,24 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { ProjectListService } from '../../services/project-list.service';
 import { Subject, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import { RequiredValidator } from '@app/shared/constants/validators';
+import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
+import { AlertType } from '@app/shared/models/alert.model';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 @Component({
   selector: 'app-create-project-modal',
-  imports: [ReactiveFormsModule, NzFormModule, NzInputModule, NzButtonModule, NzSpinModule],
+  imports: [
+    ReactiveFormsModule,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzSpinModule,
+    PopoverFormValidatorDirective,
+    NzAlertModule,
+  ],
   templateUrl: './create-project-modal.component.html',
   styleUrl: './create-project-modal.component.scss',
 })
@@ -22,14 +34,23 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
 
   private _destroying$ = new Subject<void>();
 
+  SPINNER_TIP = SPINNER_TIP;
+  ALERT_MESAGE = ALERT_MESAGE;
+  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
+
   createProjectForm!: FormGroup;
   isLoading = false;
-  SPINNER_TIP = SPINNER_TIP;
+  hasError = false;
+  alertDetails: AlertType = {
+    type: 'info',
+    message: '',
+    description: '',
+  };
 
   ngOnInit() {
     this.createProjectForm = this.formBuilder.group({
-      projectName: [''],
-      description: [''],
+      projectName: ['', RequiredValidator],
+      description: ['', RequiredValidator],
     });
   }
 
@@ -44,13 +65,42 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
     this.projectListService
       .create(payload)
       .pipe(takeUntil(this._destroying$))
-      .subscribe((response) => {
-        this.isLoading = false;
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
 
-        if (response) {
-          this.modalRef.close();
+          if (response) {
+            this.modalRef.close();
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          this.hasError = true;
+          switch (error.status) {
+            case 0:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.NoInternetConnection,
+                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
+              };
+              break;
+            case 401:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.LoginFailed,
+                description: ALERT_DESCRIPTION.LoginFailedMessage,
+              };
+              break;
+            case 500:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
+                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
+              };
+              break;
+          }
         }
-      });
+      );
   }
 
   ngOnDestroy() {
