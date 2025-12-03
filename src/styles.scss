@@ -96,4 +96,17 @@
       font-weight: 500;
     }
   }
+
+  .form-notification {
+    background-color: #52c41a;
+    color: #fff;
+
+    nz-icon {
+      color: #fff;
+    }
+
+    .ant-notification-notice-message {
+      color: #fff;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 export const SPINNER_TIP = {
   CreatingYourAccount: 'Creating your account...',
   LoggingYouIn: 'Logging you in...',
-  CreatingProject: 'Creating Project...'
+  CreatingProject: 'Creating Project...',
 };
 
 export const ALERT_MESAGE = {
@@ -25,3 +25,11 @@ export const ALERT_DESCRIPTION = {
 export const MODAL_TITLE = {
   AccountCreated: '🎉 Account Successfully Created',
 };
+
+export const NOTIFICATION_TITLE = {
+  FormCreatedSuccessfully: '{{1}} Successfully',
+};
+
+export const NOTIFICATION_MESSAGE = {
+  FormCreatedSuccess: 'The project was created and saved successfully. Your Project ID is {{1}}.'
+}

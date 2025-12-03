@@ -3,6 +3,9 @@ import { ProjectListTableComponent } from './components/project-list-table.compo
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { CreateProjectModalComponent } from './modals/create-project-modal/create-project-modal.component';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
+import { Project } from '@app/shared/models/project.model';
 
 @Component({
   selector: 'app-project-list',
@@ -12,6 +15,10 @@ import { CreateProjectModalComponent } from './modals/create-project-modal/creat
 })
 export class ProjectListComponent {
   private modalService = inject(NzModalService);
+  private notificationService = inject(NzNotificationService);
+
+  NOTIFICATION_TITLE = NOTIFICATION_TITLE;
+  NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
 
   projectListData = [
     {
@@ -40,11 +47,25 @@ export class ProjectListComponent {
   ];
 
   addNewProject() {
-    this.modalService.create({
+    const modal = this.modalService.create({
       nzContent: CreateProjectModalComponent,
       nzTitle: 'Create new project',
       nzClassName: 'create-modal',
       nzFooter: null,
+    });
+
+    modal.afterClose.subscribe((project: Project) => {
+      if (project) {
+        this.notificationService.create(
+          'success',
+          NOTIFICATION_TITLE.FormCreatedSuccessfully.replace('{{1}}', 'Project Created'),
+          NOTIFICATION_MESSAGE.FormCreatedSuccess.replace('{{1}}', project.projectIdNumber),
+          {
+            nzClass: 'form-notification',
+            nzDuration: 5000,
+          }
+        );
+      }
     });
   }
 }
