@@ -7,6 +7,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-project',
@@ -25,6 +26,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 })
 export class EditProjectComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
 
   editProjectForm!: FormGroup;
 
@@ -41,5 +43,9 @@ export class EditProjectComponent implements OnInit {
       progress: [null],
       dueDate: [null],
     });
+  }
+
+  close() {
+    this.router.navigate([`/portal/projects`]);
   }
 }
