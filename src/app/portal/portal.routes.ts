@@ -29,7 +29,7 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'projects/:projectIdNumber',
+        path: 'projects/:id',
         loadComponent: () =>
           import('@app/features/projects/edit-project/edit-project.component').then(
             (m) => m.EditProjectComponent

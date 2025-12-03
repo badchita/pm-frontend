@@ -11,7 +11,7 @@ import { RequiredValidator } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
-import { ProjectListService } from '@app/features/projects/services/project-list.service';
+import { ProjectService } from '@app/features/projects/services/project.service';
 
 @Component({
   selector: 'app-create-project-modal',
@@ -29,7 +29,7 @@ import { ProjectListService } from '@app/features/projects/services/project-list
 })
 export class CreateProjectModalComponent implements OnInit, OnDestroy {
   private formBuilder = inject(FormBuilder);
-  private projectListService = inject(ProjectListService);
+  private projectService = inject(ProjectService);
   private modalRef = inject(NzModalRef);
 
   private _destroying$ = new Subject<void>();
@@ -62,7 +62,7 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const payload = this.createProjectForm.getRawValue();
 
-    this.projectListService
+    this.projectService
       .create(payload)
       .pipe(takeUntil(this._destroying$))
       .subscribe(
