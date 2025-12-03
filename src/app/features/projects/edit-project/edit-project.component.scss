@@ -24,6 +24,12 @@
     .content {
       padding-top: 34px;
 
+      form {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
       nz-col {
         nz-form-item {
           width: 80%;
@@ -34,6 +40,20 @@
             width: 100%;
             color: var(--pm-primary);
           }
+        }
+      }
+
+      .buttons-form-container {
+        display: flex;
+        justify-content: end;
+
+        button {
+          margin-left: 10px;
+        }
+
+        .publish-button {
+          color: #52c41a;
+          border-color: #52c41a;
         }
       }
     }
