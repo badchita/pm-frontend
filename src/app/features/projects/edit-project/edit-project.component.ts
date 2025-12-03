@@ -37,6 +37,9 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
   editProjectForm!: FormGroup;
 
+  projectName!: string;
+  projectIdNumber!: string;
+
   ngOnInit() {
     this.buildForm();
 
@@ -51,6 +54,10 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       .getProjectById(+id)
       .pipe(takeUntil(this._destroying$))
       .subscribe((response) => {
+        const { projectName, projectIdNumber } = response;
+
+        this.projectName = projectName;
+        this.projectIdNumber = projectIdNumber;
         this.editProjectForm.patchValue(response, { emitEvent: false });
       });
   }
@@ -58,10 +65,10 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   buildForm() {
     this.editProjectForm = this.formBuilder.group({
       id: [null],
-      projectIdNumber: [null],
+      projectIdNumber: [{ disabled: true, value: null }],
       projectName: [null],
       description: [null],
-      createdBy: [null],
+      createdBy: [{ disabled: true, value: null }],
       isPublished: [null],
       isDeleted: [null],
       createdAt: [null],
