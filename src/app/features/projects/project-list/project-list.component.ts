@@ -20,7 +20,7 @@ export class ProjectListComponent {
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;
   NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
 
-  projectListData = [
+  projectListData: any[] = [
     {
       id: 1,
       projectName: 'Angular',
@@ -28,6 +28,7 @@ export class ProjectListComponent {
         'This interactive tutorial will teach you the basic building blocks to start building great apps with Angular.',
       progress: 95,
       dueDate: 'Oct 15, 2025',
+      projectIdNumber: '1'
     },
     {
       id: 2,
@@ -36,6 +37,7 @@ export class ProjectListComponent {
         'React lets you build user interfaces out of individual pieces called components. Create your own React components like Thumbnail, LikeButton, and Video. Then combine them into entire screens, pages, and apps.',
       progress: 45,
       dueDate: 'Oct 15, 2025',
+      projectIdNumber: '1'
     },
     {
       id: 3,
@@ -43,6 +45,7 @@ export class ProjectListComponent {
       description: 'An approachable, performant and versatile framework.',
       progress: 85,
       dueDate: 'Oct 20, 2025',
+      projectIdNumber: '1'
     },
   ];
 

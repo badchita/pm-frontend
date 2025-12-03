@@ -34,7 +34,7 @@
           <td nzAlign="center">{{ data.progress }}</td>
           <td nzAlign="center">{{ data.dueDate }}</td>
           <td class="action-buttons" nzAlign="center">
-            <button class="edit-button" nz-button nzType="link">
+            <button class="edit-button" nz-button nzType="link" (click)="edit(data.projectIdNumber)">
               <nz-icon nzType="edit" nzTheme="outline" />
             </button>
             <nz-divider nzType="vertical"></nz-divider>
