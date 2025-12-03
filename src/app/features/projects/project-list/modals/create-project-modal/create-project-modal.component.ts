@@ -49,8 +49,8 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.createProjectForm = this.formBuilder.group({
-      projectName: ['', RequiredValidator],
-      description: ['', RequiredValidator],
+      projectName: [null, RequiredValidator],
+      description: [null, RequiredValidator],
     });
   }
 
