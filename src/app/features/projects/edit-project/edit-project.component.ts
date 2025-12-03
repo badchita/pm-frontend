@@ -39,6 +39,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
   projectName!: string;
   projectIdNumber!: string;
+  isPublished!: string;
 
   ngOnInit() {
     this.buildForm();
@@ -54,10 +55,12 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       .getProjectById(+id)
       .pipe(takeUntil(this._destroying$))
       .subscribe((response) => {
-        const { projectName, projectIdNumber } = response;
+        const { projectName, projectIdNumber, isPublished } = response;
 
         this.projectName = projectName;
         this.projectIdNumber = projectIdNumber;
+        this.isPublished = isPublished;
+
         this.editProjectForm.patchValue(response, { emitEvent: false });
       });
   }
