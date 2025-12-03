@@ -5,6 +5,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 @Component({
   selector: 'app-edit-project',
@@ -15,6 +16,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     NzGridModule,
     PopoverFormValidatorDirective,
     NzDatePickerModule,
+    NzTagModule,
   ],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss',
