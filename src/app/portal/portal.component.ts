@@ -36,7 +36,7 @@ export class PortalComponent implements OnInit {
     {
       title: 'Project List',
       icon: 'unordered-list',
-      route: '/portal/project-list',
+      route: '/portal/projects',
     },
     {
       title: 'Task Board',

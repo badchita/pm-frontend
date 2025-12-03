@@ -22,7 +22,7 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'project-list',
+        path: 'projects',
         loadComponent: () =>
           import('@app/features/projects/project-list/project-list.component').then(
             (m) => m.ProjectListComponent
