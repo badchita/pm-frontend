@@ -7,11 +7,15 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectListService {
+export class ProjectService {
   private http = inject(HttpClient);
   private api = `${environment.url}/projects`;
 
   create(project: ProjectForm): Observable<Project> {
     return this.http.post<Project>(`${this.api}`, project);
+  }
+
+  getProjectById(id: number): Observable<Project> {
+    return this.http.get<Project>(`${this.api}/${id}`);
   }
 }
