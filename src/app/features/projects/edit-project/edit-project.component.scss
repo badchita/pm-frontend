@@ -1,0 +1,25 @@
+:host {
+  .container {
+    .header {
+      font-size: 24px;
+      line-height: 32px;
+    }
+
+    .content {
+      padding-top: 34px;
+
+      nz-col {
+        nz-form-item {
+          width: 80%;
+        }
+
+        .due-date-control {
+          nz-date-picker {
+            width: 100%;
+            color: var(--pm-primary);
+          }
+        }
+      }
+    }
+  }
+}
