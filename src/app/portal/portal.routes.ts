@@ -24,7 +24,7 @@ export const routes: Routes = [
       {
         path: 'project-list',
         loadComponent: () =>
-          import('@app/features/project-list/project-list.component').then(
+          import('@app/features/projects/project-list/project-list.component').then(
             (m) => m.ProjectListComponent
           ),
       },

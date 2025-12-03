@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { ProjectListService } from '../../services/project-list.service';
 import { Subject, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
@@ -12,6 +11,7 @@ import { RequiredValidator } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { ProjectListService } from '@app/features/projects/services/project-list.service';
 
 @Component({
   selector: 'app-create-project-modal',
