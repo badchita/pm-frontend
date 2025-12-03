@@ -70,7 +70,7 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
           this.isLoading = false;
 
           if (response) {
-            this.modalRef.close();
+            this.modalRef.close(response);
           }
         },
         (error) => {
