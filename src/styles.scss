@@ -16,7 +16,9 @@
     font-weight: 500;
   }
 
-  .auth-alert {
+  .pm-alert {
+    padding-bottom: 24px;
+
     .ant-alert-error {
       border-radius: 24px;
     }

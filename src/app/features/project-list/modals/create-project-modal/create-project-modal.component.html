@@ -1,4 +1,14 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.CreatingProject">
+  @if (hasError) {
+    <nz-alert
+      class="pm-alert"
+      nzBanner
+      nzShowIcon
+      [nzType]="alertDetails.type"
+      [nzMessage]="alertDetails.message"
+      [nzDescription]="alertDetails.description"
+    ></nz-alert>
+  }
   <form class="create-project-form" nz-form nzLayout="vertical" [formGroup]="createProjectForm">
     <nz-form-item>
       <nz-form-label class="portal-input-label" nzRequired>Project Name</nz-form-label>
