@@ -12,7 +12,12 @@ import { ProjectService } from '../services/project.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Project } from '@app/shared/models/project.model';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import {
+  NOTIFICATION_MESSAGE,
+  NOTIFICATION_TITLE,
+  SPINNER_TIP,
+} from '@app/shared/constants/ui.constants';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-edit-project',
@@ -32,6 +37,7 @@ import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
 })
 export class EditProjectComponent implements OnInit, OnDestroy {
   private projectService = inject(ProjectService);
+  private notificationService = inject(NzNotificationService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -46,6 +52,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   isLoading = false;
 
   SPINNER_TIP = SPINNER_TIP;
+  NOTIFICATION_TITLE = NOTIFICATION_TITLE;
+  NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
 
   ngOnInit() {
     this.buildForm();
@@ -105,6 +113,15 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         this.isLoading = false;
 
         if (project) {
+          this.notificationService.create(
+            'success',
+            NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Project Updated'),
+            NOTIFICATION_MESSAGE.FormUpdatedSuccess.replace('{{1}}', project.projectIdNumber),
+            {
+              nzClass: 'form-notification',
+              nzDuration: 5000,
+            }
+          );
           this.editProjectForm.patchValue(project, { emitEvent: false });
         }
       });
