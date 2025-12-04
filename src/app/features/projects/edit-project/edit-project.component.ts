@@ -11,6 +11,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../services/project.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Project } from '@app/shared/models/project.model';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
 
 @Component({
   selector: 'app-edit-project',
@@ -23,6 +25,7 @@ import { Project } from '@app/shared/models/project.model';
     NzDatePickerModule,
     NzTagModule,
     NzButtonModule,
+    NzSpinModule,
   ],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss',
@@ -36,10 +39,13 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   private _destroying$ = new Subject<void>();
 
   editProjectForm!: FormGroup;
-
   projectName!: string;
   projectIdNumber!: string;
   isPublished!: string;
+
+  isLoading = false;
+
+  SPINNER_TIP = SPINNER_TIP;
 
   ngOnInit() {
     this.buildForm();
@@ -54,14 +60,14 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     this.projectService
       .getById(+id)
       .pipe(takeUntil(this._destroying$))
-      .subscribe((response) => {
-        const { projectName, projectIdNumber, isPublished } = response;
+      .subscribe((project) => {
+        const { projectName, projectIdNumber, isPublished } = project;
 
         this.projectName = projectName;
         this.projectIdNumber = projectIdNumber;
         this.isPublished = isPublished;
 
-        this.editProjectForm.patchValue(response, { emitEvent: false });
+        this.editProjectForm.patchValue(project, { emitEvent: false });
       });
   }
 
@@ -82,6 +88,26 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
   close() {
     this.router.navigate([`/portal/projects`]);
+  }
+
+  save() {
+    this.isLoading = true;
+    this.SPINNER_TIP.Updating = this.SPINNER_TIP.Updating.replace(
+      '{{1}}',
+      this.projectIdNumber ?? ''
+    );
+    const payload = this.editProjectForm.getRawValue();
+
+    this.projectService
+      .update(payload)
+      .pipe(takeUntil(this._destroying$))
+      .subscribe((project) => {
+        this.isLoading = false;
+
+        if (project) {
+          this.editProjectForm.patchValue(project, { emitEvent: false });
+        }
+      });
   }
 
   ngOnDestroy() {

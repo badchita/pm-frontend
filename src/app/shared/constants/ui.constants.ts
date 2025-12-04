@@ -1,7 +1,8 @@
 export const SPINNER_TIP = {
   CreatingYourAccount: 'Creating your account...',
   LoggingYouIn: 'Logging you in...',
-  CreatingProject: 'Creating Project...',
+  Creating: 'Creating {{1}}...',
+  Updating: 'Updating {{1}}...'
 };
 
 export const ALERT_MESAGE = {

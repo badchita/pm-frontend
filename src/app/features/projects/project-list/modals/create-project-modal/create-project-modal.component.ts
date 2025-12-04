@@ -60,17 +60,18 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
 
   create() {
     this.isLoading = true;
+    this.SPINNER_TIP.Creating = this.SPINNER_TIP.Updating.replace('{{1}}', 'Project');
     const payload = this.createProjectForm.getRawValue();
 
     this.projectService
       .create(payload)
       .pipe(takeUntil(this._destroying$))
       .subscribe(
-        (response) => {
+        (project) => {
           this.isLoading = false;
 
-          if (response) {
-            this.modalRef.close(response);
+          if (project) {
+            this.modalRef.close(project);
           }
         },
         (error) => {
