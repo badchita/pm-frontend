@@ -15,7 +15,11 @@ export class ProjectService {
     return this.http.post<Project>(`${this.api}`, project);
   }
 
-  getProjectById(id: number): Observable<Project> {
+  getById(id: number): Observable<Project> {
     return this.http.get<Project>(`${this.api}/${id}`);
+  }
+
+  update(project: Project): Observable<Project> {
+    return this.http.put<Project>(`${this.api}/${project.id}`, project);
   }
 }

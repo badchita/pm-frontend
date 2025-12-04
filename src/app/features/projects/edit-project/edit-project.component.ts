@@ -52,7 +52,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
   loadProject(id: string) {
     this.projectService
-      .getProjectById(+id)
+      .getById(+id)
       .pipe(takeUntil(this._destroying$))
       .subscribe((response) => {
         const { projectName, projectIdNumber, isPublished } = response;
