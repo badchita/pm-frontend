@@ -11,6 +11,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../services/project.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Project } from '@app/shared/models/project.model';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import {
+  NOTIFICATION_MESSAGE,
+  NOTIFICATION_TITLE,
+  SPINNER_TIP,
+} from '@app/shared/constants/ui.constants';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-edit-project',
@@ -23,12 +30,14 @@ import { Project } from '@app/shared/models/project.model';
     NzDatePickerModule,
     NzTagModule,
     NzButtonModule,
+    NzSpinModule,
   ],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss',
 })
 export class EditProjectComponent implements OnInit, OnDestroy {
   private projectService = inject(ProjectService);
+  private notificationService = inject(NzNotificationService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -36,10 +45,15 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   private _destroying$ = new Subject<void>();
 
   editProjectForm!: FormGroup;
-
   projectName!: string;
   projectIdNumber!: string;
   isPublished!: string;
+
+  isLoading = false;
+
+  SPINNER_TIP = SPINNER_TIP;
+  NOTIFICATION_TITLE = NOTIFICATION_TITLE;
+  NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
 
   ngOnInit() {
     this.buildForm();
@@ -52,16 +66,16 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
   loadProject(id: string) {
     this.projectService
-      .getProjectById(+id)
+      .getById(+id)
       .pipe(takeUntil(this._destroying$))
-      .subscribe((response) => {
-        const { projectName, projectIdNumber, isPublished } = response;
+      .subscribe((project) => {
+        const { projectName, projectIdNumber, isPublished } = project;
 
         this.projectName = projectName;
         this.projectIdNumber = projectIdNumber;
         this.isPublished = isPublished;
 
-        this.editProjectForm.patchValue(response, { emitEvent: false });
+        this.editProjectForm.patchValue(project, { emitEvent: false });
       });
   }
 
@@ -82,6 +96,35 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
   close() {
     this.router.navigate([`/portal/projects`]);
+  }
+
+  save() {
+    this.isLoading = true;
+    this.SPINNER_TIP.Updating = this.SPINNER_TIP.Updating.replace(
+      '{{1}}',
+      this.projectIdNumber ?? ''
+    );
+    const payload = this.editProjectForm.getRawValue();
+
+    this.projectService
+      .update(payload)
+      .pipe(takeUntil(this._destroying$))
+      .subscribe((project) => {
+        this.isLoading = false;
+
+        if (project) {
+          this.notificationService.create(
+            'success',
+            NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Project Updated'),
+            NOTIFICATION_MESSAGE.FormUpdatedSuccess.replace('{{1}}', project.projectIdNumber),
+            {
+              nzClass: 'form-notification',
+              nzDuration: 5000,
+            }
+          );
+          this.editProjectForm.patchValue(project, { emitEvent: false });
+        }
+      });
   }
 
   ngOnDestroy() {

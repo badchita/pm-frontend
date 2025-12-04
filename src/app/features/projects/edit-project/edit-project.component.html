@@ -1,119 +1,122 @@
-<div class="container">
-  <div class="header">
-    <span>{{ projectName }}: {{ projectIdNumber }}</span>
-    @if (isPublished === 'Y') {
-      <nz-tag nzColor="success">Active</nz-tag>
-    } @else {
-      <nz-tag nzColor="default">In Active</nz-tag>
-    }
+<nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.Updating">
+  <div class="container">
+    <div class="header">
+      <span>{{ projectName }}: {{ projectIdNumber }}</span>
+      @if (isPublished === 'Y') {
+        <nz-tag nzColor="success">Active</nz-tag>
+      } @else {
+        <nz-tag nzColor="default">In Active</nz-tag>
+      }
+    </div>
+
+    <div class="content">
+      <form nz-form nzLayout="vertical" [formGroup]="editProjectForm">
+        <nz-row>
+          <nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="portal-input-label" nzRequired>Project Name</nz-form-label>
+              <nz-form-control>
+                <nz-input-wrapper>
+                  <input
+                    class="portal-input-form"
+                    type="text"
+                    nz-input
+                    formControlName="projectName"
+                    nzSize="large"
+                    appPopoverFormValidator
+                  />
+                </nz-input-wrapper>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="portal-input-label" nzRequired>Project Id Number</nz-form-label>
+              <nz-form-control>
+                <nz-input-wrapper>
+                  <input
+                    class="portal-input-form"
+                    type="text"
+                    nz-input
+                    formControlName="projectIdNumber"
+                    nzSize="large"
+                    appPopoverFormValidator
+                  />
+                </nz-input-wrapper>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
+
+        <nz-row>
+          <nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="portal-input-label" nzRequired>Created By</nz-form-label>
+              <nz-form-control>
+                <nz-input-wrapper>
+                  <input
+                    class="portal-input-form"
+                    type="text"
+                    nz-input
+                    formControlName="createdBy"
+                    nzSize="large"
+                    appPopoverFormValidator
+                  />
+                </nz-input-wrapper>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="portal-input-label" nzRequired>Due Date</nz-form-label>
+              <nz-form-control class="due-date-control">
+                <nz-date-picker
+                  class="portal-input-form"
+                  formControlName="dueDate"
+                  nzFormat="MMM dd, yyyy"
+                ></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
+
+        <nz-row>
+          <nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="portal-input-label" nzRequired>Descripton</nz-form-label>
+              <nz-form-control>
+                <nz-textarea-count [nzMaxCharacterCount]="2000">
+                  <textarea
+                    class="portal-input-textarea-form"
+                    formControlName="description"
+                    nz-input
+                    [nzAutosize]="{ minRows: 5, maxRows: 10 }"
+                    appPopoverFormValidator
+                  ></textarea>
+                </nz-textarea-count>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
+
+        <div class="buttons-form-container">
+          <button
+            nz-button
+            class="create-button"
+            nzSize="large"
+            nzShape="round"
+            [nzType]="'primary'"
+            [disabled]="editProjectForm.invalid"
+            (click)="save()"
+          >
+            Save
+          </button>
+          <button nz-button class="publish-button" nzSize="large" nzShape="round">Publish</button>
+          <button nz-button class="close-button" nzSize="large" nzShape="round" (click)="close()">
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
-
-  <div class="content">
-    <form nz-form nzLayout="vertical" [formGroup]="editProjectForm">
-      <nz-row>
-        <nz-col nzSpan="12">
-          <nz-form-item>
-            <nz-form-label class="portal-input-label" nzRequired>Project Name</nz-form-label>
-            <nz-form-control>
-              <nz-input-wrapper>
-                <input
-                  class="portal-input-form"
-                  type="text"
-                  nz-input
-                  formControlName="projectName"
-                  nzSize="large"
-                  appPopoverFormValidator
-                />
-              </nz-input-wrapper>
-            </nz-form-control>
-          </nz-form-item>
-        </nz-col>
-        <nz-col nzSpan="12">
-          <nz-form-item>
-            <nz-form-label class="portal-input-label" nzRequired>Project Id Number</nz-form-label>
-            <nz-form-control>
-              <nz-input-wrapper>
-                <input
-                  class="portal-input-form"
-                  type="text"
-                  nz-input
-                  formControlName="projectIdNumber"
-                  nzSize="large"
-                  appPopoverFormValidator
-                />
-              </nz-input-wrapper>
-            </nz-form-control>
-          </nz-form-item>
-        </nz-col>
-      </nz-row>
-
-      <nz-row>
-        <nz-col nzSpan="12">
-          <nz-form-item>
-            <nz-form-label class="portal-input-label" nzRequired>Created By</nz-form-label>
-            <nz-form-control>
-              <nz-input-wrapper>
-                <input
-                  class="portal-input-form"
-                  type="text"
-                  nz-input
-                  formControlName="createdBy"
-                  nzSize="large"
-                  appPopoverFormValidator
-                />
-              </nz-input-wrapper>
-            </nz-form-control>
-          </nz-form-item>
-        </nz-col>
-        <nz-col nzSpan="12">
-          <nz-form-item>
-            <nz-form-label class="portal-input-label" nzRequired>Due Date</nz-form-label>
-            <nz-form-control class="due-date-control">
-              <nz-date-picker
-                class="portal-input-form"
-                formControlName="dueDate"
-                nzFormat="MMM dd, yyyy"
-              ></nz-date-picker>
-            </nz-form-control>
-          </nz-form-item>
-        </nz-col>
-      </nz-row>
-
-      <nz-row>
-        <nz-col nzSpan="12">
-          <nz-form-item>
-            <nz-form-label class="portal-input-label" nzRequired>Descripton</nz-form-label>
-            <nz-form-control>
-              <nz-textarea-count [nzMaxCharacterCount]="2000">
-                <textarea
-                  class="portal-input-textarea-form"
-                  formControlName="description"
-                  nz-input
-                  [nzAutosize]="{ minRows: 5, maxRows: 10 }"
-                  appPopoverFormValidator
-                ></textarea>
-              </nz-textarea-count>
-            </nz-form-control>
-          </nz-form-item>
-        </nz-col>
-      </nz-row>
-
-      <div class="buttons-form-container">
-        <button
-          nz-button
-          class="create-button"
-          nzSize="large"
-          nzShape="round"
-          [nzType]="'primary'"
-          [disabled]="editProjectForm.invalid"
-        >
-          Save
-        </button>
-        <button nz-button class="publish-button" nzSize="large" nzShape="round">Publish</button>
-        <button nz-button class="close-button" nzSize="large" nzShape="round" (click)="close()">
-          Close
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+</nz-spin>

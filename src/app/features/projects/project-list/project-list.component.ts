@@ -61,7 +61,7 @@ export class ProjectListComponent {
       if (project) {
         this.notificationService.create(
           'success',
-          NOTIFICATION_TITLE.FormCreatedSuccessfully.replace('{{1}}', 'Project Created'),
+          NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Project Created'),
           NOTIFICATION_MESSAGE.FormCreatedSuccess.replace('{{1}}', project.projectIdNumber),
           {
             nzClass: 'form-notification',
