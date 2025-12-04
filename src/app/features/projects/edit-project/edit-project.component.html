@@ -10,6 +10,17 @@
     </div>
 
     <div class="content">
+      @if (hasError) {
+        <nz-alert
+          class="pm-alert"
+          nzBanner
+          nzShowIcon
+          [nzType]="alertDetails.type"
+          [nzMessage]="alertDetails.message"
+          [nzDescription]="alertDetails.description"
+        ></nz-alert>
+      }
+
       <form nz-form nzLayout="vertical" [formGroup]="editProjectForm">
         <nz-row>
           <nz-col nzSpan="12">
