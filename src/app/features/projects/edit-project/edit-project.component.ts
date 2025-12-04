@@ -13,11 +13,16 @@ import { Subject, takeUntil } from 'rxjs';
 import { Project } from '@app/shared/models/project.model';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
+  ALERT_DESCRIPTION,
+  ALERT_MESAGE,
   NOTIFICATION_MESSAGE,
   NOTIFICATION_TITLE,
   SPINNER_TIP,
 } from '@app/shared/constants/ui.constants';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { RequiredValidator } from '@app/shared/constants/validators';
+import { AlertType } from '@app/shared/models/alert.model';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 @Component({
   selector: 'app-edit-project',
@@ -31,6 +36,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     NzTagModule,
     NzButtonModule,
     NzSpinModule,
+    NzAlertModule,
   ],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss',
@@ -50,10 +56,18 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   isPublished!: string;
 
   isLoading = false;
+  hasError = false;
+  alertDetails: AlertType = {
+    type: 'info',
+    message: '',
+    description: '',
+  };
 
   SPINNER_TIP = SPINNER_TIP;
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;
   NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
+  ALERT_MESAGE = ALERT_MESAGE;
+  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
 
   ngOnInit() {
     this.buildForm();
@@ -83,8 +97,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     this.editProjectForm = this.formBuilder.group({
       id: [null],
       projectIdNumber: [{ disabled: true, value: null }],
-      projectName: [null],
-      description: [null],
+      projectName: [null, RequiredValidator],
+      description: [null, RequiredValidator],
       createdBy: [{ disabled: true, value: null }],
       isPublished: [null],
       isDeleted: [null],
@@ -109,22 +123,51 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     this.projectService
       .update(payload)
       .pipe(takeUntil(this._destroying$))
-      .subscribe((project) => {
-        this.isLoading = false;
+      .subscribe(
+        (project) => {
+          this.isLoading = false;
 
-        if (project) {
-          this.notificationService.create(
-            'success',
-            NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Project Updated'),
-            NOTIFICATION_MESSAGE.FormUpdatedSuccess.replace('{{1}}', project.projectIdNumber),
-            {
-              nzClass: 'form-notification',
-              nzDuration: 5000,
-            }
-          );
-          this.editProjectForm.patchValue(project, { emitEvent: false });
+          if (project) {
+            this.notificationService.create(
+              'success',
+              NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Project Updated'),
+              NOTIFICATION_MESSAGE.FormUpdatedSuccess.replace('{{1}}', project.projectIdNumber),
+              {
+                nzClass: 'form-notification',
+                nzDuration: 5000,
+              }
+            );
+            this.editProjectForm.patchValue(project, { emitEvent: false });
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          this.hasError = true;
+          switch (error.status) {
+            case 0:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.NoInternetConnection,
+                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
+              };
+              break;
+            case 401:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.LoginFailed,
+                description: ALERT_DESCRIPTION.LoginFailedMessage,
+              };
+              break;
+            case 500:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
+                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
+              };
+              break;
+          }
         }
-      });
+      );
   }
 
   ngOnDestroy() {
