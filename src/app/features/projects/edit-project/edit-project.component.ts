@@ -18,6 +18,7 @@ import {
   SPINNER_TIP,
 } from '@app/shared/constants/ui.constants';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { RequiredValidator } from '@app/shared/constants/validators';
 
 @Component({
   selector: 'app-edit-project',
@@ -83,8 +84,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     this.editProjectForm = this.formBuilder.group({
       id: [null],
       projectIdNumber: [{ disabled: true, value: null }],
-      projectName: [null],
-      description: [null],
+      projectName: [null, RequiredValidator],
+      description: [null, RequiredValidator],
       createdBy: [{ disabled: true, value: null }],
       isPublished: [null],
       isDeleted: [null],

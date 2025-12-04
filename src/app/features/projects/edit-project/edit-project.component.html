@@ -3,9 +3,9 @@
     <div class="header">
       <span>{{ projectName }}: {{ projectIdNumber }}</span>
       @if (isPublished === 'Y') {
-        <nz-tag nzColor="success">Active</nz-tag>
+      <nz-tag nzColor="success">Active</nz-tag>
       } @else {
-        <nz-tag nzColor="default">In Active</nz-tag>
+      <nz-tag nzColor="default">In Active</nz-tag>
       }
     </div>
 
@@ -31,7 +31,7 @@
           </nz-col>
           <nz-col nzSpan="12">
             <nz-form-item>
-              <nz-form-label class="portal-input-label" nzRequired>Project Id Number</nz-form-label>
+              <nz-form-label class="portal-input-label">Project Id Number</nz-form-label>
               <nz-form-control>
                 <nz-input-wrapper>
                   <input
@@ -51,7 +51,7 @@
         <nz-row>
           <nz-col nzSpan="12">
             <nz-form-item>
-              <nz-form-label class="portal-input-label" nzRequired>Created By</nz-form-label>
+              <nz-form-label class="portal-input-label">Created By</nz-form-label>
               <nz-form-control>
                 <nz-input-wrapper>
                   <input
@@ -68,7 +68,7 @@
           </nz-col>
           <nz-col nzSpan="12">
             <nz-form-item>
-              <nz-form-label class="portal-input-label" nzRequired>Due Date</nz-form-label>
+              <nz-form-label class="portal-input-label">Due Date</nz-form-label>
               <nz-form-control class="due-date-control">
                 <nz-date-picker
                   class="portal-input-form"
@@ -111,7 +111,15 @@
           >
             Save
           </button>
-          <button nz-button class="publish-button" nzSize="large" nzShape="round">Publish</button>
+          <button
+            nz-button
+            class="publish-button"
+            nzSize="large"
+            nzShape="round"
+            [disabled]="editProjectForm.invalid"
+          >
+            Publish
+          </button>
           <button nz-button class="close-button" nzSize="large" nzShape="round" (click)="close()">
             Close
           </button>
