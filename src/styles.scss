@@ -59,8 +59,8 @@
     color: #fff;
   }
 
-  .ant-pagination-item-active {
-    background: #fff;
+  .ant-pagination-item-active,
+  .ant-pagination-item:hover {
     border-color: var(--pm-primary);
     a {
       color: var(--pm-primary);

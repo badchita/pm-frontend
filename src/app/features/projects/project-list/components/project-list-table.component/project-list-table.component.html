@@ -1,9 +1,21 @@
 <div class="table-container">
-  <nz-table #table class="table" nzTableLayout="fixed" [nzData]="tableData()">
-    <thead class="">
+  <nz-table
+    #table
+    class="table"
+    nzTableLayout="fixed"
+    [nzData]="dataList() || []"
+    [nzShowPagination]="true"
+    [nzFrontPagination]="false"
+    [nzShowTotal]="rangeTemplate"
+    [nzPageSizeOptions]="[10, 20, 30, 40, 50]"
+    [nzTotal]="dataTable().totalCount"
+    [nzPageSize]="dataTable().pageSize"
+    [nzLoading]="false"
+  >
+    <thead>
       <tr>
         <th nzWidth="15%">Project Name</th>
-        <th nzWidth="30%">Description</th>
+        <th nzWidth="35%">Description</th>
         <th nzWidth="15%" nzAlign="center">Progress</th>
         <th nzWidth="15%" nzAlign="center">Due Date</th>
         <th nzWidth="10%" nzAlign="center">Actions</th>
@@ -31,10 +43,10 @@
           >
             {{ data.description }}
           </td>
-          <td nzAlign="center">{{ data.progress }}</td>
+          <td nzAlign="center">100</td>
           <td nzAlign="center">{{ data.dueDate }}</td>
           <td class="action-buttons" nzAlign="center">
-            <button class="edit-button" nz-button nzType="link" (click)="edit(data.projectIdNumber)">
+            <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
               <nz-icon nzType="edit" nzTheme="outline" />
             </button>
             <nz-divider nzType="vertical"></nz-divider>
@@ -47,3 +59,9 @@
     </tbody>
   </nz-table>
 </div>
+
+<ng-template #rangeTemplate let-range="range" let-total>
+  Showing {{ dataTable().pageSize * dataTable().page + 1 }} to
+  {{ dataTable().pageSize * dataTable().page + dataList().length }} of {{ total }}
+  {{ total | i18nPlural : { '=1': 'project', other: 'projects' } }}
+</ng-template>
