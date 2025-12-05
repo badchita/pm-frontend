@@ -1,6 +1,12 @@
 :host {
-  .table-container {
+  .filter-container {
     padding-top: 34px;
+    display: flex;
+    justify-content: end;
+  }
+
+  .table-container {
+    padding-top: 14px;
 
     .description {
       overflow: hidden;

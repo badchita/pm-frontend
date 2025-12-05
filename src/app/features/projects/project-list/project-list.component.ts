@@ -70,9 +70,10 @@ export class ProjectListComponent implements OnDestroy {
   loadProjects(params: NzTableQueryParams) {
     this.tableParams.page = params.pageIndex;
     this.tableParams.pageSize = params.pageSize;
+    const filters = Object.assign({}, ...params.filter);
 
     this.busy = this.projectService
-      .getList(this.tableParams)
+      .getList(this.tableParams, filters)
       .pipe(takeUntil(this._destroying$))
       .subscribe((dataTable) => {
         this.projectDataTable = dataTable;

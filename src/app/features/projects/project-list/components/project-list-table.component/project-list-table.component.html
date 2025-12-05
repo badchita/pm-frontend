@@ -1,3 +1,37 @@
+<div class="filter-container">
+  <form nz-form nzLayout="inline" [formGroup]="searchProjectForm" (submit)="updateTable()">
+    <nz-form-item>
+      <nz-form-control>
+        <input class="input-search" nz-input formControlName="search" placeholder="Search" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-date-picker
+          class="input-search"
+          formControlName="dueDate"
+          nzFormat="MMM dd, yyyy"
+          nzPlaceHolder="Search Due Date"
+        ></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-select
+          class="select-search"
+          formControlName="isPublished"
+          name="select-error"
+          nzPlaceHolder="Select Status"
+          [nzAllowClear]="true"
+          [nzOptions]="statusOptions"
+        >
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <button class="reset-search-button" nz-button (click)="reset()">Reset</button>
+  </form>
+</div>
+
 <div class="table-container">
   <nz-table
     #table
@@ -45,13 +79,7 @@
           >
             {{ data.description }}
           </td>
-          <td nzAlign="center">
-            @if (data.isPublished == "Y") {
-              Active
-            } @else {
-              Inactive
-            }
-          </td>
+          <td nzAlign="center">@if (data.isPublished == "Y") { Active } @else { Inactive }</td>
           <td nzAlign="center">{{ data.dueDate | date : 'MMM dd, yyyy' }}</td>
           <td class="action-buttons" nzAlign="center">
             <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
@@ -69,15 +97,11 @@
 </div>
 
 <ng-template #rangeTemplate let-range="range" let-total>
-  @if (total && dataList().length > 0) {
-    Showing
+  @if (total && dataList().length > 0) { Showing
     {{ (dataTable().page - 1) * dataTable().pageSize + 1 }}
     to
     {{ (dataTable().page - 1) * dataTable().pageSize + dataList().length }}
     of {{ total }}
     {{ total | i18nPlural : { '=1': 'project', other: 'projects' } }}
-  } @else {
-    Showing 0 of 0 projects
-  }
+  } @else { Showing 0 of 0 projects }
 </ng-template>
-
