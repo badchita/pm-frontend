@@ -79,7 +79,7 @@
           </nz-col>
           <nz-col nzSpan="12">
             <nz-form-item>
-              <nz-form-label class="portal-input-label">Due Date</nz-form-label>
+              <nz-form-label class="portal-input-label" [nzRequired]="isPublished === 'Y'">Due Date</nz-form-label>
               <nz-form-control class="due-date-control">
                 <nz-date-picker
                   class="portal-input-form"

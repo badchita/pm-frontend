@@ -89,6 +89,11 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         this.isPublished = isPublished;
 
         this.editProjectForm.patchValue(project, { emitEvent: false });
+
+        if (isPublished === 'Y') {
+          this.editProjectForm.get('dueDate')?.addValidators(RequiredValidator);
+          this.editProjectForm.get('dueDate')?.updateValueAndValidity();
+        }
       });
   }
 
