@@ -58,7 +58,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (data of table.data; track data) {
+      @for (data of table.data; track data.id) {
         <tr>
           <td>{{ data.projectName }}</td>
           <td
@@ -79,7 +79,14 @@
           >
             {{ data.description }}
           </td>
-          <td nzAlign="center">@if (data.isPublished == "Y") { Active } @else { Inactive }</td>
+          <td nzAlign="center">
+            @if (data.isPublished == "Y") {
+              <nz-tag nzColor="success">Active</nz-tag>
+            } @else
+            {
+              <nz-tag nzColor="default">Inactive</nz-tag>
+            }
+          </td>
           <td nzAlign="center">{{ data.dueDate | date : 'MMM dd, yyyy' }}</td>
           <td class="action-buttons" nzAlign="center">
             <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">

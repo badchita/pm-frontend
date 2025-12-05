@@ -16,6 +16,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { StatusOptions } from '@app/shared/enums/search.enum';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 @Component({
   selector: 'app-project-list-table',
@@ -33,6 +34,7 @@ import { StatusOptions } from '@app/shared/enums/search.enum';
     NzDatePickerModule,
     NzButtonModule,
     NzSelectModule,
+    NzTagModule,
   ],
   templateUrl: './project-list-table.component.html',
   styleUrl: './project-list-table.component.scss',

@@ -10,7 +10,6 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../services/project.service';
 import { Subject, takeUntil } from 'rxjs';
-import { Project } from '@app/shared/models/project.model';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
   ALERT_DESCRIPTION,
