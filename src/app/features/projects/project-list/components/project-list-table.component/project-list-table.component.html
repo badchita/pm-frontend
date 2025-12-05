@@ -18,7 +18,7 @@
       <tr>
         <th nzWidth="15%">Project Name</th>
         <th nzWidth="35%">Description</th>
-        <th nzWidth="15%" nzAlign="center">Progress</th>
+        <th nzWidth="15%" nzAlign="center">Status</th>
         <th nzWidth="15%" nzAlign="center">Due Date</th>
         <th nzWidth="10%" nzAlign="center">Actions</th>
       </tr>
@@ -45,7 +45,13 @@
           >
             {{ data.description }}
           </td>
-          <td nzAlign="center">100</td>
+          <td nzAlign="center">
+            @if (data.isPublished == "Y") {
+              Active
+            } @else {
+              Inactive
+            }
+          </td>
           <td nzAlign="center">{{ data.dueDate }}</td>
           <td class="action-buttons" nzAlign="center">
             <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
