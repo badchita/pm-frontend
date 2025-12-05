@@ -80,6 +80,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
+    this.isLoading = true
     this.showNotAuthAlert = false;
     const payload = this.loginForm.getRawValue();
 

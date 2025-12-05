@@ -32,9 +32,11 @@ export class ProjectService {
     return this.http.get<DataTable<Project>>(`${this.api}`, { params });
   }
 
-  publish(id: number, isPublished: string): Observable<Project> {
-    const endpoint = isPublished === 'N' ? 'publish' : 'unpublish';
-
-    return this.http.put<Project>(`${this.api}/${id}/${endpoint}`, {});
+  publish(id: number, isPublished: string, project: Project): Observable<Project> {
+    if (isPublished === 'N') {
+      return this.http.put<Project>(`${this.api}/${id}/publish`, project);
+    } else {
+      return this.http.put<Project>(`${this.api}/${id}/unpublish`, {});
+    }
   }
 }
