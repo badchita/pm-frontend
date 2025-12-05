@@ -9,7 +9,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../services/project.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
   ALERT_DESCRIPTION,
@@ -54,7 +54,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   projectIdNumber!: string;
   isPublished!: string;
 
-  isLoading = false;
+  isLoading!: Subscription;
   hasError = false;
   alertDetails: AlertType = {
     type: 'info',
@@ -89,6 +89,11 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         this.isPublished = isPublished;
 
         this.editProjectForm.patchValue(project, { emitEvent: false });
+
+        if (isPublished === 'Y') {
+          this.editProjectForm.get('dueDate')?.addValidators(RequiredValidator);
+          this.editProjectForm.get('dueDate')?.updateValueAndValidity();
+        }
       });
   }
 
@@ -112,20 +117,17 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.isLoading = true;
     this.SPINNER_TIP.Updating = this.SPINNER_TIP.Updating.replace(
       '{{1}}',
       this.projectIdNumber ?? ''
     );
     const payload = this.editProjectForm.getRawValue();
 
-    this.projectService
+    this.isLoading = this.projectService
       .update(payload)
       .pipe(takeUntil(this._destroying$))
       .subscribe(
         (project) => {
-          this.isLoading = false;
-
           if (project) {
             this.notificationService.create(
               'success',
@@ -140,7 +142,64 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          this.isLoading = false;
+          this.hasError = true;
+          switch (error.status) {
+            case 0:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.NoInternetConnection,
+                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
+              };
+              break;
+            case 401:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.LoginFailed,
+                description: ALERT_DESCRIPTION.LoginFailedMessage,
+              };
+              break;
+            case 500:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
+                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
+              };
+              break;
+          }
+        }
+      );
+  }
+
+  publish() {
+    this.SPINNER_TIP.Updating = this.SPINNER_TIP.Updating.replace(
+      '{{1}}',
+      this.projectIdNumber ?? ''
+    );
+
+    const id = this.editProjectForm.get('id')?.value;
+
+    this.isLoading = this.projectService
+      .publish(id)
+      .pipe(takeUntil(this._destroying$))
+      .subscribe(
+        (project) => {
+          if (project) {
+            this.notificationService.create(
+              'success',
+              NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Project Published'),
+              NOTIFICATION_MESSAGE.ProjectFormPublishedSuccess.replace(
+                '{{1}}',
+                project.projectIdNumber
+              ),
+              {
+                nzClass: 'form-notification',
+                nzDuration: 5000,
+              }
+            );
+            this.close();
+          }
+        },
+        (error) => {
           this.hasError = true;
           switch (error.status) {
             case 0:

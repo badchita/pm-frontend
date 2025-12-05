@@ -31,4 +31,8 @@ export class ProjectService {
 
     return this.http.get<DataTable<Project>>(`${this.api}`, { params });
   }
+
+  publish(id: number): Observable<Project> {
+    return this.http.put<Project>(`${this.api}/${id}/publish`, {});
+  }
 }

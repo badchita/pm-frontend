@@ -1,4 +1,4 @@
-<nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.Updating">
+<nz-spin [nzSpinning]="isLoading && !isLoading.closed" [nzTip]="SPINNER_TIP.Updating">
   <div class="container">
     <div class="header">
       <span>{{ projectName }}: {{ projectIdNumber }}</span>
@@ -79,7 +79,7 @@
           </nz-col>
           <nz-col nzSpan="12">
             <nz-form-item>
-              <nz-form-label class="portal-input-label">Due Date</nz-form-label>
+              <nz-form-label class="portal-input-label" [nzRequired]="isPublished === 'Y'">Due Date</nz-form-label>
               <nz-form-control class="due-date-control">
                 <nz-date-picker
                   class="portal-input-form"
@@ -128,6 +128,7 @@
             nzSize="large"
             nzShape="round"
             [disabled]="editProjectForm.invalid"
+            (click)="publish()"
           >
             Publish
           </button>
