@@ -42,7 +42,6 @@ export class ProjectListTableComponent {
   }
 
   updateTable(tableParams: NzTableQueryParams) {
-    console.log(tableParams);
     this.onUpdateTable.emit(tableParams);
   }
 }

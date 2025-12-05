@@ -6,6 +6,7 @@
     [nzData]="dataList() || []"
     [nzShowPagination]="true"
     [nzFrontPagination]="false"
+    [nzShowSizeChanger]="true"
     [nzShowTotal]="rangeTemplate"
     [nzPageSizeOptions]="[10, 20, 30, 40, 50]"
     [nzTotal]="dataTable().totalCount"
@@ -62,7 +63,15 @@
 </div>
 
 <ng-template #rangeTemplate let-range="range" let-total>
-  Showing {{ dataTable().pageSize * dataTable().page + 1 }} to
-  {{ dataTable().pageSize * dataTable().page + dataList().length }} of {{ total }}
-  {{ total | i18nPlural : { '=1': 'project', other: 'projects' } }}
+  @if (total && dataList().length > 0) {
+    Showing
+    {{ (dataTable().page - 1) * dataTable().pageSize + 1 }}
+    to
+    {{ (dataTable().page - 1) * dataTable().pageSize + dataList().length }}
+    of {{ total }}
+    {{ total | i18nPlural : { '=1': 'project', other: 'projects' } }}
+  } @else {
+    Showing 0 of 0 projects
+  }
 </ng-template>
+
