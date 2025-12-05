@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ProjectListTableComponent } from './components/project-list-table.component/project-list-table.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
@@ -6,6 +6,10 @@ import { CreateProjectModalComponent } from './modals/create-project-modal/creat
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
 import { Project } from '@app/shared/models/project.model';
+import { ProjectService } from '../services/project.service';
+import { Subject, Subscription, takeUntil } from 'rxjs';
+import { DataTable, TableParams } from '@app/shared/models/data-table.model';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-project-list',
@@ -13,41 +17,32 @@ import { Project } from '@app/shared/models/project.model';
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
 })
-export class ProjectListComponent {
+export class ProjectListComponent implements OnDestroy {
   private modalService = inject(NzModalService);
   private notificationService = inject(NzNotificationService);
+  private projectService = inject(ProjectService);
+
+  private _destroying$ = new Subject<void>();
 
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;
   NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
 
-  projectListData: any[] = [
-    {
-      id: 1,
-      projectName: 'Angular',
-      description:
-        'This interactive tutorial will teach you the basic building blocks to start building great apps with Angular.',
-      progress: 95,
-      dueDate: 'Oct 15, 2025',
-      projectIdNumber: '1'
-    },
-    {
-      id: 2,
-      projectName: 'ReactJs',
-      description:
-        'React lets you build user interfaces out of individual pieces called components. Create your own React components like Thumbnail, LikeButton, and Video. Then combine them into entire screens, pages, and apps.',
-      progress: 45,
-      dueDate: 'Oct 15, 2025',
-      projectIdNumber: '1'
-    },
-    {
-      id: 3,
-      projectName: 'Vuejs',
-      description: 'An approachable, performant and versatile framework.',
-      progress: 85,
-      dueDate: 'Oct 20, 2025',
-      projectIdNumber: '1'
-    },
-  ];
+  tableParams: TableParams = {
+    search: '',
+    isPublished: '',
+    page: 1,
+    pageSize: 10,
+    sortDirection: 'desc',
+  };
+
+  projectDataTable: DataTable<Project> = {
+    data: [],
+    totalCount: 0,
+    page: 1,
+    pageSize: 10,
+  };
+
+  busy!: Subscription;
 
   addNewProject() {
     const modal = this.modalService.create({
@@ -70,5 +65,26 @@ export class ProjectListComponent {
         );
       }
     });
+  }
+
+  loadProjects(params: NzTableQueryParams) {
+    this.tableParams.page = params.pageIndex;
+    this.tableParams.pageSize = params.pageSize;
+
+    this.busy = this.projectService
+      .getList(this.tableParams)
+      .pipe(takeUntil(this._destroying$))
+      .subscribe((dataTable) => {
+        this.projectDataTable = dataTable;
+      });
+  }
+
+  tableUpdate(tableParams: NzTableQueryParams) {
+    this.loadProjects(tableParams);
+  }
+
+  ngOnDestroy() {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
 }

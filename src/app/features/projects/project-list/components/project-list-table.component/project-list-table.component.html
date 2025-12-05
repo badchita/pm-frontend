@@ -1,10 +1,24 @@
 <div class="table-container">
-  <nz-table #table class="table" nzTableLayout="fixed" [nzData]="tableData()">
-    <thead class="">
+  <nz-table
+    #table
+    class="table"
+    nzTableLayout="fixed"
+    [nzData]="dataList() || []"
+    [nzShowPagination]="true"
+    [nzFrontPagination]="false"
+    [nzShowSizeChanger]="true"
+    [nzShowTotal]="rangeTemplate"
+    [nzPageSizeOptions]="[10, 20, 30, 40, 50]"
+    [nzTotal]="dataTable().totalCount"
+    [nzPageSize]="dataTable().pageSize"
+    [nzLoading]="isLoading() && !isLoading().closed"
+    (nzQueryParams)="updateTable($event)"
+  >
+    <thead>
       <tr>
         <th nzWidth="15%">Project Name</th>
-        <th nzWidth="30%">Description</th>
-        <th nzWidth="15%" nzAlign="center">Progress</th>
+        <th nzWidth="35%">Description</th>
+        <th nzWidth="15%" nzAlign="center">Status</th>
         <th nzWidth="15%" nzAlign="center">Due Date</th>
         <th nzWidth="10%" nzAlign="center">Actions</th>
       </tr>
@@ -31,10 +45,16 @@
           >
             {{ data.description }}
           </td>
-          <td nzAlign="center">{{ data.progress }}</td>
-          <td nzAlign="center">{{ data.dueDate }}</td>
+          <td nzAlign="center">
+            @if (data.isPublished == "Y") {
+              Active
+            } @else {
+              Inactive
+            }
+          </td>
+          <td nzAlign="center">{{ data.dueDate | date : 'MMM dd, yyyy' }}</td>
           <td class="action-buttons" nzAlign="center">
-            <button class="edit-button" nz-button nzType="link" (click)="edit(data.projectIdNumber)">
+            <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
               <nz-icon nzType="edit" nzTheme="outline" />
             </button>
             <nz-divider nzType="vertical"></nz-divider>
@@ -47,3 +67,17 @@
     </tbody>
   </nz-table>
 </div>
+
+<ng-template #rangeTemplate let-range="range" let-total>
+  @if (total && dataList().length > 0) {
+    Showing
+    {{ (dataTable().page - 1) * dataTable().pageSize + 1 }}
+    to
+    {{ (dataTable().page - 1) * dataTable().pageSize + dataList().length }}
+    of {{ total }}
+    {{ total | i18nPlural : { '=1': 'project', other: 'projects' } }}
+  } @else {
+    Showing 0 of 0 projects
+  }
+</ng-template>
+

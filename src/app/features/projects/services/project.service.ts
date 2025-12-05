@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@app/environments/environment';
+import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { Project, ProjectForm } from '@app/shared/models/project.model';
+import { TableUtilityService } from '@app/shared/services/table-utility.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,6 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class ProjectService {
   private http = inject(HttpClient);
+  private tableUtilityService = inject(TableUtilityService);
   private api = `${environment.url}/projects`;
 
   create(project: ProjectForm): Observable<Project> {
@@ -21,5 +24,11 @@ export class ProjectService {
 
   update(project: Project): Observable<Project> {
     return this.http.put<Project>(`${this.api}/${project.id}`, project);
+  }
+
+  getList(tableParams: TableParams): Observable<DataTable<Project>> {
+    const params = this.tableUtilityService.buildParams(tableParams);
+
+    return this.http.get<DataTable<Project>>(`${this.api}`, { params });
   }
 }

@@ -1,22 +1,36 @@
-import { Component, inject, input } from '@angular/core';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { Component, inject, input, output } from '@angular/core';
+import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { Router } from '@angular/router';
 import { Project } from '@app/shared/models/project.model';
+import { DataTable } from '@app/shared/models/data-table.model';
+import { DatePipe, I18nPluralPipe } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-project-list-table',
-  imports: [NzTableModule, NzDividerModule, NzButtonModule, NzIconModule, NzTooltipModule],
+  imports: [
+    NzTableModule,
+    NzDividerModule,
+    NzButtonModule,
+    NzIconModule,
+    NzTooltipModule,
+    I18nPluralPipe,
+    DatePipe,
+  ],
   templateUrl: './project-list-table.component.html',
   styleUrl: './project-list-table.component.scss',
 })
 export class ProjectListTableComponent {
-  private router = inject(Router);
+  readonly dataTable = input.required<DataTable<Project>>();
+  readonly dataList = input.required<Project[] | []>();
+  readonly isLoading = input.required<Subscription>();
+  readonly onUpdateTable = output<NzTableQueryParams>();
 
-  readonly tableData = input.required<Project[]>();
+  private router = inject(Router);
 
   showTooltipDescription = false;
 
@@ -24,7 +38,11 @@ export class ProjectListTableComponent {
     this.showTooltipDescription = el.scrollWidth > el.clientWidth;
   }
 
-  edit(projectId: string) {
-    this.router.navigate([`/portal/projects/${projectId}`]);
+  edit(id: number) {
+    this.router.navigate([`/portal/projects/${id}`]);
+  }
+
+  updateTable(tableParams: NzTableQueryParams) {
+    this.onUpdateTable.emit(tableParams);
   }
 }
