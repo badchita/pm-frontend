@@ -28,7 +28,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     NzInputModule,
     ReactiveFormsModule,
     NzDatePickerModule,
-    NzButtonModule
+    NzButtonModule,
   ],
   templateUrl: './project-list-table.component.html',
   styleUrl: './project-list-table.component.scss',
@@ -48,9 +48,21 @@ export class ProjectListTableComponent implements OnInit {
   searchProjectForm!: FormGroup;
 
   ngOnInit() {
+    this.buildForm();
+  }
+
+  buildForm() {
     this.searchProjectForm = this.formBuilder.group({
       search: [null],
       dueDate: [null],
+    });
+
+    this.searchProjectForm.get('search')?.valueChanges.subscribe(() => {
+      this.updateTable();
+    });
+
+    this.searchProjectForm.get('dueDate')?.valueChanges.subscribe(() => {
+      this.updateTable();
     });
   }
 
