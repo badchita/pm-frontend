@@ -1,4 +1,4 @@
-<nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.Updating">
+<nz-spin [nzSpinning]="isLoading && !isLoading.closed" [nzTip]="SPINNER_TIP.Updating">
   <div class="container">
     <div class="header">
       <span>{{ projectName }}: {{ projectIdNumber }}</span>
@@ -127,6 +127,8 @@
             class="publish-button"
             nzSize="large"
             nzShape="round"
+            [disabled]="editProjectForm.invalid"
+            (click)="publish()"
           >
             Publish
           </button>
