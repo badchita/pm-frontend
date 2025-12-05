@@ -2,7 +2,8 @@ export const SPINNER_TIP = {
   CreatingYourAccount: 'Creating your account...',
   LoggingYouIn: 'Logging you in...',
   Creating: 'Creating {{1}}...',
-  Updating: 'Updating {{1}}...'
+  Updating: 'Updating {{1}}...',
+  loadingData: 'Loading data...',
 };
 
 export const ALERT_MESAGE = {

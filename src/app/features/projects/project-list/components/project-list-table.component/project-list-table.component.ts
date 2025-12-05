@@ -42,7 +42,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 export class ProjectListTableComponent implements OnInit {
   readonly dataTable = input.required<DataTable<Project>>();
   readonly dataList = input.required<Project[] | []>();
-  readonly isLoading = input.required<Subscription>();
+  readonly loading = input.required<boolean>();
   readonly onUpdateTable = output<NzTableQueryParams>();
 
   private genericUtilityService = inject(GenericUtilityService);
