@@ -50,6 +50,7 @@
   >
     <thead>
       <tr>
+        <th nzWidth="15%">Project ID Number</th>
         <th nzWidth="15%">Project Name</th>
         <th nzWidth="35%">Description</th>
         <th nzWidth="15%" nzAlign="center">Status</th>
@@ -60,6 +61,7 @@
     <tbody>
       @for (data of table.data; track data.id) {
         <tr>
+          <td>{{ data.projectIdNumber }}</td>
           <td>{{ data.projectName }}</td>
           <td
             #description
