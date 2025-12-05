@@ -72,13 +72,8 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }
 
   loadProjects(params: NzTableQueryParams) {
-    this.tableParams = {
-      search: '',
-      isPublished: '',
-      page: params.pageIndex,
-      pageSize: params.pageSize,
-      sortDirection: 'desc',
-    };
+    this.tableParams.page =  params.pageIndex;
+    this.tableParams.pageSize =  params.pageSize;
 
     this.busy = this.projectService
       .getList(this.tableParams)
