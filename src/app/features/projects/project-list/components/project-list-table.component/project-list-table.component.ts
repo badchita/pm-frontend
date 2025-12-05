@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, OnInit, output } from '@angular/core';
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -9,6 +9,8 @@ import { Project } from '@app/shared/models/project.model';
 import { DataTable } from '@app/shared/models/data-table.model';
 import { DatePipe, I18nPluralPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-project-list-table',
@@ -20,19 +22,33 @@ import { Subscription } from 'rxjs';
     NzTooltipModule,
     I18nPluralPipe,
     DatePipe,
+    FormsModule,
+    NzInputModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './project-list-table.component.html',
   styleUrl: './project-list-table.component.scss',
 })
-export class ProjectListTableComponent {
+export class ProjectListTableComponent implements OnInit {
   readonly dataTable = input.required<DataTable<Project>>();
   readonly dataList = input.required<Project[] | []>();
   readonly isLoading = input.required<Subscription>();
   readonly onUpdateTable = output<NzTableQueryParams>();
 
+  private formBuilder = inject(FormBuilder);
+
   private router = inject(Router);
 
   showTooltipDescription = false;
+
+  searchProjectForm!: FormGroup;
+
+  ngOnInit() {
+    this.searchProjectForm = this.formBuilder.group({
+      search: [null],
+      description: [null],
+    });
+  }
 
   checkOverflow(el: HTMLElement) {
     this.showTooltipDescription = el.scrollWidth > el.clientWidth;
@@ -42,7 +58,16 @@ export class ProjectListTableComponent {
     this.router.navigate([`/portal/projects/${id}`]);
   }
 
-  updateTable(tableParams: NzTableQueryParams) {
+  updateTable(params?: NzTableQueryParams) {
+    const filter: NzTableQueryParams['filter'] = [{ ...this.searchProjectForm.getRawValue() }];
+
+    const tableParams: NzTableQueryParams = {
+      pageIndex: params?.pageIndex ?? this.dataTable().page,
+      pageSize: params?.pageSize ?? this.dataTable().pageSize,
+      sort: params?.sort ?? [],
+      filter: filter,
+    };
+
     this.onUpdateTable.emit(tableParams);
   }
 }

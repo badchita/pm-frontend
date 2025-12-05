@@ -26,8 +26,8 @@ export class ProjectService {
     return this.http.put<Project>(`${this.api}/${project.id}`, project);
   }
 
-  getList(tableParams: TableParams): Observable<DataTable<Project>> {
-    const params = this.tableUtilityService.buildParams(tableParams);
+  getList(tableParams: TableParams, filters: any): Observable<DataTable<Project>> {
+    const params = this.tableUtilityService.buildParams(tableParams, filters);
 
     return this.http.get<DataTable<Project>>(`${this.api}`, { params });
   }

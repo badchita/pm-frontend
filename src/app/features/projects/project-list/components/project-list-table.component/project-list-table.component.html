@@ -1,3 +1,8 @@
+<div class="filter-container">
+  <form [formGroup]="searchProjectForm" (submit)="updateTable()">
+    <input class="input-search" nz-input formControlName="search" placeholder="search" />
+  </form>
+</div>
 <div class="table-container">
   <nz-table
     #table
@@ -25,59 +30,49 @@
     </thead>
     <tbody>
       @for (data of table.data; track data) {
-        <tr>
-          <td>{{ data.projectName }}</td>
-          <td
-            #description
-            class="description"
-            nzEllipsis
-            nz-tooltip
-            nzTooltipPlacement="top"
-            [nzTooltipTitle]="showTooltipDescription ? data.description : null"
-            [nzTooltipVisible]="false"
-            [nzTooltipArrowPointAtCenter]="true"
-            [nzTooltipOverlayStyle]="{
-              'max-width': '600px',
-              'white-space': 'normal',
-              'word-break': 'break-word'
-            }"
-            (mouseenter)="checkOverflow(description)"
-          >
-            {{ data.description }}
-          </td>
-          <td nzAlign="center">
-            @if (data.isPublished == "Y") {
-              Active
-            } @else {
-              Inactive
-            }
-          </td>
-          <td nzAlign="center">{{ data.dueDate | date : 'MMM dd, yyyy' }}</td>
-          <td class="action-buttons" nzAlign="center">
-            <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
-              <nz-icon nzType="edit" nzTheme="outline" />
-            </button>
-            <nz-divider nzType="vertical"></nz-divider>
-            <button class="delete-button" nz-button nzType="link" nzDanger>
-              <nz-icon nzType="delete" nzTheme="outline" />
-            </button>
-          </td>
-        </tr>
+      <tr>
+        <td>{{ data.projectName }}</td>
+        <td
+          #description
+          class="description"
+          nzEllipsis
+          nz-tooltip
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="showTooltipDescription ? data.description : null"
+          [nzTooltipVisible]="false"
+          [nzTooltipArrowPointAtCenter]="true"
+          [nzTooltipOverlayStyle]="{
+            'max-width': '600px',
+            'white-space': 'normal',
+            'word-break': 'break-word'
+          }"
+          (mouseenter)="checkOverflow(description)"
+        >
+          {{ data.description }}
+        </td>
+        <td nzAlign="center">@if (data.isPublished == "Y") { Active } @else { Inactive }</td>
+        <td nzAlign="center">{{ data.dueDate | date : 'MMM dd, yyyy' }}</td>
+        <td class="action-buttons" nzAlign="center">
+          <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
+            <nz-icon nzType="edit" nzTheme="outline" />
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button class="delete-button" nz-button nzType="link" nzDanger>
+            <nz-icon nzType="delete" nzTheme="outline" />
+          </button>
+        </td>
+      </tr>
       }
     </tbody>
   </nz-table>
 </div>
 
 <ng-template #rangeTemplate let-range="range" let-total>
-  @if (total && dataList().length > 0) {
-    Showing
-    {{ (dataTable().page - 1) * dataTable().pageSize + 1 }}
-    to
-    {{ (dataTable().page - 1) * dataTable().pageSize + dataList().length }}
-    of {{ total }}
-    {{ total | i18nPlural : { '=1': 'project', other: 'projects' } }}
-  } @else {
-    Showing 0 of 0 projects
-  }
+  @if (total && dataList().length > 0) { Showing
+  {{ (dataTable().page - 1) * dataTable().pageSize + 1 }}
+  to
+  {{ (dataTable().page - 1) * dataTable().pageSize + dataList().length }}
+  of {{ total }}
+  {{ total | i18nPlural : { '=1': 'project', other: 'projects' } }}
+  } @else { Showing 0 of 0 projects }
 </ng-template>
-
