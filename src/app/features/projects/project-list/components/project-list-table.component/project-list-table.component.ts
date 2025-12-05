@@ -7,7 +7,7 @@ import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { Router } from '@angular/router';
 import { Project } from '@app/shared/models/project.model';
 import { DataTable } from '@app/shared/models/data-table.model';
-import { I18nPluralPipe } from '@angular/common';
+import { DatePipe, I18nPluralPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
     NzIconModule,
     NzTooltipModule,
     I18nPluralPipe,
+    DatePipe,
   ],
   templateUrl: './project-list-table.component.html',
   styleUrl: './project-list-table.component.scss',

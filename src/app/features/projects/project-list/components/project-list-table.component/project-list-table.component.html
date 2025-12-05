@@ -52,7 +52,7 @@
               Inactive
             }
           </td>
-          <td nzAlign="center">{{ data.dueDate }}</td>
+          <td nzAlign="center">{{ data.dueDate | date : 'MMM dd, yyyy' }}</td>
           <td class="action-buttons" nzAlign="center">
             <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
               <nz-icon nzType="edit" nzTheme="outline" />
