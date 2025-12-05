@@ -116,8 +116,20 @@
     height: 35px;
   }
 
-  .table-reset-button{
+  .reset-search-button {
     height: 35px;
     border-radius: 8px;
+  }
+
+  .select-search {
+    .ant-select-selector {
+      border-color: var(--pm-primary);
+      border-radius: 8px;
+      height: 35px;
+
+      .ant-select-selection-wrap {
+        width: 120px;
+      }
+    }
   }
 }

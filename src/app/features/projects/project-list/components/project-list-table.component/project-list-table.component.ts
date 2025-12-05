@@ -13,6 +13,9 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
+import { StatusOptions } from '@app/shared/enums/search.enum';
 
 @Component({
   selector: 'app-project-list-table',
@@ -29,6 +32,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     ReactiveFormsModule,
     NzDatePickerModule,
     NzButtonModule,
+    NzSelectModule,
   ],
   templateUrl: './project-list-table.component.html',
   styleUrl: './project-list-table.component.scss',
@@ -39,13 +43,14 @@ export class ProjectListTableComponent implements OnInit {
   readonly isLoading = input.required<Subscription>();
   readonly onUpdateTable = output<NzTableQueryParams>();
 
+  private genericUtilityService = inject(GenericUtilityService);
   private formBuilder = inject(FormBuilder);
-
   private router = inject(Router);
 
-  showTooltipDescription = false;
-
   searchProjectForm!: FormGroup;
+
+  showTooltipDescription = false;
+  statusOptions = this.genericUtilityService.objectToArray(StatusOptions);
 
   ngOnInit() {
     this.buildForm();
@@ -55,6 +60,7 @@ export class ProjectListTableComponent implements OnInit {
     this.searchProjectForm = this.formBuilder.group({
       search: [null],
       dueDate: [null],
+      isPublished: [null],
     });
 
     this.searchProjectForm.get('search')?.valueChanges.subscribe(() => {
@@ -62,6 +68,10 @@ export class ProjectListTableComponent implements OnInit {
     });
 
     this.searchProjectForm.get('dueDate')?.valueChanges.subscribe(() => {
+      this.updateTable();
+    });
+
+    this.searchProjectForm.get('isPublished')?.valueChanges.subscribe(() => {
       this.updateTable();
     });
   }

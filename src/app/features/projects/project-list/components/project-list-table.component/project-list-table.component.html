@@ -15,9 +15,23 @@
         ></nz-date-picker>
       </nz-form-control>
     </nz-form-item>
-    <button class="table-reset-button" nz-button (click)="reset()">Reset</button>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-select
+          class="select-search"
+          formControlName="isPublished"
+          name="select-error"
+          nzPlaceHolder="Select Status"
+          [nzAllowClear]="true"
+          [nzOptions]="statusOptions"
+        >
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <button class="reset-search-button" nz-button (click)="reset()">Reset</button>
   </form>
 </div>
+
 <div class="table-container">
   <nz-table
     #table
