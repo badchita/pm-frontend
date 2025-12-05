@@ -102,7 +102,6 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       isPublished: [null],
       isDeleted: [null],
       createdAt: [null],
-      progress: [null],
       dueDate: [null, RequiredValidator],
     });
   }
