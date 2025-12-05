@@ -86,4 +86,8 @@ export class ProjectListTableComponent implements OnInit {
 
     this.onUpdateTable.emit(tableParams);
   }
+
+  reset() {
+    this.searchProjectForm.reset();
+  }
 }
