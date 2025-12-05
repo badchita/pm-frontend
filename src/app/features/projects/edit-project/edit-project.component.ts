@@ -89,11 +89,6 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         this.isPublished = isPublished;
 
         this.editProjectForm.patchValue(project, { emitEvent: false });
-
-        if (isPublished === 'Y') {
-          this.editProjectForm.get('dueDate')?.addValidators(RequiredValidator);
-          this.editProjectForm.get('dueDate')?.updateValueAndValidity();
-        }
       });
   }
 
@@ -107,8 +102,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       isPublished: [null],
       isDeleted: [null],
       createdAt: [null],
-      progress: [null],
-      dueDate: [null],
+      dueDate: [null, RequiredValidator],
     });
   }
 
@@ -177,20 +171,20 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     );
 
     const id = this.editProjectForm.get('id')?.value;
+    const publishTitle = this.isPublished === 'N' ? 'Project Published' : 'Project Deactivated';
+    const publishMessage =
+      this.isPublished === 'N' ? 'ProjectFormPublishedSuccess' : 'ProjectFormDeactivatedSuccess';
 
     this.isLoading = this.projectService
-      .publish(id)
+      .publish(id, this.isPublished)
       .pipe(takeUntil(this._destroying$))
       .subscribe(
         (project) => {
           if (project) {
             this.notificationService.create(
               'success',
-              NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Project Published'),
-              NOTIFICATION_MESSAGE.ProjectFormPublishedSuccess.replace(
-                '{{1}}',
-                project.projectIdNumber
-              ),
+              NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', publishTitle),
+              NOTIFICATION_MESSAGE[publishMessage].replace('{{1}}', project.projectIdNumber),
               {
                 nzClass: 'form-notification',
                 nzDuration: 5000,

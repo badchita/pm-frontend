@@ -12,6 +12,5 @@ export interface Project {
   isPublished: string;
   isDeleted: string;
   createdAt: Date;
-  progress?: number;
   dueDate?: Date | string;
 }

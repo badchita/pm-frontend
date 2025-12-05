@@ -52,8 +52,13 @@
         }
 
         .publish-button {
-          color: #52c41a;
-          border-color: #52c41a;
+          color: var(--pm-green);
+          border-color: var(--pm-green);
+        }
+
+        .deactivate-button {
+          color: var(--pm-muted-grey);
+          border-color: var(--pm-muted-grey);
         }
       }
     }
