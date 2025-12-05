@@ -1,5 +1,5 @@
-import { Component, inject, input } from '@angular/core';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { Component, inject, input, output } from '@angular/core';
+import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Project } from '@app/shared/models/project.model';
 import { DataTable } from '@app/shared/models/data-table.model';
 import { I18nPluralPipe } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-project-list-table',
@@ -23,10 +24,12 @@ import { I18nPluralPipe } from '@angular/common';
   styleUrl: './project-list-table.component.scss',
 })
 export class ProjectListTableComponent {
-  private router = inject(Router);
-
   readonly dataTable = input.required<DataTable<Project>>();
   readonly dataList = input.required<Project[] | []>();
+  readonly isLoading = input.required<Subscription>();
+  readonly onUpdateTable = output<NzTableQueryParams>();
+
+  private router = inject(Router);
 
   showTooltipDescription = false;
 
@@ -36,5 +39,10 @@ export class ProjectListTableComponent {
 
   edit(id: number) {
     this.router.navigate([`/portal/projects/${id}`]);
+  }
+
+  updateTable(tableParams: NzTableQueryParams) {
+    console.log(tableParams);
+    this.onUpdateTable.emit(tableParams);
   }
 }

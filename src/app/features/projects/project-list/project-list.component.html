@@ -10,6 +10,8 @@
     <app-project-list-table
       [dataTable]="projectDataTable"
       [dataList]="projectDataTable.data.length > 0 ? projectDataTable.data : []"
+      [isLoading]="busy"
+      (onUpdateTable)="tableUpdate($event)"
     ></app-project-list-table>
   </div>
 </div>

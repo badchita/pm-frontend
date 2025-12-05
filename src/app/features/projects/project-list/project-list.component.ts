@@ -7,8 +7,9 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
 import { Project } from '@app/shared/models/project.model';
 import { ProjectService } from '../services/project.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-project-list',
@@ -41,8 +42,10 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     pageSize: 10,
   };
 
+  busy!: Subscription;
+
   ngOnInit() {
-    this.loadProjects();
+    // this.loadProjects();
   }
 
   addNewProject() {
@@ -68,13 +71,25 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadProjects() {
-    this.projectService
+  loadProjects(params: NzTableQueryParams) {
+    this.tableParams = {
+      search: '',
+      isPublished: '',
+      page: params.pageIndex,
+      pageSize: params.pageSize,
+      sortDirection: 'desc',
+    };
+
+    this.busy = this.projectService
       .getList(this.tableParams)
       .pipe(takeUntil(this._destroying$))
       .subscribe((dataTable) => {
         this.projectDataTable = dataTable;
       });
+  }
+
+  tableUpdate(tableParams: NzTableQueryParams) {
+    this.loadProjects(tableParams);
   }
 
   ngOnDestroy() {

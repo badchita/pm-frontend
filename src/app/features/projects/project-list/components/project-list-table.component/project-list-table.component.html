@@ -10,7 +10,8 @@
     [nzPageSizeOptions]="[10, 20, 30, 40, 50]"
     [nzTotal]="dataTable().totalCount"
     [nzPageSize]="dataTable().pageSize"
-    [nzLoading]="false"
+    [nzLoading]="isLoading() && !isLoading().closed"
+    (nzQueryParams)="updateTable($event)"
   >
     <thead>
       <tr>
