@@ -120,10 +120,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.spinnerTip = this.SPINNER_TIP.Updating.replace(
-      '{{1}}',
-      this.projectIdNumber ?? ''
-    );
+    this.spinnerTip = this.SPINNER_TIP.Updating.replace('{{1}}', this.projectIdNumber ?? '');
     const payload = this.editProjectForm.getRawValue();
 
     this.projectService
@@ -180,18 +177,15 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
   publish() {
     this.isLoading = true;
-    this.spinnerTip= this.SPINNER_TIP.Updating.replace(
-      '{{1}}',
-      this.projectIdNumber ?? ''
-    );
+    this.spinnerTip = this.SPINNER_TIP.Updating.replace('{{1}}', this.projectIdNumber ?? '');
 
-    const id = this.editProjectForm.get('id')?.value;
+    const payload = { ...this.editProjectForm.getRawValue() };
     const publishTitle = this.isPublished === 'N' ? 'Project Published' : 'Project Deactivated';
     const publishMessage =
       this.isPublished === 'N' ? 'ProjectFormPublishedSuccess' : 'ProjectFormDeactivatedSuccess';
 
     this.projectService
-      .publish(id, this.isPublished)
+      .publish(payload.id, this.isPublished, payload)
       .pipe(
         takeUntil(this._destroying$),
         finalize(() => {
