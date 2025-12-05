@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Project } from '@app/shared/models/project.model';
 import { DataTable } from '@app/shared/models/data-table.model';
 import { DatePipe, I18nPluralPipe } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -65,17 +65,20 @@ export class ProjectListTableComponent implements OnInit {
       isPublished: [null],
     });
 
-    this.searchProjectForm.get('search')?.valueChanges.subscribe(() => {
-      this.updateTable();
-    });
+    this.searchProjectForm
+      .get('search')
+      ?.valueChanges.pipe(debounceTime(500))
+      .subscribe(() => this.updateTable());
 
-    this.searchProjectForm.get('dueDate')?.valueChanges.subscribe(() => {
-      this.updateTable();
-    });
+    this.searchProjectForm
+      .get('dueDate')
+      ?.valueChanges.pipe(debounceTime(500))
+      .subscribe(() => this.updateTable());
 
-    this.searchProjectForm.get('isPublished')?.valueChanges.subscribe(() => {
-      this.updateTable();
-    });
+    this.searchProjectForm
+      .get('isPublished')
+      ?.valueChanges.pipe(debounceTime(500))
+      .subscribe(() => this.updateTable());
   }
 
   checkOverflow(el: HTMLElement) {
@@ -87,10 +90,13 @@ export class ProjectListTableComponent implements OnInit {
   }
 
   updateTable(params?: NzTableQueryParams) {
-    const filter: NzTableQueryParams['filter'] = [{ ...this.searchProjectForm.getRawValue() }];
+    const searchFormValues = this.searchProjectForm.getRawValue();
+    const isFiltering =
+      searchFormValues.search || searchFormValues.description || searchFormValues.dueDate;
+    const filter: NzTableQueryParams['filter'] = [{ ...searchFormValues }];
 
     const tableParams: NzTableQueryParams = {
-      pageIndex: params?.pageIndex ?? this.dataTable().page,
+      pageIndex: isFiltering ? 1 : params?.pageIndex ?? this.dataTable().page,
       pageSize: params?.pageSize ?? this.dataTable().pageSize,
       sort: params?.sort ?? [],
       filter: filter,
