@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ProjectListTableComponent } from './components/project-list-table.component/project-list-table.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
@@ -17,7 +17,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
 })
-export class ProjectListComponent implements OnInit, OnDestroy {
+export class ProjectListComponent implements OnDestroy {
   private modalService = inject(NzModalService);
   private notificationService = inject(NzNotificationService);
   private projectService = inject(ProjectService);
@@ -44,10 +44,6 @@ export class ProjectListComponent implements OnInit, OnDestroy {
 
   busy!: Subscription;
 
-  ngOnInit() {
-    // this.loadProjects();
-  }
-
   addNewProject() {
     const modal = this.modalService.create({
       nzContent: CreateProjectModalComponent,
@@ -72,8 +68,8 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }
 
   loadProjects(params: NzTableQueryParams) {
-    this.tableParams.page =  params.pageIndex;
-    this.tableParams.pageSize =  params.pageSize;
+    this.tableParams.page = params.pageIndex;
+    this.tableParams.pageSize = params.pageSize;
 
     this.busy = this.projectService
       .getList(this.tableParams)
