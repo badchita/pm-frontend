@@ -9,7 +9,7 @@ import { NzTypographyComponent } from 'ng-zorro-antd/typography';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/shared/services/api/auth.service';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import {
   ALERT_DESCRIPTION,
   ALERT_MESAGE,
@@ -52,8 +52,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private router = inject(Router);
 
   private _destroying$ = new Subject<void>();
+
   registerForm!: FormGroup;
-  isLoading = false;
+  isLoading!: Subscription;
 
   SPINNER_TIP = SPINNER_TIP;
   ALERT_MESAGE = ALERT_MESAGE;
@@ -76,16 +77,14 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   register() {
-    this.isLoading = true;
     this.hasError = false;
     const payload = this.registerForm.getRawValue();
 
-    this.authService
+    this.isLoading = this.authService
       .register(payload)
       .pipe(takeUntil(this._destroying$))
       .subscribe(
         (response) => {
-          this.isLoading = false;
           this.hasError = false;
 
           if (response) {
@@ -93,7 +92,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          this.isLoading = false;
           this.hasError = true;
 
           switch (error.status) {

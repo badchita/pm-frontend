@@ -17,7 +17,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private _destroying$ = new Subject<void>();
 
   loginForm!: FormGroup;
-  isLoading = false;
+  isLoading!: Subscription;
 
   SPINNER_TIP = SPINNER_TIP;
   ALERT_MESAGE = ALERT_MESAGE;
@@ -80,22 +80,19 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.isLoading = true;
     this.showNotAuthAlert = false;
     const payload = this.loginForm.getRawValue();
 
-    this.authService
+    this.isLoading = this.authService
       .login(payload)
       .pipe(takeUntil(this._destroying$))
       .subscribe(
         (response) => {
-          this.isLoading = false;
           this.authService.setAccessToken(response.token);
           this.authService.setUserDetails(response.user);
           this.router.navigate(['/portal']);
         },
         (error) => {
-          this.isLoading = false;
           this.hasError = true;
           switch (error.status) {
             case 0:
