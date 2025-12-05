@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TableParams } from '../models/data-table.model';
 import { HttpParams } from '@angular/common/http';
-import { filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +16,6 @@ export class TableUtilityService {
     }
 
     if (filters) {
-      console.log(filters)
       Object.keys(filters).forEach((key) => {
         let value = filters[key];
         if (value !== undefined && value !== null && value !== '') {
@@ -33,9 +31,9 @@ export class TableUtilityService {
               break;
             }
             default: {
-              // if (value instanceof Date) {
-              //   params = params.set(key, format(value, DATE_FORMAT.ISO_DATE));
-              // }
+              if (value instanceof Date) {
+                params = params.set(key, value.toISOString());
+              }
               if (value instanceof Array) {
                 value.forEach((item) => (params = params.append(key, item)));
               }

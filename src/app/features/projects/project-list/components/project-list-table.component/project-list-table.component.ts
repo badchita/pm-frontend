@@ -10,7 +10,9 @@ import { DataTable } from '@app/shared/models/data-table.model';
 import { DatePipe, I18nPluralPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 @Component({
   selector: 'app-project-list-table',
@@ -22,9 +24,11 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
     NzTooltipModule,
     I18nPluralPipe,
     DatePipe,
-    FormsModule,
+    NzFormModule,
     NzInputModule,
     ReactiveFormsModule,
+    NzDatePickerModule,
+    NzButtonModule
   ],
   templateUrl: './project-list-table.component.html',
   styleUrl: './project-list-table.component.scss',
@@ -46,7 +50,7 @@ export class ProjectListTableComponent implements OnInit {
   ngOnInit() {
     this.searchProjectForm = this.formBuilder.group({
       search: [null],
-      description: [null],
+      dueDate: [null],
     });
   }
 
