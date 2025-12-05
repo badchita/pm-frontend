@@ -7,7 +7,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
 import { Project } from '@app/shared/models/project.model';
 import { ProjectService } from '../services/project.service';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { finalize, Subject, Subscription, takeUntil } from 'rxjs';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
@@ -42,7 +42,7 @@ export class ProjectListComponent implements OnDestroy {
     pageSize: 10,
   };
 
-  busy!: Subscription;
+  isLoading = false;
 
   addNewProject() {
     const modal = this.modalService.create({
@@ -68,13 +68,19 @@ export class ProjectListComponent implements OnDestroy {
   }
 
   loadProjects(params: NzTableQueryParams) {
+    this.isLoading = true;
     this.tableParams.page = params.pageIndex;
     this.tableParams.pageSize = params.pageSize;
     const filters = Object.assign({}, ...params.filter);
 
-    this.busy = this.projectService
+    this.projectService
       .getList(this.tableParams, filters)
-      .pipe(takeUntil(this._destroying$))
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
       .subscribe((dataTable) => {
         this.projectDataTable = dataTable;
       });

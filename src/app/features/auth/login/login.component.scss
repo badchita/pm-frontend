@@ -4,6 +4,10 @@
   align-items: center;
   justify-content: center;
 
+  .pm-alert {
+    width: 450px;
+  }
+
   nz-card {
     background-color: var(--pm-secondary);
     width: 450px;

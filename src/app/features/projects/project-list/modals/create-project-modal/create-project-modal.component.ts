@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { finalize, Subject, Subscription, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { NzModalRef } from 'ng-zorro-antd/modal';
@@ -39,11 +39,11 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
   ALERT_DESCRIPTION = ALERT_DESCRIPTION;
 
   createProjectForm!: FormGroup;
-  isLoading!: Subscription;
 
+  isLoading = false;
   hasError = false;
   alertDetails: AlertType = {
-    type: 'info',
+    type: 'error',
     message: '',
     description: '',
   };
@@ -60,12 +60,18 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
   }
 
   create() {
-    this.SPINNER_TIP.Creating = this.SPINNER_TIP.Updating.replace('{{1}}', 'Project');
+    this.isLoading = true;
+    this.SPINNER_TIP.Creating = this.SPINNER_TIP.Creating.replace('{{1}}', 'Project');
     const payload = this.createProjectForm.getRawValue();
 
-    this.isLoading = this.projectService
+    this.projectService
       .create(payload)
-      .pipe(takeUntil(this._destroying$))
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
       .subscribe(
         (project) => {
           if (project) {
@@ -74,6 +80,7 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.hasError = true;
+
           switch (error.status) {
             case 0:
               this.alertDetails = {

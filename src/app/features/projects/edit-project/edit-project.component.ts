@@ -9,7 +9,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../services/project.service';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
   ALERT_DESCRIPTION,
@@ -54,13 +54,14 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   projectIdNumber!: string;
   isPublished!: string;
 
-  isLoading!: Subscription;
+  isLoading = false;
   hasError = false;
   alertDetails: AlertType = {
     type: 'info',
     message: '',
     description: '',
   };
+  spinnerTip!: string;
 
   SPINNER_TIP = SPINNER_TIP;
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;
@@ -69,6 +70,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   ALERT_DESCRIPTION = ALERT_DESCRIPTION;
 
   ngOnInit() {
+    this.spinnerTip = SPINNER_TIP.loadingData;
     this.buildForm();
 
     this.route.paramMap.subscribe((params) => {
@@ -78,9 +80,16 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   }
 
   loadProject(id: string) {
+    this.isLoading = true;
+
     this.projectService
       .getById(+id)
-      .pipe(takeUntil(this._destroying$))
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
       .subscribe((project) => {
         const { projectName, projectIdNumber, isPublished } = project;
 
@@ -111,15 +120,20 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.SPINNER_TIP.Updating = this.SPINNER_TIP.Updating.replace(
+    this.spinnerTip = this.SPINNER_TIP.Updating.replace(
       '{{1}}',
       this.projectIdNumber ?? ''
     );
     const payload = this.editProjectForm.getRawValue();
 
-    this.isLoading = this.projectService
+    this.projectService
       .update(payload)
-      .pipe(takeUntil(this._destroying$))
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
       .subscribe(
         (project) => {
           if (project) {
@@ -165,7 +179,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   }
 
   publish() {
-    this.SPINNER_TIP.Updating = this.SPINNER_TIP.Updating.replace(
+    this.isLoading = true;
+    this.spinnerTip= this.SPINNER_TIP.Updating.replace(
       '{{1}}',
       this.projectIdNumber ?? ''
     );
@@ -175,9 +190,14 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     const publishMessage =
       this.isPublished === 'N' ? 'ProjectFormPublishedSuccess' : 'ProjectFormDeactivatedSuccess';
 
-    this.isLoading = this.projectService
+    this.projectService
       .publish(id, this.isPublished)
-      .pipe(takeUntil(this._destroying$))
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
       .subscribe(
         (project) => {
           if (project) {
