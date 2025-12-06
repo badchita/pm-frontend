@@ -80,7 +80,6 @@ export class ProjectListComponent implements OnDestroy {
     const filters = Object.assign({}, ...params.filter);
     this.tableParams.sort = params.sort;
 
-    console.log(this.tableParams);
     this.projectService
       .getList(this.tableParams, filters)
       .pipe(
