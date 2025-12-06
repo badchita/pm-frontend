@@ -12,7 +12,17 @@ export class TableUtilityService {
     if (tableParams) {
       params = params.set('page', encodeURIComponent(tableParams.page));
       params = params.set('pageSize', encodeURIComponent(tableParams.pageSize));
-      params = params.set('sortDirection', encodeURIComponent(tableParams.sortDirection));
+
+      if (tableParams.sort?.length) {
+        const activeSort = tableParams.sort.find((s) => s.value);
+
+        if (activeSort && activeSort.value) {
+          const direction = activeSort.value.replace('end', '');
+
+          params = params.set('sortBy', activeSort.key);
+          params = params.set('sortDirection', direction);
+        }
+      }
     }
 
     if (filters) {
