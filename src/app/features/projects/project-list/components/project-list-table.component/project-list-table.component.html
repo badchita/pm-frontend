@@ -7,24 +7,14 @@
     </nz-form-item>
     <nz-form-item>
       <nz-form-control>
-        <nz-date-picker
-          class="input-search"
-          formControlName="dueDate"
-          nzFormat="MMM dd, yyyy"
-          nzPlaceHolder="Search Due Date"
-        ></nz-date-picker>
+        <nz-date-picker class="input-search" formControlName="dueDate" nzFormat="MMM dd, yyyy"
+          nzPlaceHolder="Search Due Date"></nz-date-picker>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-control>
-        <nz-select
-          class="select-search"
-          formControlName="isPublished"
-          name="select-error"
-          nzPlaceHolder="Select Status"
-          [nzAllowClear]="true"
-          [nzOptions]="statusOptions"
-        >
+        <nz-select class="select-search" formControlName="isPublished" name="select-error" nzPlaceHolder="Select Status"
+          [nzAllowClear]="true" [nzOptions]="statusOptions">
         </nz-select>
       </nz-form-control>
     </nz-form-item>
@@ -33,21 +23,10 @@
 </div>
 
 <div class="table-container">
-  <nz-table
-    #table
-    class="table"
-    nzTableLayout="fixed"
-    [nzData]="dataList() || []"
-    [nzShowPagination]="true"
-    [nzFrontPagination]="false"
-    [nzShowSizeChanger]="true"
-    [nzShowTotal]="rangeTemplate"
-    [nzPageSizeOptions]="[10, 20, 30, 40, 50]"
-    [nzTotal]="dataTable().totalCount"
-    [nzPageSize]="dataTable().pageSize"
-    [nzLoading]="loading()"
-    (nzQueryParams)="updateTable($event)"
-  >
+  <nz-table #table class="table" nzTableLayout="fixed" [nzData]="dataList() || []" [nzShowPagination]="true"
+    [nzFrontPagination]="false" [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate"
+    [nzPageSizeOptions]="[10, 20, 30, 40, 50]" [nzTotal]="dataTable().totalCount" [nzPageSize]="dataTable().pageSize"
+    [nzLoading]="loading()" (nzQueryParams)="updateTable($event)">
     <thead>
       <tr>
         <th nzWidth="15%" [nzSortFn]="true" nzColumnKey="projectIdNumber">Project ID Number</th>
@@ -60,46 +39,37 @@
     </thead>
     <tbody>
       @for (data of table.data; track data.id) {
-        <tr>
-          <td>{{ data.projectIdNumber }}</td>
-          <td>{{ data.projectName }}</td>
-          <td
-            #description
-            class="description"
-            nzEllipsis
-            nz-tooltip
-            nzTooltipPlacement="top"
-            [nzTooltipTitle]="showTooltipDescription ? data.description : null"
-            [nzTooltipVisible]="false"
-            [nzTooltipArrowPointAtCenter]="true"
-            [nzTooltipOverlayStyle]="{
+      <tr>
+        <td>{{ data.projectIdNumber }}</td>
+        <td>{{ data.projectName }}</td>
+        <td #description class="description" nzEllipsis nz-tooltip nzTooltipPlacement="top"
+          [nzTooltipTitle]="showTooltipDescription ? data.description : null" [nzTooltipVisible]="false"
+          [nzTooltipArrowPointAtCenter]="true" [nzTooltipOverlayStyle]="{
               'max-width': '600px',
               'white-space': 'normal',
               'word-break': 'break-word'
-            }"
-            (mouseenter)="checkOverflow(description)"
-          >
-            {{ data.description }}
-          </td>
-          <td nzAlign="center">
-            @if (data.isPublished == "Y") {
-              <nz-tag nzColor="success">Active</nz-tag>
-            } @else
-            {
-              <nz-tag nzColor="default">Inactive</nz-tag>
-            }
-          </td>
-          <td nzAlign="center">{{ data.dueDate | date : 'MMM dd, yyyy' }}</td>
-          <td class="action-buttons" nzAlign="center">
-            <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
-              <nz-icon nzType="edit" nzTheme="outline" />
-            </button>
-            <nz-divider nzType="vertical"></nz-divider>
-            <button class="delete-button" nz-button nzType="link" nzDanger>
-              <nz-icon nzType="delete" nzTheme="outline" />
-            </button>
-          </td>
-        </tr>
+            }" (mouseenter)="checkOverflow(description)">
+          {{ data.description }}
+        </td>
+        <td nzAlign="center">
+          @if (data.isPublished == "Y") {
+          <nz-tag nzColor="success">Active</nz-tag>
+          } @else
+          {
+          <nz-tag nzColor="default">Inactive</nz-tag>
+          }
+        </td>
+        <td nzAlign="center">{{ data.dueDate | date : 'MMM dd, yyyy' }}</td>
+        <td class="table-action-buttons" nzAlign="center">
+          <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
+            <nz-icon nzType="edit" nzTheme="outline" />
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button class="delete-button" nz-button nzType="link" nzDanger>
+            <nz-icon nzType="delete" nzTheme="outline" />
+          </button>
+        </td>
+      </tr>
       }
     </tbody>
   </nz-table>
@@ -107,10 +77,10 @@
 
 <ng-template #rangeTemplate let-range="range" let-total>
   @if (total && dataList().length > 0) { Showing
-    {{ (dataTable().page - 1) * dataTable().pageSize + 1 }}
-    to
-    {{ (dataTable().page - 1) * dataTable().pageSize + dataList().length }}
-    of {{ total }}
-    {{ total | i18nPlural : { '=1': 'project', other: 'projects' } }}
+  {{ (dataTable().page - 1) * dataTable().pageSize + 1 }}
+  to
+  {{ (dataTable().page - 1) * dataTable().pageSize + dataList().length }}
+  of {{ total }}
+  {{ total | i18nPlural : { '=1': 'project', other: 'projects' } }}
   } @else { Showing 0 of 0 projects }
 </ng-template>

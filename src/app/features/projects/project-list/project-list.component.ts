@@ -40,14 +40,12 @@ export class ProjectListComponent implements OnDestroy {
     pageSize: 10,
     sortDirection: 'desc',
   };
-
   projectDataTable: DataTable<Project> = {
     data: [],
     totalCount: 0,
     page: 1,
     pageSize: 10,
   };
-
   isLoading = false;
 
   addNewProject() {

@@ -23,6 +23,7 @@ import { RequiredValidator } from '@app/shared/constants/validators';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { TaskListTableComponent } from './components/task-list-table.component/task-list-table.component';
+import { DataTable } from '@app/shared/models/data-table.model';
 
 @Component({
   selector: 'app-edit-project',
@@ -64,6 +65,34 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     description: '',
   };
   spinnerTip!: string;
+  taskListTable: DataTable<any> = {
+    data: [
+      {
+        id: 1,
+        taskName: 'Create new Item',
+        taskIdNumber: 'T-001',
+        assignedTo: 'Joh Doe',
+        state: 'New',
+      },
+      {
+        id: 2,
+        taskName: 'Update Controller',
+        taskIdNumber: 'T-002',
+        assignedTo: 'Joseph James',
+        state: 'New',
+      },
+      {
+        id: 3,
+        taskName: 'Delete Database',
+        taskIdNumber: 'T-003',
+        assignedTo: 'Rain',
+        state: 'New',
+      },
+    ],
+    totalCount: 0,
+    page: 1,
+    pageSize: 10,
+  };
 
   SPINNER_TIP = SPINNER_TIP;
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;

@@ -3,22 +3,16 @@
     <div class="header">
       <span>{{ projectName }}: {{ projectIdNumber }}</span>
       @if (isPublished === 'Y') {
-        <nz-tag nzColor="success">Active</nz-tag>
+      <nz-tag nzColor="success">Active</nz-tag>
       } @else {
-        <nz-tag nzColor="default">In Active</nz-tag>
+      <nz-tag nzColor="default">In Active</nz-tag>
       }
     </div>
 
     <div class="content">
       @if (hasError) {
-        <nz-alert
-          class="pm-alert"
-          nzBanner
-          nzShowIcon
-          [nzType]="alertDetails.type"
-          [nzMessage]="alertDetails.message"
-          [nzDescription]="alertDetails.description"
-        ></nz-alert>
+      <nz-alert class="pm-alert" nzBanner nzShowIcon [nzType]="alertDetails.type" [nzMessage]="alertDetails.message"
+        [nzDescription]="alertDetails.description"></nz-alert>
       }
 
       <form nz-form nzLayout="vertical" [formGroup]="editProjectForm">
@@ -28,14 +22,8 @@
               <nz-form-label class="portal-input-label" nzRequired>Project Name</nz-form-label>
               <nz-form-control>
                 <nz-input-wrapper>
-                  <input
-                    class="portal-input-form"
-                    type="text"
-                    nz-input
-                    formControlName="projectName"
-                    nzSize="large"
-                    appPopoverFormValidator
-                  />
+                  <input class="portal-input-form" type="text" nz-input formControlName="projectName" nzSize="large"
+                    appPopoverFormValidator />
                 </nz-input-wrapper>
               </nz-form-control>
             </nz-form-item>
@@ -45,14 +33,8 @@
               <nz-form-label class="portal-input-label">Project Id Number</nz-form-label>
               <nz-form-control>
                 <nz-input-wrapper>
-                  <input
-                    class="portal-input-form"
-                    type="text"
-                    nz-input
-                    formControlName="projectIdNumber"
-                    nzSize="large"
-                    appPopoverFormValidator
-                  />
+                  <input class="portal-input-form" type="text" nz-input formControlName="projectIdNumber" nzSize="large"
+                    appPopoverFormValidator />
                 </nz-input-wrapper>
               </nz-form-control>
             </nz-form-item>
@@ -65,14 +47,8 @@
               <nz-form-label class="portal-input-label">Created By</nz-form-label>
               <nz-form-control>
                 <nz-input-wrapper>
-                  <input
-                    class="portal-input-form"
-                    type="text"
-                    nz-input
-                    formControlName="createdBy"
-                    nzSize="large"
-                    appPopoverFormValidator
-                  />
+                  <input class="portal-input-form" type="text" nz-input formControlName="createdBy" nzSize="large"
+                    appPopoverFormValidator />
                 </nz-input-wrapper>
               </nz-form-control>
             </nz-form-item>
@@ -81,11 +57,8 @@
             <nz-form-item>
               <nz-form-label class="portal-input-label" nzRequired>Due Date</nz-form-label>
               <nz-form-control class="due-date-control">
-                <nz-date-picker
-                  class="portal-input-form"
-                  formControlName="dueDate"
-                  nzFormat="MMM dd, yyyy"
-                ></nz-date-picker>
+                <nz-date-picker class="portal-input-form" formControlName="dueDate"
+                  nzFormat="MMM dd, yyyy"></nz-date-picker>
               </nz-form-control>
             </nz-form-item>
           </nz-col>
@@ -97,63 +70,38 @@
               <nz-form-label class="portal-input-label" nzRequired>Descripton</nz-form-label>
               <nz-form-control>
                 <nz-textarea-count [nzMaxCharacterCount]="2000">
-                  <textarea
-                    class="portal-input-textarea-form"
-                    formControlName="description"
-                    nz-input
-                    [nzAutosize]="{ minRows: 5, maxRows: 10 }"
-                    appPopoverFormValidator
-                  ></textarea>
+                  <textarea class="portal-input-textarea-form" formControlName="description" nz-input
+                    [nzAutosize]="{ minRows: 5, maxRows: 10 }" appPopoverFormValidator></textarea>
                 </nz-textarea-count>
               </nz-form-control>
             </nz-form-item>
           </nz-col>
         </nz-row>
 
-      <div class="header task-header">
-        <span>Task List</span>
-        <button nz-button nzShape="round" nzType="primary">
-          Add New Project
-        </button>
-      </div>
+        <div class="header task-header">
+          <span>Task List</span>
+          <button nz-button nzShape="round" nzType="primary">
+            Add New Project
+          </button>
+        </div>
 
-      <div class="task-table-containter">
-        <app-task-list-table></app-task-list-table>
-      </div>
+        <app-task-list-table [dataTable]="taskListTable" [dataList]="taskListTable.data"
+          [loading]="isLoading"></app-task-list-table>
 
         <div class="buttons-form-container">
-          <button
-            nz-button
-            class="create-button"
-            nzSize="large"
-            nzShape="round"
-            [nzType]="'primary'"
-            [disabled]="editProjectForm.invalid"
-            (click)="save()"
-          >
+          <button nz-button class="create-button" nzSize="large" nzShape="round" [nzType]="'primary'"
+            [disabled]="editProjectForm.invalid" (click)="save()">
             Save
           </button>
           @if (isPublished === 'N') {
-            <button
-              nz-button
-              class="publish-button"
-              nzSize="large"
-              nzShape="round"
-              [disabled]="editProjectForm.invalid"
-              (click)="publish()"
-            >
-              Publish
-            </button>
+          <button nz-button class="publish-button" nzSize="large" nzShape="round" [disabled]="editProjectForm.invalid"
+            (click)="publish()">
+            Publish
+          </button>
           } @else {
-            <button
-              nz-button
-              class="deactivate-button"
-              nzSize="large"
-              nzShape="round"
-              (click)="publish()"
-            >
-              Deactivate
-            </button>
+          <button nz-button class="deactivate-button" nzSize="large" nzShape="round" (click)="publish()">
+            Deactivate
+          </button>
           }
           <button nz-button class="close-button" nzSize="large" nzShape="round" (click)="close()">
             Close

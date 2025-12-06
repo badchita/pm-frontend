@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Project } from '@app/shared/models/project.model';
 import { DataTable } from '@app/shared/models/data-table.model';
 import { DatePipe, I18nPluralPipe } from '@angular/common';
-import { debounceTime, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
