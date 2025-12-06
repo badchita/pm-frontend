@@ -30,6 +30,12 @@ export class ProjectListComponent implements OnDestroy {
   tableParams: TableParams = {
     search: '',
     isPublished: '',
+    sort: [
+      {
+        key: '',
+        value: '',
+      },
+    ],
     page: 1,
     pageSize: 10,
     sortDirection: 'desc',
@@ -72,6 +78,7 @@ export class ProjectListComponent implements OnDestroy {
     this.tableParams.page = params.pageIndex;
     this.tableParams.pageSize = params.pageSize;
     const filters = Object.assign({}, ...params.filter);
+    this.tableParams.sort = params.sort;
 
     this.projectService
       .getList(this.tableParams, filters)

@@ -50,11 +50,11 @@
   >
     <thead>
       <tr>
-        <th nzWidth="15%">Project ID Number</th>
-        <th nzWidth="15%">Project Name</th>
+        <th nzWidth="15%" [nzSortFn]="true" nzColumnKey="projectIdNumber">Project ID Number</th>
+        <th nzWidth="15%" [nzSortFn]="true" nzColumnKey="projectName">Project Name</th>
         <th nzWidth="35%">Description</th>
         <th nzWidth="15%" nzAlign="center">Status</th>
-        <th nzWidth="15%" nzAlign="center">Due Date</th>
+        <th nzWidth="15%" nzAlign="center" [nzSortFn]="true" nzColumnKey="dueDate">Due Date</th>
         <th nzWidth="10%" nzAlign="center">Actions</th>
       </tr>
     </thead>

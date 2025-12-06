@@ -134,4 +134,8 @@
       }
     }
   }
+
+  .ant-table-thead th.ant-table-column-has-sorters:hover {
+    background-color: var(--pm-primary);
+  }
 }
