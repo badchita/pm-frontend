@@ -22,6 +22,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { RequiredValidator } from '@app/shared/constants/validators';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { TaskListTableComponent } from './components/task-list-table.component/task-list-table.component';
 
 @Component({
   selector: 'app-edit-project',
@@ -36,6 +37,7 @@ import { NzAlertModule } from 'ng-zorro-antd/alert';
     NzButtonModule,
     NzSpinModule,
     NzAlertModule,
+    TaskListTableComponent,
   ],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss',

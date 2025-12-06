@@ -7,13 +7,13 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
 import { Project } from '@app/shared/models/project.model';
 import { ProjectService } from '../services/project.service';
-import { finalize, Subject, Subscription, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-project-list',
-  imports: [ProjectListTableComponent, NzButtonModule, NzModalModule],
+  imports: [ProjectListTableComponent, NzButtonModule, NzModalModule,],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
 })

@@ -1,0 +1,12 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "[html]": {
+    "editor.tabSize": 2
+  },
+  "[angular]": {
+    "editor.tabSize": 2
+  },
+  "prettier.tabWidth": 2,
+  "prettier.useTabs": false
+}
