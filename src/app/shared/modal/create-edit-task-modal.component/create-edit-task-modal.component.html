@@ -1,1 +1,67 @@
-<p>create-edit-task-modal.component works!</p>
+<div *nzModalTitle></div>
+
+<form nz-form nzLayout="vertical" [formGroup]="createEditTaskForm">
+  <nz-row>
+    <nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-wrapper>
+            <input class="portal-input-form" type="text" nz-input formControlName="taskName" nzSize="large"
+              placeholder="Task Name" appPopoverFormValidator />
+          </nz-input-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+  <nz-row class="assign-row">
+    <nz-col nzSpan="8">
+      <nz-form-item>
+        <nz-form-control>
+          <nz-select class="select-search" nzSuffixIcon="user" formControlName="assignedTo"
+            nzPlaceHolder="No one selected" [nzAllowClear]="true">
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzSpan="8">
+      <span nz-typography>
+        <a>
+          <nz-icon nzType="comment" nzTheme="outline" />
+          0 Comments
+        </a>
+      </span>
+    </nz-col>
+    <nz-col>
+      <button nz-button class="save-button" nzSize="small" [nzType]="'primary'">
+        <nz-icon nzType="save" nzTheme="outline" />
+        Save
+      </button>
+      <button nz-button class="history-button" nzSize="default" nzType="link">
+        <nz-icon nzType="sync" nzTheme="outline" />
+      </button>
+    </nz-col>
+  </nz-row>
+  <nz-row class="state-row">
+    <nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-control>
+          <nz-select class="select-search" nzSuffixIcon="user" formControlName="assignedTo"
+            nzPlaceHolder="State" [nzAllowClear]="true">
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+  </nz-row>
+</form>
+
+<ng-template [nzModalTitle]>
+  <div class="title-container">
+    <span>
+      Create new task
+    </span>
+
+    <button nz-button nzType="link">
+      <nz-icon nzType="fullscreen" nzTheme="outline" />
+    </button>
+  </div>
+</ng-template>

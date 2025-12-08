@@ -1,0 +1,22 @@
+:host {
+  padding: 0px;
+  .assign-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .save-button {
+    border-radius: 4px;
+  }
+
+  .history-button {
+    color: var(--pm-muted-grey);
+  }
+
+  .state-row {
+    nz-form-item {
+      display: flex;
+      align-items: center;
+    }
+  }
+}

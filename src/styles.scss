@@ -78,6 +78,18 @@
       border-radius: 24px;
       .ant-modal-title {
         color: #840bdc;
+
+
+        .title-container {
+          flex: 1;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          nz-icon {
+            color: rgba(0, 0, 0, 0.45);
+          }
+        }
       }
     }
   }

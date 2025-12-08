@@ -276,6 +276,9 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       nzContent: CreateEditTaskModalComponent,
       nzClassName: 'create-modal',
       nzFooter: null,
+      nzClosable: false,
+      nzWidth: '1000px',
+      // nzCentered: true
     });
   }
 
