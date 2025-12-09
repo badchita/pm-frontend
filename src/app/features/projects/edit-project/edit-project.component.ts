@@ -25,7 +25,7 @@ import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { TaskListTableComponent } from './components/task-list-table.component/task-list-table.component';
 import { DataTable } from '@app/shared/models/data-table.model';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { CreateEditTaskModalComponent } from '@app/shared/modal/create-edit-task-modal.component/create-edit-task-modal.component';
+import { CreateEditTaskModalComponent } from '@app/shared/modal/create-edit-task-modal/create-edit-task-modal.component';
 
 @Component({
   selector: 'app-edit-project',
@@ -278,7 +278,6 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       nzFooter: null,
       nzClosable: false,
       nzWidth: '1000px',
-      // nzCentered: true
     });
   }
 

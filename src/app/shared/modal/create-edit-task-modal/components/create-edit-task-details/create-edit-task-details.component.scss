@@ -1,0 +1,29 @@
+.rich-text {
+  display: block;
+  width: 100%;
+}
+
+.bubble-rich-text:hover {
+  border: 1px solid #ccc;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+
+  span {
+    padding-right: 20px;
+    font-size: 16px;
+    line-height: 32px;
+  }
+
+  .description-buttons {
+    nz-icon {
+      color: var(--pm-primary);
+    }
+  }
+}
