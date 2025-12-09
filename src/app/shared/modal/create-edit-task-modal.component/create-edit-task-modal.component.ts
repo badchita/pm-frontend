@@ -35,16 +35,26 @@ export class CreateEditTaskModalComponent implements OnInit {
 
   createEditTaskForm!: FormGroup;
 
-  modules = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link', 'image'],
-    ],
+  quillToolbar = [
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link', 'image'],
+  ];
+  descriptionQuillmodules = {
+    toolbar: this.quillToolbar,
+  };
+  acceptanceCriteriaQuillmodules = {
+    toolbar: this.quillToolbar,
   };
   descriptionTheme = 'bubble';
-  showRichText = true;
-  hideRichText = false;
+  acceptanceCriteriaTheme = 'bubble';
+  showDescriptionRichText = true;
+  showAcceptanceCriteriaRichText = true;
+  hideDescriptionRichText = false;
+  hideDescription = false;
+  hideacceptanceCriteriaRichText = false;
+  hideacceptanceCriteria = false;
+  hideOtherCol = false;
   richTextSpan = 12;
   hoverdInputs = {
     title: false,
@@ -62,10 +72,11 @@ export class CreateEditTaskModalComponent implements OnInit {
       assignedTo: [null],
       state: [null],
       description: [null],
+      acceptanceCriteria: [null],
     });
   }
 
-  onInputFocus(input?: string) {
+  onInputFocus(input: string) {
     switch (input) {
       case 'title':
         this.hoverdInputs.title = true;
@@ -76,16 +87,24 @@ export class CreateEditTaskModalComponent implements OnInit {
       case 'state':
         this.hoverdInputs.state = true;
         break;
-      default:
+      case 'description':
         if (this.descriptionTheme === 'snow') return;
 
         this.descriptionTheme = 'snow';
 
-        this.reRenderEditor();
+        this.reRenderEditor(input);
+        break;
+      case 'acceptanceCriteria':
+        if (this.acceptanceCriteriaTheme === 'snow') return;
+
+        this.acceptanceCriteriaTheme = 'snow';
+
+        this.reRenderEditor(input);
+        break;
     }
   }
 
-  onInputBlur(input?: string) {
+  onInputBlur(input: string) {
     switch (input) {
       case 'title':
         this.hoverdInputs.title = false;
@@ -96,18 +115,47 @@ export class CreateEditTaskModalComponent implements OnInit {
       case 'state':
         this.hoverdInputs.state = false;
         break;
-      default:
+      case 'description':
         if (this.descriptionTheme === 'bubble') return;
 
         this.descriptionTheme = 'bubble';
 
-        this.reRenderEditor();
+        this.reRenderEditor(input);
+        break;
+      case 'acceptanceCriteria':
+        if (this.acceptanceCriteriaTheme === 'bubble') return;
+
+        this.acceptanceCriteriaTheme = 'bubble';
+
+        this.reRenderEditor(input);
+        break;
     }
   }
 
-  private reRenderEditor() {
-    this.showRichText = false;
+  expandMinimizeRichText(richText: string, isExpand: boolean) {
+    if (richText === 'description') {
+      this.richTextSpan = isExpand ? 24 : 12;
+      this.hideOtherCol = isExpand;
+      this.hideacceptanceCriteria = isExpand;
+      return;
+    }
+
+    this.richTextSpan = isExpand ? 24 : 12;
+    this.hideOtherCol = isExpand;
+    this.hideDescription = isExpand;
+  }
+
+  private reRenderEditor(richTextInput: string) {
+    if (richTextInput === 'description') {
+      this.showDescriptionRichText = false;
+      this.changeDetectorRef.detectChanges();
+      this.showDescriptionRichText = true;
+
+      return;
+    }
+
+    this.showAcceptanceCriteriaRichText = false;
     this.changeDetectorRef.detectChanges();
-    this.showRichText = true;
+    this.showAcceptanceCriteriaRichText = true;
   }
 }

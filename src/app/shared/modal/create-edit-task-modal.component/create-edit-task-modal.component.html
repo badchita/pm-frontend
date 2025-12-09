@@ -47,9 +47,9 @@
     <nz-col nzSpan="6">
       <nz-form-item>
         <nz-form-control>
-          <nz-select [class]="hoverdInputs.state ? 'select-search' : 'create-edit-select-form'"
-            formControlName="state" nzPlaceHolder="State" [nzAllowClear]="true"
-            (nzFocus)="onInputFocus('state')" (nzBlur)="onInputBlur('state')">
+          <nz-select [class]="hoverdInputs.assignedTo ? 'select-search' : 'create-edit-select-form'"
+            formControlName="state" nzPlaceHolder="State" [nzAllowClear]="true" (nzFocus)="onInputFocus('state')"
+            (nzBlur)="onInputBlur('state')">
           </nz-select>
         </nz-form-control>
       </nz-form-item>
@@ -57,39 +57,93 @@
   </nz-row>
   <nz-row>
     <nz-col [nzSpan]="richTextSpan">
+      @if (!hideDescription) {
       <div class="header">
         <span>Description</span>
         <div class="description-buttons">
           @if (richTextSpan === 12) {
-          <button nz-button nzSize="default" nzType="link" (click)="richTextSpan = 24">
+          <button nz-button nzSize="default" nzType="link" (click)="expandMinimizeRichText('description', true)">
             <nz-icon nzType="expand-alt" nzTheme="outline" />
           </button>
           } @else {
-          <button nz-button nzSize="default" nzType="link" (click)="richTextSpan = 12">
+          <button nz-button nzSize="default" nzType="link" (click)="expandMinimizeRichText('description', false)">
             <nz-icon nzType="shrink" nzTheme="outline" />
           </button>
           }
-          @if (!hideRichText) {
-          <button nz-button nzSize="default" nzType="link" (click)="hideRichText=true">
+          @if (!hideDescriptionRichText) {
+          <button nz-button nzSize="default" nzType="link" (click)="hideDescriptionRichText=true">
             <nz-icon nzType="up" nzTheme="outline" />
           </button>
           } @else {
-          <button nz-button nzSize="default" nzType="link" (click)="hideRichText=false">
+          <button nz-button nzSize="default" nzType="link" (click)="hideDescriptionRichText=false">
             <nz-icon nzType="down" nzTheme="outline" />
           </button>
           }
         </div>
       </div>
+      @if (!hideDescriptionRichText) {
+      <nz-form-item>
+        <nz-form-control>
+          @if (showDescriptionRichText) {
+          <quill-editor class="rich-text" [class]="descriptionTheme === 'bubble' ? 'bubble-rich-text' : ''"
+            formControlName="description" [modules]="descriptionQuillmodules" [theme]="descriptionTheme"
+            placeholder="description..." (onFocus)="onInputFocus('description')" (onBlur)="onInputBlur('description')">
+          </quill-editor>
+          }
+        </nz-form-control>
+      </nz-form-item>
+      }
+      }
+
+      @if (!hideacceptanceCriteria) {
+      <div class="header">
+        <span>Acceptance Criteria</span>
+        <div class="description-buttons">
+          @if (richTextSpan === 12) {
+          <button nz-button nzSize="default" nzType="link" (click)="expandMinimizeRichText('acceptanceCriteria', true)">
+            <nz-icon nzType="expand-alt" nzTheme="outline" />
+          </button>
+          } @else {
+          <button nz-button nzSize="default" nzType="link"
+            (click)="expandMinimizeRichText('acceptanceCriteria', false)">
+            <nz-icon nzType="shrink" nzTheme="outline" />
+          </button>
+          }
+          @if (!hideacceptanceCriteriaRichText) {
+          <button nz-button nzSize="default" nzType="link" (click)="hideacceptanceCriteriaRichText=true">
+            <nz-icon nzType="up" nzTheme="outline" />
+          </button>
+          } @else {
+          <button nz-button nzSize="default" nzType="link" (click)="hideacceptanceCriteriaRichText=false">
+            <nz-icon nzType="down" nzTheme="outline" />
+          </button>
+          }
+        </div>
+      </div>
+      @if (!hideacceptanceCriteriaRichText) {
+      <nz-form-item>
+        <nz-form-control>
+          @if (showAcceptanceCriteriaRichText) {
+          <quill-editor class="rich-text" [class]="acceptanceCriteriaTheme === 'bubble' ? 'bubble-rich-text' : ''"
+            formControlName="acceptanceCriteria" [modules]="acceptanceCriteriaQuillmodules"
+            [theme]="acceptanceCriteriaTheme" placeholder="acceptance criteria..."
+            (onFocus)="onInputFocus('acceptanceCriteria')" (onBlur)="onInputBlur('acceptanceCriteria')">
+          </quill-editor>
+          }
+        </nz-form-control>
+      </nz-form-item>
+      }
+      }
     </nz-col>
   </nz-row>
-  @if (!hideRichText) {
+  <!-- @if (!hideDescriptionRichText) {
   <nz-row>
     <nz-col [nzSpan]="richTextSpan">
       <nz-form-item>
         <nz-form-control>
-          @if (showRichText) {
+          @if (showDescriptionRichText) {
           <quill-editor class="rich-text" [class]="descriptionTheme === 'bubble' ? 'bubble-rich-text' : ''"
-            formControlName="description" [modules]="modules" [theme]="descriptionTheme" placeholder="description..."
+            formControlName="description" [modules]="descriptionQuillmodules" [theme]="descriptionTheme" placeholder="description..."
             (onFocus)="onInputFocus()" (onBlur)="onInputBlur()">
           </quill-editor>
           }
@@ -97,7 +151,7 @@
       </nz-form-item>
     </nz-col>
   </nz-row>
-  }
+  } -->
 </form>
 
 <ng-template [nzModalTitle]>
