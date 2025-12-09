@@ -196,4 +196,31 @@
   .create-edit-task-tabs > .ant-tabs-nav .ant-tabs-nav-wrap {
     justify-content: end;
   }
+
+  .create-edit-input-form {
+    border: none;
+    height: 52px;
+    border-radius: 10px;
+  }
+
+  .create-edit-input-form:hover {
+    border: 1px solid var(--pm-primary);
+  }
+
+  .create-edit-task-date-picker {
+    border: none;
+    width: 200px;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .ant-picker-focused,
+  .create-edit-task-date-picker:hover {
+    border: 1px solid var(--pm-primary);
+    border-radius: 8px;
+  }
+
+  .create-edit-task-date-picker:hover {
+    width: 200px;
+  }
 }

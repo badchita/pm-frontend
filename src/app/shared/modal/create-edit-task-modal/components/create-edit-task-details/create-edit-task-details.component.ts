@@ -4,6 +4,8 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { QuillModule } from 'ngx-quill';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 @Component({
   selector: 'app-create-edit-task-details',
@@ -14,6 +16,8 @@ import { QuillModule } from 'ngx-quill';
     QuillModule,
     ReactiveFormsModule,
     NzFormModule,
+    NzInputModule,
+    NzDatePickerModule,
   ],
   templateUrl: './create-edit-task-details.component.html',
   styleUrl: './create-edit-task-details.component.scss',
@@ -45,10 +49,24 @@ export class CreateEditTaskDetailsComponent {
   hideacceptanceCriteriaRichText = false;
   hideacceptanceCriteria = false;
   hideOtherCol = false;
-  richTextSpan = 12;
+  richTextSpan = 13;
+  hoverdInputs = {
+    taskPoints: false,
+    readyForDevelopmentDate: false,
+    doneDate: false,
+  };
 
   onInputFocus(input: string) {
     switch (input) {
+      case 'taskPoints':
+        this.hoverdInputs.taskPoints = true;
+        break;
+      case 'readyForDevelopmentDate':
+        this.hoverdInputs.readyForDevelopmentDate = true;
+        break;
+      case 'doneDate':
+        this.hoverdInputs.doneDate = true;
+        break;
       case 'description':
         if (this.descriptionTheme === 'snow') return;
 
@@ -68,6 +86,15 @@ export class CreateEditTaskDetailsComponent {
 
   onInputBlur(input: string) {
     switch (input) {
+      case 'taskPoints':
+        this.hoverdInputs.taskPoints = false;
+        break;
+      case 'readyForDevelopmentDate':
+        this.hoverdInputs.readyForDevelopmentDate = false;
+        break;
+      case 'doneDate':
+        this.hoverdInputs.doneDate = false;
+        break;
       case 'description':
         if (this.descriptionTheme === 'bubble') return;
 
@@ -87,13 +114,13 @@ export class CreateEditTaskDetailsComponent {
 
   expandMinimizeRichText(richText: string, isExpand: boolean) {
     if (richText === 'description') {
-      this.richTextSpan = isExpand ? 24 : 12;
+      this.richTextSpan = isExpand ? 24 : 13;
       this.hideOtherCol = isExpand;
       this.hideacceptanceCriteria = isExpand;
       return;
     }
 
-    this.richTextSpan = isExpand ? 24 : 12;
+    this.richTextSpan = isExpand ? 24 : 13;
     this.hideOtherCol = isExpand;
     this.hideDescription = isExpand;
   }

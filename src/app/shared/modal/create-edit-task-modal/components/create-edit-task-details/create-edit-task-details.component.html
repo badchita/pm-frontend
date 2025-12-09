@@ -1,11 +1,11 @@
 <div [formGroup]="taskDetailForm()">
-  <nz-row>
+  <nz-row class="details-row">
     <nz-col [nzSpan]="richTextSpan">
       @if (!hideDescription) {
       <div class="header">
         <span>Description</span>
         <div class="description-buttons">
-          @if (richTextSpan === 12) {
+          @if (richTextSpan === 13) {
           <button nz-button nzSize="default" nzType="link" (click)="expandMinimizeRichText('description', true)">
             <nz-icon nzType="expand-alt" nzTheme="outline" />
           </button>
@@ -44,7 +44,7 @@
       <div class="header">
         <span>Acceptance Criteria</span>
         <div class="description-buttons">
-          @if (richTextSpan === 12) {
+          @if (richTextSpan === 13) {
           <button nz-button nzSize="default" nzType="link" (click)="expandMinimizeRichText('acceptanceCriteria', true)">
             <nz-icon nzType="expand-alt" nzTheme="outline" />
           </button>
@@ -81,5 +81,47 @@
       }
       }
     </nz-col>
+    @if (!hideOtherCol) {
+    <nz-col nzSpan="5">
+      <div class="header">
+        <span>Planning</span>
+      </div>
+      <nz-form-item>
+        <nz-form-label>Task Points</nz-form-label>
+        <nz-form-control>
+          <nz-input-wrapper>
+            <input [class]="hoverdInputs.taskPoints ? 'portal-input-form' : 'create-edit-input-form'" type="text"
+              nz-input formControlName="taskPoints" nzSize="large" appPopoverFormValidator
+              (focus)="onInputFocus('taskPoints')" (blur)="onInputBlur('taskPoints')" />
+          </nz-input-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Ready For Development Date</nz-form-label>
+        <nz-form-control>
+          <nz-date-picker
+            [class]="hoverdInputs.readyForDevelopmentDate ? 'input-search' : 'create-edit-task-date-picker'"
+            formControlName="readyForDevelopmentDate" nzFormat="MMM dd, yyyy"
+            (focus)="onInputFocus('readyForDevelopmentDate')"
+            (blur)="onInputBlur('readyForDevelopmentDate')"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Done Date</nz-form-label>
+        <nz-form-control>
+          <nz-date-picker
+            [class]="hoverdInputs.doneDate ? 'input-search' : 'create-edit-task-date-picker'"
+            formControlName="doneDate" nzFormat="MMM dd, yyyy"
+            (focus)="onInputFocus('doneDate')"
+            (blur)="onInputBlur('doneDate')"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-col>
+    <nz-col nzSpan="5">
+      <div class="header">
+        <span>Testing</span>
+      </div>
+    </nz-col>
+    }
   </nz-row>
 </div>
