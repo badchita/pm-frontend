@@ -9,7 +9,7 @@
   }
 
   .history-button {
-    color: var(--pm-muted-grey);
+    color: var(--pm-primary);
   }
 
   .state-row {
@@ -45,6 +45,28 @@
     .description-buttons {
       nz-icon {
         color: var(--pm-primary);
+      }
+    }
+  }
+
+  .create-edit-input-form {
+    border: none;
+    height: 52px;
+    border-radius: 10px;
+  }
+
+  .create-edit-input-form:hover {
+    border: 1px solid var(--pm-primary);
+  }
+
+  .create-edit-select-form {
+    .ant-select-selector {
+      border: none;
+      border-radius: 8px;
+      height: 35px;
+
+      .ant-select-selection-wrap {
+        width: 120px;
       }
     }
   }

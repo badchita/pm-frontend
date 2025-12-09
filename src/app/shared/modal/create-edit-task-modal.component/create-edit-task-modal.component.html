@@ -6,8 +6,9 @@
       <nz-form-item>
         <nz-form-control>
           <nz-input-wrapper>
-            <input class="portal-input-form" type="text" nz-input formControlName="taskName" nzSize="large"
-              placeholder="Task Name" appPopoverFormValidator />
+            <input [class]="hoverdInputs.title ? 'portal-input-form' : 'create-edit-input-form'" type="text" nz-input
+              formControlName="taskName" nzSize="large" placeholder="Task Name" appPopoverFormValidator
+              (focus)="onInputFocus('title')" (blur)="onInputBlur('title')" />
           </nz-input-wrapper>
         </nz-form-control>
       </nz-form-item>
@@ -17,8 +18,9 @@
     <nz-col nzSpan="8">
       <nz-form-item>
         <nz-form-control>
-          <nz-select class="select-search" nzSuffixIcon="user" formControlName="assignedTo"
-            nzPlaceHolder="No one selected" [nzAllowClear]="true">
+          <nz-select [class]="hoverdInputs.assignedTo ? 'select-search' : 'create-edit-select-form'" nzSuffixIcon="user"
+            formControlName="assignedTo" nzPlaceHolder="No one selected" [nzAllowClear]="true"
+            (nzFocus)="onInputFocus('assignedTo')" (nzBlur)="onInputBlur('assignedTo')">
           </nz-select>
         </nz-form-control>
       </nz-form-item>
@@ -45,8 +47,9 @@
     <nz-col nzSpan="6">
       <nz-form-item>
         <nz-form-control>
-          <nz-select class="select-search" nzSuffixIcon="user" formControlName="assignedTo" nzPlaceHolder="State"
-            [nzAllowClear]="true">
+          <nz-select [class]="hoverdInputs.state ? 'select-search' : 'create-edit-select-form'"
+            formControlName="state" nzPlaceHolder="State" [nzAllowClear]="true"
+            (nzFocus)="onInputFocus('state')" (nzBlur)="onInputBlur('state')">
           </nz-select>
         </nz-form-control>
       </nz-form-item>
@@ -87,7 +90,7 @@
           @if (showRichText) {
           <quill-editor class="rich-text" [class]="descriptionTheme === 'bubble' ? 'bubble-rich-text' : ''"
             formControlName="description" [modules]="modules" [theme]="descriptionTheme" placeholder="description..."
-            (onFocus)="onDescriptionFocus()" (onBlur)="onDescriptionBlur()">
+            (onFocus)="onInputFocus()" (onBlur)="onInputBlur()">
           </quill-editor>
           }
         </nz-form-control>

@@ -81,7 +81,6 @@
       .ant-modal-title {
         color: #840bdc;
 
-
         .title-container {
           flex: 1;
           display: flex;
@@ -161,5 +160,28 @@
     .edit-button {
       color: #1890ff;
     }
+  }
+
+  .ant-input:focus {
+    box-shadow: none;
+  }
+
+  .create-edit-select-form {
+    .ant-select-selector {
+      border: none;
+      border-radius: 8px;
+      height: 35px;
+
+      .ant-select-selection-wrap {
+        width: 120px;
+      }
+    }
+  }
+
+  .ant-select:not(.ant-select-disabled).ant-select-focused .ant-select-selector {
+    box-shadow: none;
+    border-color: var(--pm-primary);
+    border-radius: 8px;
+    height: 35px;
   }
 }

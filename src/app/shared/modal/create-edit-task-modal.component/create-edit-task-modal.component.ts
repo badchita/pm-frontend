@@ -46,6 +46,11 @@ export class CreateEditTaskModalComponent implements OnInit {
   showRichText = true;
   hideRichText = false;
   richTextSpan = 12;
+  hoverdInputs = {
+    title: false,
+    assignedTo: false,
+    state: false,
+  };
 
   ngOnInit() {
     this.buildForm();
@@ -55,26 +60,49 @@ export class CreateEditTaskModalComponent implements OnInit {
     this.createEditTaskForm = this.formBuilder.group({
       taskName: [null],
       assignedTo: [null],
+      state: [null],
       description: [null],
     });
   }
 
-  onDescriptionFocus() {
-    if (this.descriptionTheme === 'snow') return;
+  onInputFocus(input?: string) {
+    switch (input) {
+      case 'title':
+        this.hoverdInputs.title = true;
+        break;
+      case 'assignedTo':
+        this.hoverdInputs.assignedTo = true;
+        break;
+      case 'state':
+        this.hoverdInputs.state = true;
+        break;
+      default:
+        if (this.descriptionTheme === 'snow') return;
 
-    this.descriptionTheme = 'snow';
+        this.descriptionTheme = 'snow';
 
-    this.reRenderEditor();
-    console.log('focus', this.descriptionTheme);
+        this.reRenderEditor();
+    }
   }
 
-  onDescriptionBlur() {
-    if (this.descriptionTheme === 'bubble') return;
+  onInputBlur(input?: string) {
+    switch (input) {
+      case 'title':
+        this.hoverdInputs.title = false;
+        break;
+      case 'assignedTo':
+        this.hoverdInputs.assignedTo = false;
+        break;
+      case 'state':
+        this.hoverdInputs.state = false;
+        break;
+      default:
+        if (this.descriptionTheme === 'bubble') return;
 
-    this.descriptionTheme = 'bubble';
+        this.descriptionTheme = 'bubble';
 
-    this.reRenderEditor();
-    console.log('blur', this.descriptionTheme);
+        this.reRenderEditor();
+    }
   }
 
   private reRenderEditor() {
