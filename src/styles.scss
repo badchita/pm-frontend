@@ -184,4 +184,16 @@
     border-radius: 8px;
     height: 35px;
   }
+
+  .ant-tabs-tab:hover {
+    color: var(--pm-primary);
+  }
+
+  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: var(--pm-primary);
+  }
+
+  .create-edit-task-tabs > .ant-tabs-nav .ant-tabs-nav-wrap {
+    justify-content: end;
+  }
 }

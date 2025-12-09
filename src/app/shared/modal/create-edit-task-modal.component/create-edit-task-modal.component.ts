@@ -10,6 +10,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { QuillModule } from 'ngx-quill';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
 
 @Component({
   selector: 'app-create-edit-task-modal',
@@ -25,6 +26,7 @@ import { QuillModule } from 'ngx-quill';
     NzGridModule,
     NzTypographyModule,
     QuillModule,
+    NzTabsModule,
   ],
   templateUrl: './create-edit-task-modal.component.html',
   styleUrl: './create-edit-task-modal.component.scss',
@@ -61,6 +63,14 @@ export class CreateEditTaskModalComponent implements OnInit {
     assignedTo: false,
     state: false,
   };
+  tabs = [
+    {
+      name: 'Details',
+    },
+    {
+      icon: 'redo',
+    },
+  ];
 
   ngOnInit() {
     this.buildForm();
