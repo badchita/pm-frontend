@@ -54,6 +54,8 @@ export class CreateEditTaskDetailsComponent {
     taskPoints: false,
     readyForDevelopmentDate: false,
     doneDate: false,
+    testingStartDate: false,
+    testingEndDate: false,
   };
 
   onInputFocus(input: string) {
@@ -66,6 +68,12 @@ export class CreateEditTaskDetailsComponent {
         break;
       case 'doneDate':
         this.hoverdInputs.doneDate = true;
+        break;
+      case 'testingStartDate':
+        this.hoverdInputs.testingStartDate = true;
+        break;
+      case 'testingEndDate':
+        this.hoverdInputs.testingEndDate = true;
         break;
       case 'description':
         if (this.descriptionTheme === 'snow') return;
@@ -94,6 +102,12 @@ export class CreateEditTaskDetailsComponent {
         break;
       case 'doneDate':
         this.hoverdInputs.doneDate = false;
+        break;
+      case 'testingStartDate':
+        this.hoverdInputs.testingStartDate = false;
+        break;
+      case 'testingEndDate':
+        this.hoverdInputs.testingEndDate = false;
         break;
       case 'description':
         if (this.descriptionTheme === 'bubble') return;

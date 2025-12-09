@@ -64,6 +64,8 @@ export class CreateEditTaskModalComponent implements OnInit {
       taskPoints: [null],
       readyForDevelopmentDate: [null],
       doneDate: [null],
+      testingStartDate: [null],
+      testingEndDate: [null],
     });
   }
 

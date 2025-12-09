@@ -109,10 +109,8 @@
       <nz-form-item>
         <nz-form-label>Done Date</nz-form-label>
         <nz-form-control>
-          <nz-date-picker
-            [class]="hoverdInputs.doneDate ? 'input-search' : 'create-edit-task-date-picker'"
-            formControlName="doneDate" nzFormat="MMM dd, yyyy"
-            (focus)="onInputFocus('doneDate')"
+          <nz-date-picker [class]="hoverdInputs.doneDate ? 'input-search' : 'create-edit-task-date-picker'"
+            formControlName="doneDate" nzFormat="MMM dd, yyyy" (focus)="onInputFocus('doneDate')"
             (blur)="onInputBlur('doneDate')"></nz-date-picker>
         </nz-form-control>
       </nz-form-item>
@@ -121,6 +119,23 @@
       <div class="header">
         <span>Testing</span>
       </div>
+      <nz-form-item>
+        <nz-form-label>Testing Start Date</nz-form-label>
+        <nz-form-control>
+          <nz-date-picker [class]="hoverdInputs.testingStartDate ? 'input-search' : 'create-edit-task-date-picker'"
+            formControlName="testingStartDate" nzFormat="MMM dd, yyyy" (focus)="onInputFocus('testingStartDate')"
+            (blur)="onInputBlur('testingStartDate')"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Testing End Date</nz-form-label>
+        <nz-form-control>
+          <nz-date-picker [class]="hoverdInputs.testingEndDate ? 'input-search' : 'create-edit-task-date-picker'"
+            formControlName="testingEndDate" nzFormat="MMM dd, yyyy" (focus)="onInputFocus('testingEndDate')"
+            (blur)="onInputBlur('testingEndDate')"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
     </nz-col>
     }
   </nz-row>
