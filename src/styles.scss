@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import '../node_modules/quill/dist/quill.snow.css';
+@import '../node_modules/quill/dist/quill.bubble.css';
 :root {
   --pm-primary: #840bdc;
   --pm-secondary: #e3cef2;
@@ -78,6 +80,17 @@
       border-radius: 24px;
       .ant-modal-title {
         color: #840bdc;
+
+        .title-container {
+          flex: 1;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          nz-icon {
+            color: rgba(0, 0, 0, 0.45);
+          }
+        }
       }
     }
   }
@@ -147,5 +160,67 @@
     .edit-button {
       color: #1890ff;
     }
+  }
+
+  .ant-input:focus {
+    box-shadow: none;
+  }
+
+  .create-edit-select-form {
+    .ant-select-selector {
+      border: none;
+      border-radius: 8px;
+      height: 35px;
+
+      .ant-select-selection-wrap {
+        width: 120px;
+      }
+    }
+  }
+
+  .ant-select:not(.ant-select-disabled).ant-select-focused .ant-select-selector {
+    box-shadow: none;
+    border-color: var(--pm-primary);
+    border-radius: 8px;
+    height: 35px;
+  }
+
+  .ant-tabs-tab:hover {
+    color: var(--pm-primary);
+  }
+
+  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: var(--pm-primary);
+  }
+
+  .create-edit-task-tabs > .ant-tabs-nav .ant-tabs-nav-wrap {
+    justify-content: end;
+  }
+
+  .create-edit-input-form {
+    border: none;
+    height: 52px;
+    border-radius: 10px;
+  }
+
+  .create-edit-input-form:hover {
+    border: 1px solid var(--pm-primary);
+  }
+
+  .create-edit-task-date-picker {
+    border: none;
+    width: 200px;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .ant-picker-focused,
+  .create-edit-task-date-picker:hover {
+    border: 1px solid var(--pm-primary);
+    border-radius: 8px;
+  }
+
+  .create-edit-task-date-picker:hover {
+    width: 200px;
   }
 }

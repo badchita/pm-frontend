@@ -24,6 +24,8 @@ import { AlertType } from '@app/shared/models/alert.model';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { TaskListTableComponent } from './components/task-list-table.component/task-list-table.component';
 import { DataTable } from '@app/shared/models/data-table.model';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { CreateEditTaskModalComponent } from '@app/shared/modal/create-edit-task-modal/create-edit-task-modal.component';
 
 @Component({
   selector: 'app-edit-project',
@@ -39,6 +41,7 @@ import { DataTable } from '@app/shared/models/data-table.model';
     NzSpinModule,
     NzAlertModule,
     TaskListTableComponent,
+    NzModalModule,
   ],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss',
@@ -46,6 +49,7 @@ import { DataTable } from '@app/shared/models/data-table.model';
 export class EditProjectComponent implements OnInit, OnDestroy {
   private projectService = inject(ProjectService);
   private notificationService = inject(NzNotificationService);
+  private modalService = inject(NzModalService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -265,6 +269,16 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           }
         }
       );
+  }
+
+  addNewTask() {
+    const modal = this.modalService.create({
+      nzContent: CreateEditTaskModalComponent,
+      nzClassName: 'create-modal',
+      nzFooter: null,
+      nzClosable: false,
+      nzWidth: '1000px',
+    });
   }
 
   ngOnDestroy() {
