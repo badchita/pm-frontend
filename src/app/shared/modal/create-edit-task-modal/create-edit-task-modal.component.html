@@ -1,5 +1,3 @@
-<div *nzModalTitle></div>
-
 <form nz-form nzLayout="vertical" [formGroup]="createEditTaskForm">
   <nz-row>
     <nz-col nzSpan="24">
@@ -73,15 +71,3 @@
     }
   </nz-tabs>
 </form>
-
-<ng-template [nzModalTitle]>
-  <div class="title-container">
-    <span>
-      Create new task
-    </span>
-
-    <button nz-button nzType="link">
-      <nz-icon nzType="fullscreen" nzTheme="outline" />
-    </button>
-  </div>
-</ng-template>
