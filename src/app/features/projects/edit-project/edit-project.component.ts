@@ -277,7 +277,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       nzClassName: 'create-modal',
       nzFooter: null,
       nzWidth: '1000px',
-      nzTitle: 'Create task'
+      nzTitle: 'Create task',
+      nzCentered: true
     });
   }
 

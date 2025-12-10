@@ -1,0 +1,20 @@
+import { Project } from './project.model';
+
+export interface Task {
+  id: number;
+  taskName: string;
+  description: string;
+  acceptanceCriteria: string;
+  assignedTo: string;
+  taskPoints: number;
+  taskIdNumber: string;
+  state: number;
+  readyForDevelopmentDate: Date;
+  doneDate: Date;
+  testingStartDate: Date;
+  testingEndDate: Date;
+  createdBy: string;
+  updatedBy: string;
+  projectId: number;
+  project: Project;
+}
