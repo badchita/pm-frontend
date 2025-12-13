@@ -1,4 +1,4 @@
-<form nz-form nzLayout="vertical" [formGroup]="createEditTaskForm">
+<form nz-form [formGroup]="createEditTaskForm">
   <nz-row>
     <nz-col nzSpan="24">
       <nz-form-item>
@@ -45,8 +45,8 @@
     <nz-col nzSpan="6">
       <nz-form-item>
         <nz-form-control>
-          <nz-select [class]="hoverdInputs.state ? 'select-search' : 'create-edit-select-form'"
-            formControlName="state" nzPlaceHolder="State" [nzAllowClear]="true" (nzFocus)="onInputFocus('state')"
+          <nz-select [class]="hoverdInputs.state ? 'select-search' : 'create-edit-select-form'" formControlName="state"
+            nzPlaceHolder="State" [nzOptions]="stateOptions" [nzAllowClear]="true" (nzFocus)="onInputFocus('state')"
             (nzBlur)="onInputBlur('state')">
           </nz-select>
         </nz-form-control>

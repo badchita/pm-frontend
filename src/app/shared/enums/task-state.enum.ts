@@ -11,8 +11,8 @@ export enum State {
 export const TaskStateOptions: Record<State, string> = {
   [State.New]: 'New',
   [State.Refinement]: 'Refinement',
-  [State.ReadyForDevelopment]: 'ReadyForDevelopment',
-  [State.InProgress]: 'InProgress',
+  [State.ReadyForDevelopment]: 'Ready For Development',
+  [State.InProgress]: 'In Progress',
   [State.Testing]: 'Testing',
   [State.Deployed]: 'Deployed',
   [State.Closed]: 'Closed',

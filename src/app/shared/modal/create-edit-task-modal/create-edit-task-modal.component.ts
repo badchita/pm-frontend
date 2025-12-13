@@ -11,6 +11,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { CreateEditTaskDetailsComponent } from './components/create-edit-task-details/create-edit-task-details.component';
+import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
+import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
 
 @Component({
   selector: 'app-create-edit-task-modal',
@@ -32,6 +34,7 @@ import { CreateEditTaskDetailsComponent } from './components/create-edit-task-de
   styleUrl: './create-edit-task-modal.component.scss',
 })
 export class CreateEditTaskModalComponent implements OnInit {
+  private genericUtilityService = inject(GenericUtilityService);
   private formBuilder = inject(FormBuilder);
 
   createEditTaskForm!: FormGroup;
@@ -49,6 +52,7 @@ export class CreateEditTaskModalComponent implements OnInit {
       icon: 'redo',
     },
   ];
+  stateOptions = this.genericUtilityService.objectToArray(TaskStateOptions, false, true);
 
   ngOnInit() {
     this.buildForm();
@@ -58,7 +62,7 @@ export class CreateEditTaskModalComponent implements OnInit {
     this.createEditTaskForm = this.formBuilder.group({
       taskName: [null],
       assignedTo: [null],
-      state: [null],
+      state: [0],
       description: [null],
       acceptanceCriteria: [null],
       taskPoints: [null],
