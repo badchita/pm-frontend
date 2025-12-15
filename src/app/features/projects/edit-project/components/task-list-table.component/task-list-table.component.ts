@@ -2,6 +2,7 @@ import { I18nPluralPipe } from '@angular/common';
 import { Component, inject, input, output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DataTable } from '@app/shared/models/data-table.model';
+import { Task } from '@app/shared/models/task.model';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -23,13 +24,14 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 })
 export class TaskListTableComponent {
   readonly dataTable = input.required<DataTable<any>>();
-  readonly dataList = input.required<any[] | []>();
+  readonly dataList = input.required<Task[] | []>();
   readonly loading = input.required<boolean>();
   readonly onUpdateTable = output<NzTableQueryParams>();
 
   private formBuilder = inject(FormBuilder);
 
   searchProjectTaskForm!: FormGroup;
+  dataTaskList!: Task[];
 
   ngOnInit() {
     this.buildForm();

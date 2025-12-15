@@ -28,6 +28,9 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { CreateEditTaskModalComponent } from '@app/shared/modal/create-edit-task-modal/create-edit-task-modal.component';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { TaskStateColorOptions, TaskStateOptions } from '@app/shared/enums/task-state.enum';
+import { NzSelectOptionInterface } from 'ng-zorro-antd/select';
+import { Task } from '@app/shared/models/task.model';
 
 @Component({
   selector: 'app-edit-project',
@@ -73,7 +76,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     description: '',
   };
   spinnerTip!: string;
-  taskDataTable: DataTable<any> = {
+  taskDataTable: DataTable<Task> = {
     data: [],
     totalCount: 0,
     page: 1,
@@ -92,6 +95,9 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     pageSize: 10,
     sortDirection: 'desc',
   };
+
+  stateColorOptions = this.genericUtilityService.objectToArray(TaskStateColorOptions, false, true);
+  stateOptions = this.genericUtilityService.objectToArray(TaskStateOptions, false, true);
   SPINNER_TIP = SPINNER_TIP;
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;
   NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
@@ -129,6 +135,11 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           this.editProjectForm.patchValue(project, { emitEvent: false });
 
           this.taskDataTable = tasks;
+          this.taskDataTable.data = tasks.data.map((task) => ({
+            ...task,
+            stateColor: this.genericUtilityService.getStateColor(task.state),
+            stateLabel: this.genericUtilityService.getStateText(task.state),
+          }));
         },
         (error) => {
           console.error('Failed to load project data', error);
@@ -287,6 +298,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
     modal.afterClose.subscribe((taskNumber: string) => {
       if (taskNumber) {
+        this.loadData(this.id?.value);
         this.notificationService.create(
           'success',
           NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Task Created'),

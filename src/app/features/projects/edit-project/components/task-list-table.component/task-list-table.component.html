@@ -18,7 +18,7 @@
         <td>{{ data.taskIdNumber }}</td>
         <td>{{ data.taskName }}</td>
         <td nzAlign="center">
-          <nz-tag nzColor="default">{{ data.state }}</nz-tag>
+          <nz-tag [nzColor]="data.stateColor">{{ data.stateLabel }}</nz-tag>
         </td>
         <td nzAlign="center">{{ data.assignedTo }}</td>
         <td class="table-action-buttons" nzAlign="center">
