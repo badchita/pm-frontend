@@ -78,6 +78,7 @@
           </nz-col>
         </nz-row>
 
+        @if (isPublished === 'Y') {
         <div class="header task-header">
           <span>Task List</span>
           <button nz-button nzShape="round" nzType="primary" (click)="addNewTask()">
@@ -87,6 +88,7 @@
 
         <app-task-list-table [dataTable]="taskDataTable" [dataList]="taskDataTable.data" [loading]="isTableLoading"
           (onUpdateTable)="tableUpdate($event)"></app-task-list-table>
+        }
 
         <div class="buttons-form-container">
           <button nz-button class="create-button" nzSize="large" nzShape="round" [nzType]="'primary'"
