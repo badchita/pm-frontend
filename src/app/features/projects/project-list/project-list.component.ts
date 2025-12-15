@@ -60,6 +60,7 @@ export class ProjectListComponent implements OnDestroy {
 
     modal.afterClose.subscribe((projectIdNumber: string) => {
       if (projectIdNumber) {
+        this.loadProjects();
         this.notificationService.create(
           'success',
           NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Project Created'),
@@ -77,12 +78,15 @@ export class ProjectListComponent implements OnDestroy {
     });
   }
 
-  loadProjects(params: NzTableQueryParams) {
+  loadProjects(params?: NzTableQueryParams) {
     this.isLoading = true;
-    this.tableParams.page = params.pageIndex;
-    this.tableParams.pageSize = params.pageSize;
-    const filters = Object.assign({}, ...params.filter);
-    this.tableParams.sort = params.sort;
+    let filters;
+    if (params) {
+      this.tableParams.page = params.pageIndex;
+      this.tableParams.pageSize = params.pageSize;
+      filters = Object.assign({}, ...params.filter);
+      this.tableParams.sort = params.sort;
+    }
 
     this.projectService
       .getList(this.tableParams, filters)
