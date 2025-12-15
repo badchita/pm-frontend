@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -6,7 +6,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NZ_MODAL_DATA, NzModalModule, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
@@ -14,6 +14,12 @@ import { CreateEditTaskDetailsComponent } from './components/create-edit-task-de
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { TaskStateTagComponent } from '@app/shared/components/task-state-tag/task-state-tag.component';
+import { RequiredValidator } from '@app/shared/constants/validators';
+import { ProjectService } from '@app/features/projects/services/project.service';
+import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { AlertType } from '@app/shared/models/alert.model';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @Component({
   selector: 'app-create-edit-task-modal',
@@ -31,15 +37,23 @@ import { TaskStateTagComponent } from '@app/shared/components/task-state-tag/tas
     NzTabsModule,
     CreateEditTaskDetailsComponent,
     TaskStateTagComponent,
+    PopoverFormValidatorDirective,
+    NzSpinModule,
   ],
   templateUrl: './create-edit-task-modal.component.html',
   styleUrl: './create-edit-task-modal.component.scss',
 })
-export class CreateEditTaskModalComponent implements OnInit {
+export class CreateEditTaskModalComponent implements OnInit, OnDestroy {
   private genericUtilityService = inject(GenericUtilityService);
+  private projectService = inject(ProjectService);
   private formBuilder = inject(FormBuilder);
+  private modalRef = inject(NzModalRef);
 
+  private _destroying$ = new Subject<void>();
+
+  projectId!: number;
   createEditTaskForm!: FormGroup;
+  spinnerTip!: string;
 
   hoverdInputs = {
     title: false,
@@ -55,6 +69,21 @@ export class CreateEditTaskModalComponent implements OnInit {
     },
   ];
   stateOptions = this.genericUtilityService.objectToArray(TaskStateOptions, false, true);
+  isLoading = false;
+  hasError = false;
+  alertDetails: AlertType = {
+    type: 'info',
+    message: '',
+    description: '',
+  };
+  SPINNER_TIP = SPINNER_TIP;
+  ALERT_MESAGE = ALERT_MESAGE;
+  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
+
+  constructor(@Inject(NZ_MODAL_DATA) data: { projectId: number }) {
+    this.projectId = data.projectId;
+    console.log(data);
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -62,7 +91,8 @@ export class CreateEditTaskModalComponent implements OnInit {
 
   buildForm() {
     this.createEditTaskForm = this.formBuilder.group({
-      taskName: [null],
+      id: [null],
+      taskName: [null, RequiredValidator],
       assignedTo: [null],
       state: [0],
       description: [null],
@@ -72,6 +102,7 @@ export class CreateEditTaskModalComponent implements OnInit {
       doneDate: [null],
       testingStartDate: [null],
       testingEndDate: [null],
+      projectId: [this.projectId],
     });
   }
 
@@ -104,7 +135,55 @@ export class CreateEditTaskModalComponent implements OnInit {
   }
 
   save() {
-    console.log(this.createEditTaskForm.value);
+    this.spinnerTip = this.SPINNER_TIP.Creating.replace('{{1}}', 'Task');
+    const payload = this.createEditTaskForm.getRawValue();
+
+    this.projectService
+      .saveTask(payload, this.projectId)
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe(
+        (task) => {
+          if (task) {
+            this.modalRef.close(task.taskIdNumber);
+          }
+        },
+        (error) => {
+          this.hasError = true;
+          switch (error.status) {
+            case 0:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.NoInternetConnection,
+                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
+              };
+              break;
+            case 401:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.LoginFailed,
+                description: ALERT_DESCRIPTION.LoginFailedMessage,
+              };
+              break;
+            case 500:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
+                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
+              };
+              break;
+          }
+        }
+      );
+  }
+
+  ngOnDestroy() {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
 
   get state(): AbstractControl | null | undefined {

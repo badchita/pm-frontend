@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -26,6 +26,7 @@ import { TaskListTableComponent } from './components/task-list-table.component/t
 import { DataTable } from '@app/shared/models/data-table.model';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { CreateEditTaskModalComponent } from '@app/shared/modal/create-edit-task-modal/create-edit-task-modal.component';
+import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 
 @Component({
   selector: 'app-edit-project',
@@ -50,6 +51,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   private projectService = inject(ProjectService);
   private notificationService = inject(NzNotificationService);
   private modalService = inject(NzModalService);
+  private genericUtilityService = inject(GenericUtilityService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -97,7 +99,6 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     page: 1,
     pageSize: 10,
   };
-
   SPINNER_TIP = SPINNER_TIP;
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;
   NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
@@ -275,15 +276,40 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     const modal = this.modalService.create({
       nzContent: CreateEditTaskModalComponent,
       nzClassName: 'create-modal',
+      nzData: {
+        projectId: this.id?.value,
+      },
       nzFooter: null,
       nzWidth: '1000px',
       nzTitle: 'Create task',
-      nzCentered: true
+      nzCentered: true,
+    });
+
+    modal.afterClose.subscribe((taskNumber: string) => {
+      if (taskNumber) {
+        this.notificationService.create(
+          'success',
+          NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Task Created'),
+          this.genericUtilityService.formatMessage(NOTIFICATION_MESSAGE.FormCreatedSuccess, [
+            'task',
+            'task',
+            taskNumber,
+          ]),
+          {
+            nzClass: 'form-notification',
+            nzDuration: 5000,
+          }
+        );
+      }
     });
   }
 
   ngOnDestroy() {
     this._destroying$.next(undefined);
     this._destroying$.complete();
+  }
+
+  get id(): AbstractControl | null | undefined {
+    return this.editProjectForm?.get('id');
   }
 }

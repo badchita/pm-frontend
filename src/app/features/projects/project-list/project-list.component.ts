@@ -10,10 +10,11 @@ import { ProjectService } from '../services/project.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 
 @Component({
   selector: 'app-project-list',
-  imports: [ProjectListTableComponent, NzButtonModule, NzModalModule,],
+  imports: [ProjectListTableComponent, NzButtonModule, NzModalModule],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
 })
@@ -21,6 +22,7 @@ export class ProjectListComponent implements OnDestroy {
   private modalService = inject(NzModalService);
   private notificationService = inject(NzNotificationService);
   private projectService = inject(ProjectService);
+  private genericUtilityService = inject(GenericUtilityService);
 
   private _destroying$ = new Subject<void>();
 
@@ -56,12 +58,16 @@ export class ProjectListComponent implements OnDestroy {
       nzFooter: null,
     });
 
-    modal.afterClose.subscribe((project: Project) => {
-      if (project) {
+    modal.afterClose.subscribe((projectIdNumber: string) => {
+      if (projectIdNumber) {
         this.notificationService.create(
           'success',
           NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Project Created'),
-          NOTIFICATION_MESSAGE.FormCreatedSuccess.replace('{{1}}', project.projectIdNumber),
+          this.genericUtilityService.formatMessage(NOTIFICATION_MESSAGE.FormCreatedSuccess, [
+            'project',
+            'project',
+            projectIdNumber,
+          ]),
           {
             nzClass: 'form-notification',
             nzDuration: 5000,

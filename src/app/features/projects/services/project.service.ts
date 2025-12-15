@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@app/environments/environment';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { Project, ProjectForm } from '@app/shared/models/project.model';
+import { Task } from '@app/shared/models/task.model';
 import { TableUtilityService } from '@app/shared/services/table-utility.service';
 import { Observable } from 'rxjs';
 
@@ -38,5 +39,9 @@ export class ProjectService {
     } else {
       return this.http.put<Project>(`${this.api}/${id}/unpublish`, {});
     }
+  }
+
+  saveTask(task: Task, projectId: number): Observable<Task> {
+    return this.http.post<Task>(`${this.api}/${projectId}/tasks`, task);
   }
 }
