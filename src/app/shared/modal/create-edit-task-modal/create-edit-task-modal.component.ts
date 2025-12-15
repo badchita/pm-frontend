@@ -82,7 +82,6 @@ export class CreateEditTaskModalComponent implements OnInit, OnDestroy {
 
   constructor(@Inject(NZ_MODAL_DATA) data: { projectId: number }) {
     this.projectId = data.projectId;
-    console.log(data);
   }
 
   ngOnInit() {
