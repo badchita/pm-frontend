@@ -75,7 +75,7 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
       .subscribe(
         (project) => {
           if (project) {
-            this.modalRef.close(project);
+            this.modalRef.close(project.projectIdNumber);
           }
         },
         (error) => {

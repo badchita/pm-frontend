@@ -13,9 +13,12 @@
   }
 
   .state-row {
-    nz-form-item {
-      display: flex;
-      align-items: center;
+    .state-form-item {
+      .state-flex {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
     }
   }
 

@@ -33,7 +33,7 @@ export const NOTIFICATION_TITLE = {
 };
 
 export const NOTIFICATION_MESSAGE = {
-  FormCreatedSuccess: 'The project was created and saved successfully. Your Project ID is {{1}}.',
+  FormCreatedSuccess: 'The {{1}} was created and saved successfully. Your {{2}} ID is {{3}}.',
   FormUpdatedSuccess: '{{1}} was updated successfully.',
   ProjectFormPublishedSuccess: '{{1}} was published successfully.',
   ProjectFormDeactivatedSuccess: '{{1}} was deactivated successfully.',
