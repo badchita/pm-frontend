@@ -9,7 +9,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../services/project.service';
-import { filter, finalize, forkJoin, Subject, takeUntil } from 'rxjs';
+import { finalize, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
   ALERT_DESCRIPTION,
@@ -117,24 +117,38 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   loadData(id: string) {
     this.isLoading = true;
 
-    const project$ = this.projectService.getById(+id);
-    const projectTasks$ = this.projectService.getProjectTaskList(this.tableParams, {}, +id);
-    forkJoin([project$, projectTasks$])
+    this.projectService
+      .getById(+id)
       .pipe(
         takeUntil(this._destroying$),
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe(
-        ([project, tasks]) => {
+
+        switchMap((project) => {
           const { projectName, projectIdNumber, isPublished } = project;
+
           this.projectName = projectName;
           this.projectIdNumber = projectIdNumber;
           this.isPublished = isPublished;
           this.editProjectForm.patchValue(project, { emitEvent: false });
 
-          this.setTableData(tasks);
+          if (isPublished === 'N') {
+            return of({
+              data: [],
+              totalCount: 0,
+              page: this.tableParams.page,
+              pageSize: this.tableParams.pageSize,
+            } as DataTable<Task>);
+          }
+
+          return this.projectService.getProjectTaskList(this.tableParams, {}, +id);
+        }),
+
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe(
+        (tasksTable: DataTable<Task>) => {
+          this.setTableData(tasksTable);
         },
         (error) => {
           console.error('Failed to load project data', error);
