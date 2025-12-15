@@ -54,4 +54,8 @@ export class ProjectService {
 
     return this.http.get<DataTable<Task>>(`${this.api}/${projectId}/tasks`, { params });
   }
+
+  getProjectTaskById(projectId: number, id: number): Observable<Task> {
+    return this.http.get<Task>(`${this.api}/${projectId}/tasks/${id}`);
+  }
 }
