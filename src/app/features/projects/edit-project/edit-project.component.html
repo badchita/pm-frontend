@@ -85,8 +85,8 @@
           </button>
         </div>
 
-        <app-task-list-table [dataTable]="taskListTable" [dataList]="taskListTable.data"
-          [loading]="isLoading"></app-task-list-table>
+        <app-task-list-table [dataTable]="taskDataTable" [dataList]="taskDataTable.data" [loading]="isTableLoading"
+          (onUpdateTable)="tableUpdate($event)"></app-task-list-table>
 
         <div class="buttons-form-container">
           <button nz-button class="create-button" nzSize="large" nzShape="round" [nzType]="'primary'"
