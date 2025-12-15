@@ -9,6 +9,8 @@ export interface Task {
   taskPoints: number;
   taskIdNumber: string;
   state: number;
+  stateColor?: string;
+  stateLabel?: string;
   readyForDevelopmentDate: Date;
   doneDate: Date;
   testingStartDate: Date;

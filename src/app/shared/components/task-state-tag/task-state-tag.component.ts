@@ -24,17 +24,10 @@ export class TaskStateTagComponent implements OnInit {
     this.stateColorOptions = this.stateColorOptions.map((stateColor: NzSelectOptionInterface) => {
       return { value: stateColor.value, color: stateColor.label };
     });
-    this.getStateColor();
-    this.state()?.valueChanges.subscribe(() => {
-      this.getStateColor();
-    });
-  }
+    this.color = this.genericUtilityService.getStateColor(this.state()?.value);
 
-  getStateColor() {
-    const stateIndex = this.stateColorOptions.findIndex((stateColor: NzSelectOptionInterface) => {
-      return stateColor.value === this.state()?.value;
+    this.state()?.valueChanges.subscribe((value) => {
+      this.color = this.genericUtilityService.getStateColor(value);
     });
-
-    this.color = this.stateColorOptions[stateIndex].color;
   }
 }

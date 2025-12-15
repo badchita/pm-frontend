@@ -9,7 +9,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../services/project.service';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { filter, finalize, forkJoin, Subject, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
   ALERT_DESCRIPTION,
@@ -23,10 +23,14 @@ import { RequiredValidator } from '@app/shared/constants/validators';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { TaskListTableComponent } from './components/task-list-table.component/task-list-table.component';
-import { DataTable } from '@app/shared/models/data-table.model';
+import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { CreateEditTaskModalComponent } from '@app/shared/modal/create-edit-task-modal/create-edit-task-modal.component';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { TaskStateColorOptions, TaskStateOptions } from '@app/shared/enums/task-state.enum';
+import { NzSelectOptionInterface } from 'ng-zorro-antd/select';
+import { Task } from '@app/shared/models/task.model';
 
 @Component({
   selector: 'app-edit-project',
@@ -64,6 +68,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   isPublished!: string;
 
   isLoading = false;
+  isTableLoading = false;
   hasError = false;
   alertDetails: AlertType = {
     type: 'info',
@@ -71,34 +76,28 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     description: '',
   };
   spinnerTip!: string;
-  taskListTable: DataTable<any> = {
-    data: [
-      {
-        id: 1,
-        taskName: 'Create new Item',
-        taskIdNumber: 'T-001',
-        assignedTo: 'Joh Doe',
-        state: 'New',
-      },
-      {
-        id: 2,
-        taskName: 'Update Controller',
-        taskIdNumber: 'T-002',
-        assignedTo: 'Joseph James',
-        state: 'New',
-      },
-      {
-        id: 3,
-        taskName: 'Delete Database',
-        taskIdNumber: 'T-003',
-        assignedTo: 'Rain',
-        state: 'New',
-      },
-    ],
+  taskDataTable: DataTable<Task> = {
+    data: [],
     totalCount: 0,
     page: 1,
     pageSize: 10,
   };
+  tableParams: TableParams = {
+    search: '',
+    state: null,
+    sort: [
+      {
+        key: '',
+        value: '',
+      },
+    ],
+    page: 1,
+    pageSize: 10,
+    sortDirection: 'desc',
+  };
+
+  stateColorOptions = this.genericUtilityService.objectToArray(TaskStateColorOptions, false, true);
+  stateOptions = this.genericUtilityService.objectToArray(TaskStateOptions, false, true);
   SPINNER_TIP = SPINNER_TIP;
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;
   NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
@@ -111,30 +110,36 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id')!;
-      this.loadProject(id);
+      this.loadData(id);
     });
   }
 
-  loadProject(id: string) {
+  loadData(id: string) {
     this.isLoading = true;
 
-    this.projectService
-      .getById(+id)
+    const project$ = this.projectService.getById(+id);
+    const projectTasks$ = this.projectService.getProjectTaskList(this.tableParams, {}, +id);
+    forkJoin([project$, projectTasks$])
       .pipe(
         takeUntil(this._destroying$),
         finalize(() => {
           this.isLoading = false;
         })
       )
-      .subscribe((project) => {
-        const { projectName, projectIdNumber, isPublished } = project;
+      .subscribe(
+        ([project, tasks]) => {
+          const { projectName, projectIdNumber, isPublished } = project;
+          this.projectName = projectName;
+          this.projectIdNumber = projectIdNumber;
+          this.isPublished = isPublished;
+          this.editProjectForm.patchValue(project, { emitEvent: false });
 
-        this.projectName = projectName;
-        this.projectIdNumber = projectIdNumber;
-        this.isPublished = isPublished;
-
-        this.editProjectForm.patchValue(project, { emitEvent: false });
-      });
+          this.setTableData(tasks);
+        },
+        (error) => {
+          console.error('Failed to load project data', error);
+        }
+      );
   }
 
   buildForm() {
@@ -156,6 +161,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   }
 
   save() {
+    this.isLoading = true;
     this.spinnerTip = this.SPINNER_TIP.Updating.replace('{{1}}', this.projectIdNumber ?? '');
     const payload = this.editProjectForm.getRawValue();
 
@@ -287,6 +293,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
     modal.afterClose.subscribe((taskNumber: string) => {
       if (taskNumber) {
+        this.loadData(this.id?.value);
         this.notificationService.create(
           'success',
           NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Task Created'),
@@ -302,6 +309,40 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  tableUpdate(params: NzTableQueryParams) {
+    this.isTableLoading = true;
+    this.tableParams.page = params.pageIndex;
+    this.tableParams.pageSize = params.pageSize;
+    const filters = Object.assign({}, ...params.filter);
+    this.tableParams.sort = params.sort;
+
+    this.projectService
+      .getProjectTaskList(this.tableParams, filters, this.id?.value)
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isTableLoading = false;
+        })
+      )
+      .subscribe(
+        (tasks) => {
+          this.setTableData(tasks);
+        },
+        (error) => {
+          console.error('Failed to load project data', error);
+        }
+      );
+  }
+
+  setTableData(tableData: DataTable<Task>) {
+    this.taskDataTable = tableData;
+    this.taskDataTable.data = tableData.data.map((task) => ({
+      ...task,
+      stateColor: this.genericUtilityService.getStateColor(task.state),
+      stateLabel: this.genericUtilityService.getStateText(task.state),
+    }));
   }
 
   ngOnDestroy() {
