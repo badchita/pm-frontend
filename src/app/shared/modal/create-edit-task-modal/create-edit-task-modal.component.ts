@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -13,6 +13,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { CreateEditTaskDetailsComponent } from './components/create-edit-task-details/create-edit-task-details.component';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
+import { TaskStateTagComponent } from '@app/shared/components/task-state-tag/task-state-tag.component';
 
 @Component({
   selector: 'app-create-edit-task-modal',
@@ -29,6 +30,7 @@ import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
     NzTypographyModule,
     NzTabsModule,
     CreateEditTaskDetailsComponent,
+    TaskStateTagComponent,
   ],
   templateUrl: './create-edit-task-modal.component.html',
   styleUrl: './create-edit-task-modal.component.scss',
@@ -103,5 +105,9 @@ export class CreateEditTaskModalComponent implements OnInit {
 
   save() {
     console.log(this.createEditTaskForm.value);
+  }
+
+  get state(): AbstractControl | null | undefined {
+    return this.createEditTaskForm?.get('state');
   }
 }

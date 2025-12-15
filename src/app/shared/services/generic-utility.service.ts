@@ -9,7 +9,7 @@ export class GenericUtilityService {
     obj: any,
     humanize = false,
     valueAsNumber = false
-  ): NzSelectOptionInterface[] {
+  ): NzSelectOptionInterface[] | any {
     return Object.keys(obj).map((key) => {
       const label = humanize ? obj[key].replace(/_/g, ' ') : obj[key];
       return { label, value: valueAsNumber ? Number(key) : key };
