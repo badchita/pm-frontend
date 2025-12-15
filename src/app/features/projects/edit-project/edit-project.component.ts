@@ -29,7 +29,6 @@ import { CreateEditTaskModalComponent } from '@app/shared/modal/create-edit-task
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { TaskStateColorOptions, TaskStateOptions } from '@app/shared/enums/task-state.enum';
-import { NzSelectOptionInterface } from 'ng-zorro-antd/select';
 import { Task } from '@app/shared/models/task.model';
 
 @Component({
