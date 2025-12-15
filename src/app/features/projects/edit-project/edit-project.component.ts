@@ -134,12 +134,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           this.isPublished = isPublished;
           this.editProjectForm.patchValue(project, { emitEvent: false });
 
-          this.taskDataTable = tasks;
-          this.taskDataTable.data = tasks.data.map((task) => ({
-            ...task,
-            stateColor: this.genericUtilityService.getStateColor(task.state),
-            stateLabel: this.genericUtilityService.getStateText(task.state),
-          }));
+          this.setTableData(tasks);
         },
         (error) => {
           console.error('Failed to load project data', error);
@@ -333,12 +328,21 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         (tasks) => {
-          this.taskDataTable = tasks;
+          this.setTableData(tasks);
         },
         (error) => {
           console.error('Failed to load project data', error);
         }
       );
+  }
+
+  setTableData(tableData: DataTable<Task>) {
+    this.taskDataTable = tableData;
+    this.taskDataTable.data = tableData.data.map((task) => ({
+      ...task,
+      stateColor: this.genericUtilityService.getStateColor(task.state),
+      stateLabel: this.genericUtilityService.getStateText(task.state),
+    }));
   }
 
   ngOnDestroy() {
