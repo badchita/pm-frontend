@@ -26,6 +26,13 @@ export const routes: Routes = [
             (m) => m.EditProjectComponent
           ),
       },
+      {
+        path: 'tasks/:projectId/:id',
+        loadComponent: () =>
+          import('@app/features/tasks/pages/edit-task/edit-task.component').then(
+            (m) => m.EditTaskComponent
+          ),
+      },
     ],
   },
 ];

@@ -1,12 +1,13 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@app/core/layout/header/header.component';
 import { NavItem } from '@app/shared/models/nav-item.model';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-portal',
@@ -22,7 +23,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
   templateUrl: './portal.component.html',
   styleUrl: './portal.component.scss',
 })
-export class PortalComponent implements OnInit {
+export class PortalComponent {
   private router = inject(Router);
 
   @ViewChild('collapseButtonContainer') collapseButtonContainerRef!: ElementRef;
@@ -55,13 +56,20 @@ export class PortalComponent implements OnInit {
     },
   ];
 
-  isCollapsed = false;
   currentRoute!: string;
 
-  ngOnInit() {
-    const currentUrl = this.router.url;
-    this.currentRoute = currentUrl;
+  isCollapsed = false;
+  isWhiteBackground = false;
+
+  constructor() {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.isWhiteBackground = event.urlAfterRedirects.startsWith('/portal/tasks/');
+        this.currentRoute = event.url;
+      });
   }
+
   navigate(url: string) {
     this.router.navigate([url]);
   }

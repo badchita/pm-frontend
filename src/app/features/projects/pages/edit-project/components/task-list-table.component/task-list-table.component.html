@@ -40,7 +40,7 @@
         </td>
         <td nzAlign="center">{{ data.assignedTo }}</td>
         <td class="table-action-buttons" nzAlign="center">
-          <button class="edit-button" nz-button nzType="link">
+          <button class="edit-button" nz-button nzType="link" (click)="edit(data)">
             <nz-icon nzType="edit" nzTheme="outline" />
           </button>
           <nz-divider nzType="vertical"></nz-divider>
