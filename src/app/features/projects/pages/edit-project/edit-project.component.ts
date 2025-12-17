@@ -24,12 +24,12 @@ import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { TaskListTableComponent } from './components/task-list-table.component/task-list-table.component';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { CreateEditTaskModalComponent } from '@app/shared/modal/create-edit-task-modal/create-edit-task-modal.component';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { TaskStateColorOptions, TaskStateOptions } from '@app/shared/enums/task-state.enum';
-import { Task } from '@app/shared/models/task.model';
+import { Task } from '@app/features/tasks/models/task.model';
 import { ProjectService } from '../../services/project.service';
+import { CreateTaskModalComponent } from '@app/features/tasks/modals/create-task-modal/create-task-modal.component';
 
 @Component({
   selector: 'app-edit-project',
@@ -293,7 +293,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
   addNewTask() {
     const modal = this.modalService.create({
-      nzContent: CreateEditTaskModalComponent,
+      nzContent: CreateTaskModalComponent,
       nzClassName: 'create-modal',
       nzData: {
         projectId: this.id?.value,

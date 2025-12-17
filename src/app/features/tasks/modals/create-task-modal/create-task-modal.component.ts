@@ -10,7 +10,6 @@ import { NZ_MODAL_DATA, NzModalModule, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-import { CreateEditTaskDetailsComponent } from './components/create-edit-task-details/create-edit-task-details.component';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { TaskStateTagComponent } from '@app/shared/components/task-state-tag/task-state-tag.component';
@@ -20,6 +19,7 @@ import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/consta
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { TaskFormDetailsComponent } from '../../components/task-form-details/task-form-details.component';
 
 @Component({
   selector: 'app-create-edit-task-modal',
@@ -35,15 +35,15 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzGridModule,
     NzTypographyModule,
     NzTabsModule,
-    CreateEditTaskDetailsComponent,
+    TaskFormDetailsComponent,
     TaskStateTagComponent,
     PopoverFormValidatorDirective,
     NzSpinModule,
   ],
-  templateUrl: './create-edit-task-modal.component.html',
-  styleUrl: './create-edit-task-modal.component.scss',
+  templateUrl: './create-task-modal.component.html',
+  styleUrl: './create-task-modal.component.scss',
 })
-export class CreateEditTaskModalComponent implements OnInit, OnDestroy {
+export class CreateTaskModalComponent implements OnInit, OnDestroy {
   private genericUtilityService = inject(GenericUtilityService);
   private projectService = inject(ProjectService);
   private formBuilder = inject(FormBuilder);

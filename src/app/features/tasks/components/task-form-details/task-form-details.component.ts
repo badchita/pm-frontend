@@ -8,7 +8,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 @Component({
-  selector: 'app-create-edit-task-details',
+  selector: 'app-task-form-details',
   imports: [
     NzFormModule,
     NzButtonModule,
@@ -19,10 +19,10 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     NzInputModule,
     NzDatePickerModule,
   ],
-  templateUrl: './create-edit-task-details.component.html',
-  styleUrl: './create-edit-task-details.component.scss',
+  templateUrl: './task-form-details.component.html',
+  styleUrl: './task-form-details.component.scss',
 })
-export class CreateEditTaskDetailsComponent {
+export class TaskFormDetailsComponent {
   @ViewChild('descriptionRef') descriptionRef!: any;
   @ViewChild('acceptanceCriteriaRef') acceptanceCriteriaRef!: any;
 

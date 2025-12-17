@@ -3,7 +3,7 @@ import { Component, inject, input, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { DataTable } from '@app/shared/models/data-table.model';
-import { Task } from '@app/shared/models/task.model';
+import { Task } from '@app/features/tasks/models/task.model';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
