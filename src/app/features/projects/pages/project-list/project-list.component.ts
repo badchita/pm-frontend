@@ -5,12 +5,12 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { CreateProjectModalComponent } from './modals/create-project-modal/create-project-modal.component';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
-import { Project } from '@app/shared/models/project.model';
-import { ProjectService } from '../services/project.service';
+import { Project } from '@app/features/projects/models/project.model';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
+import { ProjectService } from '../../services/project.service';
 
 @Component({
   selector: 'app-project-list',

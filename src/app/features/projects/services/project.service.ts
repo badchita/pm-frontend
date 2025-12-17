@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@app/environments/environment';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
-import { Project, ProjectForm } from '@app/shared/models/project.model';
+import { Project, ProjectForm } from '@app/features/projects/models/project.model';
 import { Task } from '@app/shared/models/task.model';
 import { TableUtilityService } from '@app/shared/services/table-utility.service';
 import { Observable } from 'rxjs';

@@ -8,7 +8,6 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProjectService } from '../services/project.service';
 import { finalize, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
@@ -30,6 +29,7 @@ import { GenericUtilityService } from '@app/shared/services/generic-utility.serv
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { TaskStateColorOptions, TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { Task } from '@app/shared/models/task.model';
+import { ProjectService } from '../../services/project.service';
 
 @Component({
   selector: 'app-edit-project',
