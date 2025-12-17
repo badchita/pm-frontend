@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@app/environments/environment';
 import { LoginForm, LoginResponse } from '@app/shared/models/auth.model';
-import { User } from '@app/shared/models/user.model';
+import { User } from '@app/features/auth/models/user.model';
 import { Observable } from 'rxjs';
 
 @Injectable({

@@ -9,7 +9,7 @@ import {
 } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { AlertType } from '@app/shared/models/alert.model';
-import { AuthService } from '@app/shared/services/api/auth.service';
+import { AuthService } from '@app/features/auth/services/auth.service';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardComponent } from 'ng-zorro-antd/card';
