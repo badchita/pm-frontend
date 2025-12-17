@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@app/core/layout/header/header.component';
 import { NavItem } from '@app/shared/models/nav-item.model';
@@ -23,7 +23,7 @@ import { filter } from 'rxjs';
   templateUrl: './portal.component.html',
   styleUrl: './portal.component.scss',
 })
-export class PortalComponent implements OnInit {
+export class PortalComponent {
   private router = inject(Router);
 
   @ViewChild('collapseButtonContainer') collapseButtonContainerRef!: ElementRef;
@@ -70,7 +70,6 @@ export class PortalComponent implements OnInit {
       });
   }
 
-  ngOnInit() {}
   navigate(url: string) {
     this.router.navigate([url]);
   }
