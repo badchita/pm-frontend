@@ -1,0 +1,79 @@
+<nz-spin [nzSpinning]="isLoading" [nzTip]="spinnerTip">
+  <form nz-form nzLayout="vertical" [formGroup]="createEditTaskForm">
+    <nz-row>
+      <nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-wrapper>
+              <input [class]="hoverdInputs.title ? 'portal-input-form' : 'create-edit-input-form'" type="text" nz-input
+                formControlName="taskName" nzSize="large" placeholder="Task Name" appPopoverFormValidator
+                (focus)="onInputFocus('title')" (blur)="onInputBlur('title')" />
+            </nz-input-wrapper>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-row class="assign-row">
+      <nz-col nzSpan="8">
+        <nz-form-item>
+          <nz-form-control>
+            <nz-select [class]="hoverdInputs.assignedTo ? 'select-search' : 'create-edit-select-form'"
+              nzSuffixIcon="user" formControlName="assignedTo" nzPlaceHolder="No one selected" [nzAllowClear]="true"
+              (nzFocus)="onInputFocus('assignedTo')" (nzBlur)="onInputBlur('assignedTo')">
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      <nz-col nzSpan="8">
+        <span nz-typography>
+          <a>
+            <nz-icon nzType="comment" nzTheme="outline" />
+            0 Comments
+          </a>
+        </span>
+      </nz-col>
+      <nz-col>
+        <button nz-button class="save-button" nzSize="small" [nzType]="'primary'"
+          [disabled]="createEditTaskForm.invalid" (click)="save()">
+          <nz-icon nzType="save" nzTheme="outline" />
+          Save
+        </button>
+        <button nz-button class="history-button" nzSize="default" nzType="link">
+          <nz-icon nzType="sync" nzTheme="outline" />
+        </button>
+      </nz-col>
+    </nz-row>
+    <nz-row class="state-row">
+      <nz-col nzSpan="6">
+        <nz-form-item class="state-form-item">
+          <nz-form-control>
+            <div class="state-flex">
+              <nz-select [class]="hoverdInputs.state ? 'select-search' : 'create-edit-select-form'"
+                formControlName="state" nzPlaceHolder="State" [nzOptions]="stateOptions" [nzAllowClear]="true"
+                (nzFocus)="onInputFocus('state')" (nzBlur)="onInputBlur('state')">
+              </nz-select>
+              <app-task-state-tag [state]="state"></app-task-state-tag>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+    <nz-tabs class="create-edit-task-tabs" nzType="card">
+      @for (tab of tabs; track tab) {
+      <nz-tab [nzTitle]="titleTemplate" nzHideAdd>
+        <ng-template #titleTemplate>
+          @if (tab.icon) {
+          <nz-icon [nzType]="tab.icon" />
+          }
+          @if (tab.name){
+          {{ tab.name }}
+          }
+        </ng-template>
+        @if (tab.name === 'Details' ) {
+        <app-task-form-details [taskDetailForm]="createEditTaskForm"></app-task-form-details>
+        }
+      </nz-tab>
+      }
+    </nz-tabs>
+  </form>
+</nz-spin>
