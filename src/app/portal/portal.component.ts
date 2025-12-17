@@ -61,16 +61,16 @@ export class PortalComponent implements OnInit {
   isCollapsed = false;
   isWhiteBackground = false;
 
-  ngOnInit() {
+  constructor() {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         this.isWhiteBackground = event.urlAfterRedirects.startsWith('/portal/tasks/');
+        this.currentRoute = event.url;
       });
-
-    const currentUrl = this.router.url;
-    this.currentRoute = currentUrl;
   }
+
+  ngOnInit() {}
   navigate(url: string) {
     this.router.navigate([url]);
   }

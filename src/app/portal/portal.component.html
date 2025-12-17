@@ -9,7 +9,7 @@
         <ul nz-menu class="sider-menu" nzMode="inline">
           @for (nav of navItem; track nav) {
           <li nz-menu-item class="sider-menu-item" (click)="navigate(nav.route)"
-            [nzSelected]="nav.route === currentRoute">
+            [nzSelected]="currentRoute.includes(nav.route)">
             <nz-icon [nzType]="nav.icon" nzTheme="outline" />
             <span>{{ nav.title }}</span>
           </li>
