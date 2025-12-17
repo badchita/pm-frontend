@@ -30,6 +30,7 @@ import { TaskStateColorOptions, TaskStateOptions } from '@app/shared/enums/task-
 import { Task } from '@app/features/tasks/models/task.model';
 import { ProjectService } from '../../services/project.service';
 import { CreateTaskModalComponent } from '@app/features/tasks/modals/create-task-modal/create-task-modal.component';
+import { TaskService } from '@app/features/tasks/services/task.service';
 
 @Component({
   selector: 'app-edit-project',
@@ -52,6 +53,7 @@ import { CreateTaskModalComponent } from '@app/features/tasks/modals/create-task
 })
 export class EditProjectComponent implements OnInit, OnDestroy {
   private projectService = inject(ProjectService);
+  private taskService = inject(TaskService);
   private notificationService = inject(NzNotificationService);
   private modalService = inject(NzModalService);
   private genericUtilityService = inject(GenericUtilityService);
@@ -138,7 +140,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
             } as DataTable<Task>);
           }
 
-          return this.projectService.getProjectTaskList(this.tableParams, {}, +id);
+          return this.taskService.getList(this.tableParams, {}, +id);
         }),
 
         finalize(() => {
@@ -331,8 +333,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     const filters = Object.assign({}, ...params.filter);
     this.tableParams.sort = params.sort;
 
-    this.projectService
-      .getProjectTaskList(this.tableParams, filters, this.id?.value)
+    this.taskService
+      .getList(this.tableParams, filters, this.id?.value)
       .pipe(
         takeUntil(this._destroying$),
         finalize(() => {

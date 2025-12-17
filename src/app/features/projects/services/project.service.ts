@@ -40,22 +40,4 @@ export class ProjectService {
       return this.http.put<Project>(`${this.api}/${id}/unpublish`, {});
     }
   }
-
-  saveTask(task: Task, projectId: number): Observable<Task> {
-    return this.http.post<Task>(`${this.api}/${projectId}/tasks`, task);
-  }
-
-  getProjectTaskList(
-    tableParams: TableParams,
-    filters: any,
-    projectId: number
-  ): Observable<DataTable<Task>> {
-    const params = this.tableUtilityService.buildParams(tableParams, filters);
-
-    return this.http.get<DataTable<Task>>(`${this.api}/${projectId}/tasks`, { params });
-  }
-
-  getProjectTaskById(projectId: number, id: number): Observable<Task> {
-    return this.http.get<Task>(`${this.api}/${projectId}/tasks/${id}`);
-  }
 }

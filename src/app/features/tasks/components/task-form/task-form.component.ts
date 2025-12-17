@@ -13,12 +13,12 @@ import { GenericUtilityService } from '@app/shared/services/generic-utility.serv
 import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { TaskStateTagComponent } from '@app/shared/components/task-state-tag/task-state-tag.component';
 import { RequiredValidator } from '@app/shared/constants/validators';
-import { ProjectService } from '@app/features/projects/services/project.service';
 import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { TaskFormDetailsComponent } from '../../components/task-form-details/task-form-details.component';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-task-form',
@@ -46,7 +46,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   readonly onSave = output<string>();
 
   private genericUtilityService = inject(GenericUtilityService);
-  private projectService = inject(ProjectService);
+  private taskService = inject(TaskService);
   private formBuilder = inject(FormBuilder);
 
   private _destroying$ = new Subject<void>();
@@ -132,8 +132,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     this.spinnerTip = this.SPINNER_TIP.Creating.replace('{{1}}', 'Task');
     const payload = this.createEditTaskForm.getRawValue();
 
-    this.projectService
-      .saveTask(payload, this.projectId())
+    this.taskService
+      .create(payload, this.projectId())
       .pipe(
         takeUntil(this._destroying$),
         finalize(() => {
