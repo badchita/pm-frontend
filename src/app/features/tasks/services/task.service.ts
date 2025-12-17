@@ -28,7 +28,7 @@ export class TaskService {
     return this.http.get<DataTable<Task>>(`${this.apiProjects}/${projectId}/tasks`, { params });
   }
 
-  getProjectTaskById(projectId: number, id: number): Observable<Task> {
+  getById(projectId: number, id: number): Observable<Task> {
     return this.http.get<Task>(`${this.apiProjects}/${projectId}/tasks/${id}`);
   }
 }

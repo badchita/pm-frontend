@@ -8,15 +8,11 @@
       <div class="sidebar-items">
         <ul nz-menu class="sider-menu" nzMode="inline">
           @for (nav of navItem; track nav) {
-            <li
-              nz-menu-item
-              class="sider-menu-item"
-              (click)="navigate(nav.route)"
-              [nzSelected]="nav.route === currentRoute"
-            >
-              <nz-icon [nzType]="nav.icon" nzTheme="outline" />
-              <span>{{ nav.title }}</span>
-            </li>
+          <li nz-menu-item class="sider-menu-item" (click)="navigate(nav.route)"
+            [nzSelected]="nav.route === currentRoute">
+            <nz-icon [nzType]="nav.icon" nzTheme="outline" />
+            <span>{{ nav.title }}</span>
+          </li>
           }
         </ul>
 
@@ -29,7 +25,7 @@
       </div>
     </nz-sider>
     <nz-layout class="inner-layout">
-      <nz-content class="content">
+      <nz-content class="content" [ngClass]="{ 'content-white': isWhiteBackground }">
         <router-outlet></router-outlet>
       </nz-content>
     </nz-layout>

@@ -1,12 +1,13 @@
 import { NgClass } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@app/core/layout/header/header.component';
 import { NavItem } from '@app/shared/models/nav-item.model';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-portal',
@@ -55,10 +56,18 @@ export class PortalComponent implements OnInit {
     },
   ];
 
-  isCollapsed = false;
   currentRoute!: string;
 
+  isCollapsed = false;
+  isWhiteBackground = false;
+
   ngOnInit() {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.isWhiteBackground = event.urlAfterRedirects.startsWith('/portal/tasks/');
+      });
+
     const currentUrl = this.router.url;
     this.currentRoute = currentUrl;
   }

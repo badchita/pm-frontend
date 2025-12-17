@@ -1,6 +1,7 @@
 :host {
   .layout-container {
     min-height: 100vh;
+    border: 1px solid black;
   }
 
   .header {
@@ -77,5 +78,9 @@
 
   .content {
     padding: 28px;
+  }
+
+  .content-white {
+    background-color: #fff;
   }
 }

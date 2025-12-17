@@ -14,6 +14,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { debounceTime } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-list-table',
@@ -40,6 +41,7 @@ export class TaskListTableComponent {
 
   private genericUtilityService = inject(GenericUtilityService);
   private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
 
   searchProjectTaskForm!: FormGroup;
 
@@ -84,5 +86,11 @@ export class TaskListTableComponent {
 
   reset() {
     this.searchProjectTaskForm.reset();
+  }
+
+  edit(task: Task) {
+    const { projectId, id } = task;
+
+    this.router.navigate([`/portal/tasks/${projectId}/${id}`]);
   }
 }

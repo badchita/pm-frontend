@@ -14,7 +14,7 @@ import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { TaskStateTagComponent } from '@app/shared/components/task-state-tag/task-state-tag.component';
 import { RequiredValidator } from '@app/shared/constants/validators';
 import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, pipe, Subject, takeUntil } from 'rxjs';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { TaskFormDetailsComponent } from '../../components/task-form-details/task-form-details.component';
@@ -43,6 +43,7 @@ import { TaskService } from '../../services/task.service';
 })
 export class TaskFormComponent implements OnInit, OnDestroy {
   readonly projectId = input.required<number>();
+  readonly id = input.required<number>();
   readonly onSave = output<string>();
 
   private genericUtilityService = inject(GenericUtilityService);
@@ -81,6 +82,10 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildForm();
+
+    if (this.id() > 0) {
+      this.loadTask();
+    }
   }
 
   buildForm() {
@@ -98,6 +103,22 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       testingEndDate: [null],
       projectId: [this.projectId()],
     });
+  }
+
+  loadTask() {
+    this.isLoading = true;
+
+    this.taskService
+      .getById(this.projectId(), this.id())
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe((task) => {
+        this.createEditTaskForm.patchValue(task, { emitEvent: false });
+      });
   }
 
   onInputFocus(input: string) {
