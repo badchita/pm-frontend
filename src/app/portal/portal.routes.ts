@@ -10,28 +10,19 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('@app/features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-        children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import('@app/features/dashboard/pages/home/home.component').then(
-                (m) => m.HomeComponent
-              ),
-          },
-        ],
+          import('@app/features/dashboard/pages/home/home.component').then((m) => m.HomeComponent),
       },
       {
         path: 'projects',
         loadComponent: () =>
-          import('@app/features/projects/project-list/project-list.component').then(
+          import('@app/features/projects/pages/project-list/project-list.component').then(
             (m) => m.ProjectListComponent
           ),
       },
       {
         path: 'projects/:id',
         loadComponent: () =>
-          import('@app/features/projects/edit-project/edit-project.component').then(
+          import('@app/features/projects/pages/edit-project/edit-project.component').then(
             (m) => m.EditProjectComponent
           ),
       },
