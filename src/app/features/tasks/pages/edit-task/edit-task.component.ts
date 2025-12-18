@@ -13,11 +13,17 @@ export class EditTaskComponent implements OnInit {
 
   projectId!: number;
   taskId!: number;
+  taskIdNumber!: string;
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       this.projectId = +params.get('projectId')!;
       this.taskId = +params.get('id')!;
     });
+  }
+
+  getTaskIdNumber(taskIdNumber: string) {
+    this.taskIdNumber = taskIdNumber;
+    console.log(taskIdNumber);
   }
 }

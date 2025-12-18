@@ -52,6 +52,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   readonly projectId = input.required<number>();
   readonly id = input.required<number>();
   readonly onSave = output<string>();
+  readonly onGetTaskIdNumber = output<string>();
 
   private genericUtilityService = inject(GenericUtilityService);
   private taskService = inject(TaskService);
@@ -128,6 +129,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       )
       .subscribe((task) => {
         this.createEditTaskForm.patchValue(task);
+        this.onGetTaskIdNumber.emit(task.taskIdNumber);
       });
   }
 
