@@ -6,6 +6,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { QuillModule } from 'ngx-quill';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import Quill from 'quill';
 
 @Component({
   selector: 'app-task-form-details',
@@ -29,10 +30,13 @@ export class TaskFormDetailsComponent {
   taskDetailForm = input.required<FormGroup>();
   private changeDetectorRef = inject(ChangeDetectorRef);
 
+  clearToolbarTimer: any;
+
   quillToolbar = [
     ['bold', 'italic', 'underline'],
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['link', 'image'],
+    [{ color: [] }, { background: [] }],
   ];
   descriptionQuillmodules = {
     toolbar: this.quillToolbar,
@@ -57,6 +61,7 @@ export class TaskFormDetailsComponent {
     testingStartDate: false,
     testingEndDate: false,
   };
+  toolbarInteracting = false;
 
   onInputFocus(input: string) {
     switch (input) {
@@ -92,7 +97,30 @@ export class TaskFormDetailsComponent {
     }
   }
 
+  onEditorCreated(quill: Quill) {
+    const toolbar = quill.getModule('toolbar') as any | null;
+
+    if (!toolbar?.container) return;
+
+    const toolbarEl = toolbar.container;
+
+    toolbarEl.addEventListener('pointerdown', () => {
+      this.toolbarInteracting = true;
+      if (this.clearToolbarTimer) {
+        clearTimeout(this.clearToolbarTimer);
+      }
+    });
+
+    document.addEventListener('pointerup', () => {
+      this.clearToolbarTimer = setTimeout(() => {
+        this.toolbarInteracting = false;
+      }, 0);
+    });
+  }
+
   onInputBlur(input: string) {
+    if (this.toolbarInteracting) return;
+
     switch (input) {
       case 'taskPoints':
         this.hoverdInputs.taskPoints = false;
@@ -111,16 +139,12 @@ export class TaskFormDetailsComponent {
         break;
       case 'description':
         if (this.descriptionTheme === 'bubble') return;
-
         this.descriptionTheme = 'bubble';
-
         this.reRenderEditor(input, true);
         break;
       case 'acceptanceCriteria':
         if (this.acceptanceCriteriaTheme === 'bubble') return;
-
         this.acceptanceCriteriaTheme = 'bubble';
-
         this.reRenderEditor(input, true);
         break;
     }

@@ -32,7 +32,8 @@
           <quill-editor #descriptionRef class="rich-text"
             [class]="descriptionTheme === 'bubble' ? 'bubble-rich-text' : ''" formControlName="description"
             [modules]="descriptionQuillmodules" [theme]="descriptionTheme" placeholder="description..."
-            (onFocus)="onInputFocus('description')" (onBlur)="onInputBlur('description')">
+            (onFocus)="onInputFocus('description')" (onBlur)="onInputBlur('description')"
+            (onEditorCreated)="onEditorCreated($event)">
           </quill-editor>
           }
         </nz-form-control>
@@ -73,7 +74,8 @@
             [class]="acceptanceCriteriaTheme === 'bubble' ? 'bubble-rich-text' : ''"
             formControlName="acceptanceCriteria" [modules]="acceptanceCriteriaQuillmodules"
             [theme]="acceptanceCriteriaTheme" placeholder="acceptance criteria..."
-            (onFocus)="onInputFocus('acceptanceCriteria')" (onBlur)="onInputBlur('acceptanceCriteria')">
+            (onFocus)="onInputFocus('acceptanceCriteria')" (onBlur)="onInputBlur('acceptanceCriteria')"
+            (onEditorCreated)="onEditorCreated($event)">
           </quill-editor>
           }
         </nz-form-control>

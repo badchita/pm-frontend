@@ -13,12 +13,19 @@ import { GenericUtilityService } from '@app/shared/services/generic-utility.serv
 import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { TaskStateTagComponent } from '@app/shared/components/task-state-tag/task-state-tag.component';
 import { RequiredValidator } from '@app/shared/constants/validators';
-import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import {
+  ALERT_DESCRIPTION,
+  ALERT_MESAGE,
+  NOTIFICATION_MESSAGE,
+  NOTIFICATION_TITLE,
+  SPINNER_TIP,
+} from '@app/shared/constants/ui.constants';
 import { finalize, pipe, Subject, takeUntil } from 'rxjs';
 import { AlertType } from '@app/shared/models/alert.model';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { TaskFormDetailsComponent } from '../../components/task-form-details/task-form-details.component';
 import { TaskService } from '../../services/task.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-task-form',
@@ -48,6 +55,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
   private genericUtilityService = inject(GenericUtilityService);
   private taskService = inject(TaskService);
+  private notificationService = inject(NzNotificationService);
   private formBuilder = inject(FormBuilder);
 
   private _destroying$ = new Subject<void>();
@@ -79,6 +87,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   SPINNER_TIP = SPINNER_TIP;
   ALERT_MESAGE = ALERT_MESAGE;
   ALERT_DESCRIPTION = ALERT_DESCRIPTION;
+  NOTIFICATION_TITLE = NOTIFICATION_TITLE;
+  NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
 
   ngOnInit() {
     this.buildForm();
@@ -150,11 +160,12 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   }
 
   save() {
+    this.isLoading = true;
     this.spinnerTip = this.SPINNER_TIP.Creating.replace('{{1}}', 'Task');
     const payload = this.createEditTaskForm.getRawValue();
 
     this.taskService
-      .create(payload, this.projectId())
+      .save(payload, this.projectId())
       .pipe(
         takeUntil(this._destroying$),
         finalize(() => {
@@ -163,9 +174,25 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         (task) => {
-          if (task) {
+          if (task && this.id() === 0) {
             this.onSave.emit(task.taskIdNumber);
+            return;
           }
+
+          this.notificationService.create(
+            'success',
+            NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Task Updated'),
+            this.genericUtilityService.formatMessage(NOTIFICATION_MESSAGE.FormUpdatedSuccess, [
+              'task',
+              'task',
+              task.taskIdNumber,
+            ]),
+            {
+              nzClass: 'form-notification',
+              nzDuration: 5000,
+            }
+          );
+          this.createEditTaskForm.patchValue(task, { emitEvent: false });
         },
         (error) => {
           this.hasError = true;

@@ -14,15 +14,15 @@ export class TaskService {
   private tableUtilityService = inject(TableUtilityService);
   private apiProjects = `${environment.url}/projects`;
 
-  create(task: Task, projectId: number): Observable<Task> {
-    return this.http.post<Task>(`${this.apiProjects}/${projectId}/tasks`, task);
+  save(task: Task, projectId: number): Observable<Task> {
+    if (!task.id) {
+      return this.http.post<Task>(`${this.apiProjects}/${projectId}/tasks`, task);
+    }
+
+    return this.http.put<Task>(`${this.apiProjects}/${projectId}/tasks/${task.id}`, task);
   }
 
-  getList(
-    tableParams: TableParams,
-    filters: any,
-    projectId: number
-  ): Observable<DataTable<Task>> {
+  getList(tableParams: TableParams, filters: any, projectId: number): Observable<DataTable<Task>> {
     const params = this.tableUtilityService.buildParams(tableParams, filters);
 
     return this.http.get<DataTable<Task>>(`${this.apiProjects}/${projectId}/tasks`, { params });
