@@ -1,5 +1,4 @@
 :host {
-  background-color: red;
   .assign-row {
     display: flex;
     justify-content: space-between;
@@ -33,5 +32,12 @@
         width: 120px;
       }
     }
+  }
+
+  .task-sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #fff;
   }
 }
