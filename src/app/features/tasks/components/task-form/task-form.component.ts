@@ -223,6 +223,12 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       );
   }
 
+  refresh() {
+    if (this.id() > 0) {
+      this.loadTask();
+    }
+  }
+
   ngOnDestroy() {
     this._destroying$.next(undefined);
     this._destroying$.complete();
