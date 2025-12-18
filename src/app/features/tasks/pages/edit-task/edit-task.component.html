@@ -1,1 +1,12 @@
-<app-task-form [projectId]="projectId" [id]="taskId"></app-task-form>
+<div class="container">
+  <div class="header">
+    <button class="back-button" nz-button nzType="link" (click)="localtion.back()">
+      <nz-icon nzType="arrow-left" nzTheme="outline" />
+    </button>
+    <span>{{ taskIdNumber }}</span>
+  </div>
+
+  <div class="content">
+    <app-task-form [projectId]="projectId" [id]="taskId" (onGetTaskIdNumber)="getTaskIdNumber($event)"></app-task-form>
+  </div>
+</div>

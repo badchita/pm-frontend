@@ -1,0 +1,22 @@
+:host {
+  .container {
+    .header {
+      display: flex;
+      align-items: center;
+      padding-bottom: 34px;
+
+      span {
+        font-size: 24px;
+        line-height: 32px;
+        padding-left: 10px;
+      }
+
+      .back-button {
+        nz-icon {
+          font-size: 20px;
+          color: var(--pm-primary);
+        }
+      }
+    }
+  }
+}
