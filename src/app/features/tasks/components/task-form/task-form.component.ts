@@ -127,7 +127,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((task) => {
-        this.createEditTaskForm.patchValue(task, { emitEvent: false });
+        this.createEditTaskForm.patchValue(task);
       });
   }
 

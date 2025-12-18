@@ -4,6 +4,7 @@ import { TaskStateColorOptions } from '@app/shared/enums/task-state.enum';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { NzSelectOptionInterface } from 'ng-zorro-antd/select';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { startWith } from 'rxjs';
 
 @Component({
   selector: 'app-task-state-tag',
@@ -24,9 +25,11 @@ export class TaskStateTagComponent implements OnInit {
     this.stateColorOptions = this.stateColorOptions.map((stateColor: NzSelectOptionInterface) => {
       return { value: stateColor.value, color: stateColor.label };
     });
-    this.color = this.genericUtilityService.getStateColor(this.state()?.value);
 
-    this.state()?.valueChanges.subscribe((value) => {
+    const control = this.state();
+    if (!control) return;
+
+    control.valueChanges.pipe(startWith(control.value)).subscribe((value) => {
       this.color = this.genericUtilityService.getStateColor(value);
     });
   }
