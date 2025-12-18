@@ -127,7 +127,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((task) => {
-        this.createEditTaskForm.patchValue(task, { emitEvent: false });
+        this.createEditTaskForm.patchValue(task);
       });
   }
 
@@ -221,6 +221,12 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           }
         }
       );
+  }
+
+  refresh() {
+    if (this.id() > 0) {
+      this.loadTask();
+    }
   }
 
   ngOnDestroy() {
