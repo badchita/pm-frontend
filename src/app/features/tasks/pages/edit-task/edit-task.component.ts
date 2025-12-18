@@ -3,6 +3,7 @@ import { TaskFormComponent } from '../../components/task-form/task-form.componen
 import { ActivatedRoute } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-edit-task.component',
@@ -12,6 +13,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 })
 export class EditTaskComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  localtion = inject(Location);
 
   projectId!: number;
   taskId!: number;
