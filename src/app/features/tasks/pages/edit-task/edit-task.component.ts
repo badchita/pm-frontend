@@ -1,10 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TaskFormComponent } from '../../components/task-form/task-form.component';
 import { ActivatedRoute } from '@angular/router';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-edit-task.component',
-  imports: [TaskFormComponent],
+  imports: [TaskFormComponent, NzButtonModule, NzIconModule],
   templateUrl: './edit-task.component.html',
   styleUrl: './edit-task.component.scss',
 })
