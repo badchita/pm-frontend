@@ -9,7 +9,6 @@ import {
 } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { AuthService } from '@app/features/auth/services/auth.service';
-import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -30,7 +29,6 @@ import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-al
     NzTypographyModule,
     RouterLink,
     NzSpinModule,
-    NzAlertModule,
     PopoverFormValidatorDirective,
     ErrorAlertComponent,
   ],

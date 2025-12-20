@@ -3,15 +3,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { finalize, Subject, Subscription, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { RequiredValidator } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
-import { AlertType } from '@app/shared/models/alert.model';
-import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { ProjectService } from '@app/features/projects/services/project.service';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 
 @Component({
   selector: 'app-create-project-modal',
@@ -22,7 +21,7 @@ import { ProjectService } from '@app/features/projects/services/project.service'
     NzButtonModule,
     NzSpinModule,
     PopoverFormValidatorDirective,
-    NzAlertModule,
+    ErrorAlertComponent,
   ],
   templateUrl: './create-project-modal.component.html',
   styleUrl: './create-project-modal.component.scss',
@@ -35,18 +34,11 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
   private _destroying$ = new Subject<void>();
 
   SPINNER_TIP = SPINNER_TIP;
-  ALERT_MESAGE = ALERT_MESAGE;
-  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
 
   createProjectForm!: FormGroup;
+  catchError!: any;
 
   isLoading = false;
-  hasError = false;
-  alertDetails: AlertType = {
-    type: 'error',
-    message: '',
-    description: '',
-  };
 
   ngOnInit() {
     this.createProjectForm = this.formBuilder.group({
@@ -79,31 +71,7 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          this.hasError = true;
-
-          switch (error.status) {
-            case 0:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.NoInternetConnection,
-                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
-              };
-              break;
-            case 401:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.LoginFailed,
-                description: ALERT_DESCRIPTION.LoginFailedMessage,
-              };
-              break;
-            case 500:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
-                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
-              };
-              break;
-          }
+          this.catchError = error;
         }
       );
   }
