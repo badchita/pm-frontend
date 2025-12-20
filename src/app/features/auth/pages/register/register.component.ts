@@ -10,14 +10,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/features/auth/services/auth.service';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import {
-  ALERT_DESCRIPTION,
-  ALERT_MESAGE,
-  MODAL_TITLE,
-  SPINNER_TIP,
-} from '@app/shared/constants/ui.constants';
-import { NzAlertModule } from 'ng-zorro-antd/alert';
-import { AlertType } from '@app/shared/models/alert.model';
+import { MODAL_TITLE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import {
@@ -25,6 +18,7 @@ import {
   PasswordValidators,
   RequiredValidator,
 } from '@app/shared/constants/validators';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 
 @Component({
   selector: 'app-register',
@@ -38,9 +32,9 @@ import {
     NzTypographyComponent,
     RouterLink,
     NzSpinModule,
-    NzAlertModule,
     NzModalModule,
     PopoverFormValidatorDirective,
+    ErrorAlertComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -54,18 +48,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private _destroying$ = new Subject<void>();
 
   registerForm!: FormGroup;
+  catchError!: any;
 
   SPINNER_TIP = SPINNER_TIP;
-  ALERT_MESAGE = ALERT_MESAGE;
-  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
   MODAL_TITLE = MODAL_TITLE;
-
-  alertDetails: AlertType = {
-    type: 'info',
-    message: '',
-    description: '',
-  };
-  hasError = false;
   isLoading = false;
 
   ngOnInit() {
@@ -77,7 +63,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   register() {
-    this.hasError = false;
     this.isLoading = true;
     const payload = this.registerForm.getRawValue();
 
@@ -91,41 +76,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         (response) => {
-          this.hasError = false;
-
           if (response) {
             this.registerSucessful(response.name);
           }
         },
         (error) => {
-          this.hasError = true;
-
-          switch (error.status) {
-            case 0:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.NoInternetConnection,
-                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
-              };
-
-              break;
-            case 409:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.EmailAlreadyExists,
-                description: ALERT_DESCRIPTION.ThisEmailIsAlreadyInUse,
-              };
-
-              break;
-            case 500:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
-                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
-              };
-
-              break;
-          }
+          this.catchError = error;
         }
       );
   }

@@ -21,9 +21,9 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { RequiredValidator } from '@app/shared/constants/validators';
 import { TaskService } from '../../services/task.service';
-import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import { AlertType } from '@app/shared/models/alert.model';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 
 @Component({
   selector: 'app-task-form-details',
@@ -41,6 +41,7 @@ import { AlertType } from '@app/shared/models/alert.model';
     NzCardModule,
     NzSpinModule,
     FormsModule,
+    ErrorAlertComponent,
   ],
   templateUrl: './task-form-details.component.html',
   styleUrl: './task-form-details.component.scss',
@@ -61,6 +62,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   clearToolbarTimer: any;
   commentsSpinnerTip!: string;
   createTaskCommentForm!: FormGroup;
+  catchError!: any;
 
   quillToolbar = [
     ['bold', 'italic', 'underline'],
@@ -97,17 +99,12 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   };
   toolbarInteracting = false;
   isCommentsLoading = false;
-  hasError = false;
   SPINNER_TIP = SPINNER_TIP;
-  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
-  alertDetails: AlertType = {
-    type: 'info',
-    message: '',
-    description: '',
-  };
 
   ngOnInit() {
-    this.buildForm();
+    if (this.taskId()) {
+      this.buildForm();
+    }
   }
 
   buildForm() {
@@ -120,37 +117,36 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onInputFocus(input: string) {
-    switch (input) {
-      case 'taskPoints':
-        this.hoverdInputs.taskPoints = true;
-        break;
-      case 'readyForDevelopmentDate':
-        this.hoverdInputs.readyForDevelopmentDate = true;
-        break;
-      case 'doneDate':
-        this.hoverdInputs.doneDate = true;
-        break;
-      case 'testingStartDate':
-        this.hoverdInputs.testingStartDate = true;
-        break;
-      case 'testingEndDate':
-        this.hoverdInputs.testingEndDate = true;
-        break;
-      case 'description':
-        if (this.descriptionTheme === 'snow') return;
+  handleInputFocusBlur(input: string, isFocus = false) {
+    if (!isFocus && this.toolbarInteracting) return;
 
-        this.descriptionTheme = 'snow';
+    const hoverStateMap: Record<string, keyof typeof this.hoverdInputs> = {
+      taskPoints: 'taskPoints',
+      readyForDevelopmentDate: 'readyForDevelopmentDate',
+      doneDate: 'doneDate',
+      testingStartDate: 'testingStartDate',
+      testingEndDate: 'testingEndDate',
+    };
 
-        this.reRenderEditor(input, false);
-        break;
-      case 'acceptanceCriteria':
-        if (this.acceptanceCriteriaTheme === 'snow') return;
+    if (hoverStateMap[input]) {
+      this.hoverdInputs[hoverStateMap[input]] = isFocus;
+      return;
+    }
 
-        this.acceptanceCriteriaTheme = 'snow';
+    const editorMap: Record<string, { themeProp: 'descriptionTheme' | 'acceptanceCriteriaTheme' }> =
+      {
+        description: { themeProp: 'descriptionTheme' },
+        acceptanceCriteria: { themeProp: 'acceptanceCriteriaTheme' },
+      };
 
-        this.reRenderEditor(input, false);
-        break;
+    if (editorMap[input]) {
+      const themeProp = editorMap[input].themeProp;
+      const newTheme = isFocus ? 'snow' : 'bubble';
+
+      if (this[themeProp] === newTheme) return;
+
+      this[themeProp] = newTheme;
+      this.reRenderEditor(input, !isFocus);
     }
   }
 
@@ -175,38 +171,6 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onInputBlur(input: string) {
-    if (this.toolbarInteracting) return;
-
-    switch (input) {
-      case 'taskPoints':
-        this.hoverdInputs.taskPoints = false;
-        break;
-      case 'readyForDevelopmentDate':
-        this.hoverdInputs.readyForDevelopmentDate = false;
-        break;
-      case 'doneDate':
-        this.hoverdInputs.doneDate = false;
-        break;
-      case 'testingStartDate':
-        this.hoverdInputs.testingStartDate = false;
-        break;
-      case 'testingEndDate':
-        this.hoverdInputs.testingEndDate = false;
-        break;
-      case 'description':
-        if (this.descriptionTheme === 'bubble') return;
-        this.descriptionTheme = 'bubble';
-        this.reRenderEditor(input, true);
-        break;
-      case 'acceptanceCriteria':
-        if (this.acceptanceCriteriaTheme === 'bubble') return;
-        this.acceptanceCriteriaTheme = 'bubble';
-        this.reRenderEditor(input, true);
-        break;
-    }
-  }
-
   expandMinimize(richText: string, isExpand: boolean, isDiscussionRow = false) {
     const span = isExpand ? 24 : 13;
 
@@ -227,11 +191,6 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
     } else {
       this.hideDescription = isExpand;
     }
-  }
-
-  expandMinimizeDiscussion(isExpand: boolean) {
-    this.hideDetailsRow = isExpand;
-    this.discussionSpan = isExpand ? 24 : 13;
   }
 
   private reRenderEditor(richTextInput: string, isBlur: boolean) {
@@ -286,30 +245,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
           this.createTaskCommentForm.get('content')?.reset();
         },
         (error) => {
-          this.hasError = true;
-          switch (error.status) {
-            case 0:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.NoInternetConnection,
-                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
-              };
-              break;
-            case 401:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.LoginFailed,
-                description: ALERT_DESCRIPTION.LoginFailedMessage,
-              };
-              break;
-            case 500:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
-                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
-              };
-              break;
-          }
+          this.catchError = error;
         }
       );
   }

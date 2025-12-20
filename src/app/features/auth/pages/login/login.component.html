@@ -1,15 +1,7 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="SPINNER_TIP.LoggingYouIn">
-  @if (hasError || showNotAuthAlert) {
-    <nz-alert
-      class="pm-alert"
-      nzBanner
-      nzShowIcon
-      [nzCloseable]="showNotAuthAlert"
-      [nzType]="alertDetails.type"
-      [nzMessage]="alertDetails.message"
-      [nzDescription]="alertDetails.description"
-    ></nz-alert>
-  }
+  <div class="error-alert">
+    <app-error-alert [error]="catchError"></app-error-alert>
+  </div>
 
   <nz-card>
     <form nz-form [formGroup]="loginForm" class="login-form">
@@ -17,40 +9,21 @@
       <nz-form-item>
         <nz-form-control>
           <nz-input-wrapper>
-            <input
-              type="text"
-              nz-input
-              formControlName="email"
-              placeholder="Email"
-              nzSize="large"
-              appPopoverFormValidator
-            />
+            <input type="text" nz-input formControlName="email" placeholder="Email" nzSize="large"
+              appPopoverFormValidator />
           </nz-input-wrapper>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-control>
           <nz-input-wrapper>
-            <input
-              nz-input
-              formControlName="password"
-              placeholder="Password"
-              nzSize="large"
-              type="password"
-              appPopoverFormValidator
-            />
+            <input nz-input formControlName="password" placeholder="Password" nzSize="large" type="password"
+              appPopoverFormValidator />
           </nz-input-wrapper>
         </nz-form-control>
       </nz-form-item>
-      <button
-        nz-button
-        class="login-form-button"
-        [nzType]="'primary'"
-        nzSize="large"
-        nzShape="round"
-        (click)="login()"
-        [disabled]="loginForm.invalid"
-      >
+      <button nz-button class="login-form-button" [nzType]="'primary'" nzSize="large" nzShape="round" (click)="login()"
+        [disabled]="loginForm.invalid">
         Log in
       </button>
       <div class="link-texts">
