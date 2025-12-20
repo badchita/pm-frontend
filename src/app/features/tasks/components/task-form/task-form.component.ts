@@ -14,18 +14,16 @@ import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { TaskStateTagComponent } from '@app/shared/components/task-state-tag/task-state-tag.component';
 import { RequiredValidator } from '@app/shared/constants/validators';
 import {
-  ALERT_DESCRIPTION,
-  ALERT_MESAGE,
   NOTIFICATION_MESSAGE,
   NOTIFICATION_TITLE,
   SPINNER_TIP,
 } from '@app/shared/constants/ui.constants';
-import { finalize, pipe, Subject, takeUntil } from 'rxjs';
-import { AlertType } from '@app/shared/models/alert.model';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { TaskFormDetailsComponent } from '../../components/task-form-details/task-form-details.component';
 import { TaskService } from '../../services/task.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 
 @Component({
   selector: 'app-task-form',
@@ -44,6 +42,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     TaskStateTagComponent,
     PopoverFormValidatorDirective,
     NzSpinModule,
+    ErrorAlertComponent,
   ],
   templateUrl: './task-form.component.html',
   styleUrl: './task-form.component.scss',
@@ -63,6 +62,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
   createEditTaskForm!: FormGroup;
   spinnerTip!: string;
+  catchError!: any;
 
   hoverdInputs = {
     title: false,
@@ -79,15 +79,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   ];
   stateOptions = this.genericUtilityService.objectToArray(TaskStateOptions, false, true);
   isLoading = false;
-  hasError = false;
-  alertDetails: AlertType = {
-    type: 'info',
-    message: '',
-    description: '',
-  };
   SPINNER_TIP = SPINNER_TIP;
-  ALERT_MESAGE = ALERT_MESAGE;
-  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;
   NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
 
@@ -127,10 +119,15 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe((task) => {
-        this.createEditTaskForm.patchValue(task);
-        this.onGetTaskIdNumber.emit(task.taskIdNumber);
-      });
+      .subscribe(
+        (task) => {
+          this.createEditTaskForm.patchValue(task);
+          this.onGetTaskIdNumber.emit(task.taskIdNumber);
+        },
+        (error) => {
+          this.catchError = error;
+        }
+      );
   }
 
   onInputFocus(input: string) {
@@ -197,30 +194,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           this.createEditTaskForm.patchValue(task, { emitEvent: false });
         },
         (error) => {
-          this.hasError = true;
-          switch (error.status) {
-            case 0:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.NoInternetConnection,
-                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
-              };
-              break;
-            case 401:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.LoginFailed,
-                description: ALERT_DESCRIPTION.LoginFailedMessage,
-              };
-              break;
-            case 500:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
-                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
-              };
-              break;
-          }
+          this.catchError = error;
         }
       );
   }

@@ -141,7 +141,7 @@
     }
   </nz-row>
 
-  @if (!hideDiscussionRow) {
+  @if (!hideDiscussionRow && taskId()) {
   <nz-row class="discussion-row">
     <nz-col [nzSpan]="discussionSpan">
       <div class="col-header">

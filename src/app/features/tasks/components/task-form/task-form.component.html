@@ -1,4 +1,6 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="spinnerTip">
+  <app-error-alert [error]="catchError"></app-error-alert>
+
   <form nz-form nzLayout="vertical" [formGroup]="createEditTaskForm">
     <div class="task-sticky-header">
       <nz-row>

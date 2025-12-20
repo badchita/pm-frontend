@@ -107,7 +107,9 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-    this.buildForm();
+    if (this.taskId()) {
+      this.buildForm();
+    }
   }
 
   buildForm() {
