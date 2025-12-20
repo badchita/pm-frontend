@@ -1,5 +1,13 @@
-import { ChangeDetectorRef, Component, inject, input, ViewChild } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -10,6 +18,12 @@ import { NzCommentModule } from 'ng-zorro-antd/comment';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import Quill from 'quill';
 import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { RequiredValidator } from '@app/shared/constants/validators';
+import { TaskService } from '../../services/task.service';
+import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { AlertType } from '@app/shared/models/alert.model';
 
 @Component({
   selector: 'app-task-form-details',
@@ -25,18 +39,28 @@ import { NzCardModule } from 'ng-zorro-antd/card';
     NzCommentModule,
     NzAvatarModule,
     NzCardModule,
+    NzSpinModule,
+    FormsModule,
   ],
   templateUrl: './task-form-details.component.html',
   styleUrl: './task-form-details.component.scss',
 })
-export class TaskFormDetailsComponent {
+export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('descriptionRef') descriptionRef!: any;
   @ViewChild('acceptanceCriteriaRef') acceptanceCriteriaRef!: any;
 
   taskDetailForm = input.required<FormGroup>();
+  taskId = input.required<number>();
+
   private changeDetectorRef = inject(ChangeDetectorRef);
+  private formBuilder = inject(FormBuilder);
+  private taskService = inject(TaskService);
+
+  private _destroying$ = new Subject<void>();
 
   clearToolbarTimer: any;
+  commentsSpinnerTip!: string;
+  createTaskCommentForm!: FormGroup;
 
   quillToolbar = [
     ['bold', 'italic', 'underline'],
@@ -72,6 +96,29 @@ export class TaskFormDetailsComponent {
     testingEndDate: false,
   };
   toolbarInteracting = false;
+  isCommentsLoading = false;
+  hasError = false;
+  SPINNER_TIP = SPINNER_TIP;
+  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
+  alertDetails: AlertType = {
+    type: 'info',
+    message: '',
+    description: '',
+  };
+
+  ngOnInit() {
+    this.buildForm();
+  }
+
+  buildForm() {
+    const userDetailsSession = sessionStorage.getItem('user_details');
+    const userDetails = userDetailsSession ? JSON.parse(userDetailsSession) : null;
+    this.createTaskCommentForm = this.formBuilder.group({
+      id: [null],
+      content: [null, RequiredValidator],
+      userId: [userDetails.id],
+    });
+  }
 
   onInputFocus(input: string) {
     switch (input) {
@@ -219,5 +266,56 @@ export class TaskFormDetailsComponent {
         quill.focus();
       }
     });
+  }
+
+  addComment() {
+    this.isCommentsLoading = true;
+    this.commentsSpinnerTip = this.SPINNER_TIP.Adding.replace('{{1}}', 'Comment');
+    const payload = this.createTaskCommentForm.getRawValue();
+
+    this.taskService
+      .saveTaskComment(payload, this.taskId())
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isCommentsLoading = false;
+        })
+      )
+      .subscribe(
+        (comment) => {
+          this.createTaskCommentForm.get('content')?.reset();
+        },
+        (error) => {
+          this.hasError = true;
+          switch (error.status) {
+            case 0:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.NoInternetConnection,
+                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
+              };
+              break;
+            case 401:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.LoginFailed,
+                description: ALERT_DESCRIPTION.LoginFailedMessage,
+              };
+              break;
+            case 500:
+              this.alertDetails = {
+                type: 'error',
+                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
+                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
+              };
+              break;
+          }
+        }
+      );
+  }
+
+  ngOnDestroy() {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
 }
