@@ -10,4 +10,5 @@ export interface TaskComment {
   task: Task;
   createdAt: Date;
   updatedAt: Date;
+  displayTime?: string;
 }

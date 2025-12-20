@@ -24,6 +24,8 @@ import { TaskService } from '../../services/task.service';
 import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
+import { TaskComment } from '../../models/task-comment.model';
+import { formatDistance } from 'date-fns';
 
 @Component({
   selector: 'app-task-form-details',
@@ -63,6 +65,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   commentsSpinnerTip!: string;
   createTaskCommentForm!: FormGroup;
   catchError!: any;
+  taskComments!: TaskComment[];
 
   quillToolbar = [
     ['bold', 'italic', 'underline'],
@@ -115,6 +118,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
       content: [null, RequiredValidator],
       userId: [userDetails.id],
     });
+    this.loadComments();
   }
 
   handleInputFocusBlur(input: string, isFocus = false) {
@@ -241,8 +245,35 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(
-        (comment) => {
+        () => {
           this.createTaskCommentForm.get('content')?.reset();
+          this.loadComments();
+        },
+        (error) => {
+          this.catchError = error;
+        }
+      );
+  }
+
+  loadComments() {
+    this.isCommentsLoading = true;
+
+    this.taskService
+      .getAllTaskComments(this.taskId())
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isCommentsLoading = false;
+        })
+      )
+      .subscribe(
+        (comments) => {
+          this.taskComments = comments.map((comment) => {
+            return {
+              ...comment,
+              displayTime: formatDistance(new Date(), comment.createdAt),
+            };
+          });
         },
         (error) => {
           this.catchError = error;
