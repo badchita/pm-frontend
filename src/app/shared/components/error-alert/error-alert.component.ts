@@ -10,7 +10,7 @@ import { NzAlertModule } from 'ng-zorro-antd/alert';
   styleUrl: './error-alert.component.scss',
 })
 export class ErrorAlertComponent implements OnChanges {
-  error = input.required<any>();
+  error = input.required<any | AlertType>();
 
   alertDetails: AlertType | null = null;
 
@@ -18,7 +18,7 @@ export class ErrorAlertComponent implements OnChanges {
   ALERT_DESCRIPTION = ALERT_DESCRIPTION;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['error'] && this.error) {
+    if (changes['error'] && this.error()) {
       this.setAlert(this.error());
     }
   }
@@ -32,6 +32,13 @@ export class ErrorAlertComponent implements OnChanges {
           description: this.ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
         };
         break;
+      case 401:
+        this.alertDetails = {
+          type: 'error',
+          message: ALERT_MESAGE.LoginFailed,
+          description: ALERT_DESCRIPTION.LoginFailedMessage,
+        };
+        break;
       case 409:
         this.alertDetails = {
           type: 'error',
@@ -40,13 +47,18 @@ export class ErrorAlertComponent implements OnChanges {
         };
         break;
       case 500:
-      default:
         this.alertDetails = {
           type: 'error',
           message: this.ALERT_MESAGE.UnexpectedErroIinternalServerError,
           description: this.ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
         };
         break;
+      default:
+        this.alertDetails = {
+          type: 'error',
+          message: ALERT_MESAGE.NotAuthorized,
+          description: ALERT_DESCRIPTION.NotAuthorizedMessage,
+        };
     }
   }
 }

@@ -1,14 +1,13 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import {
   EmailValidator,
   PasswordValidators,
   RequiredValidator,
 } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
-import { AlertType } from '@app/shared/models/alert.model';
 import { AuthService } from '@app/features/auth/services/auth.service';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -18,6 +17,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +32,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     NzSpinModule,
     NzAlertModule,
     PopoverFormValidatorDirective,
+    ErrorAlertComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -45,29 +46,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   private _destroying$ = new Subject<void>();
 
   loginForm!: FormGroup;
+  catchError!: any;
 
   SPINNER_TIP = SPINNER_TIP;
-  ALERT_MESAGE = ALERT_MESAGE;
-  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
-
-  alertDetails: AlertType = {
-    type: 'info',
-    message: '',
-    description: '',
-  };
-  hasError = false;
-  showNotAuthAlert = false;
   isLoading = false;
 
   constructor() {
     this.route.queryParams.subscribe((params) => {
       if (params['message'] === 'not-authenticated') {
-        this.showNotAuthAlert = true;
-        this.alertDetails = {
-          type: 'error',
-          message: ALERT_MESAGE.NotAuthorized,
-          description: ALERT_DESCRIPTION.NotAuthorizedMessage,
-        };
+        this.catchError = 'not-authenticated';
       }
     });
   }
@@ -80,8 +67,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.isLoading = true
-    this.showNotAuthAlert = false;
+    this.isLoading = true;
     const payload = this.loginForm.getRawValue();
 
     this.authService
@@ -99,31 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.router.navigate(['/portal']);
         },
         (error) => {
-          this.hasError = true;
-
-          switch (error.status) {
-            case 0:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.NoInternetConnection,
-                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
-              };
-              break;
-            case 401:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.LoginFailed,
-                description: ALERT_DESCRIPTION.LoginFailedMessage,
-              };
-              break;
-            case 500:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
-                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
-              };
-              break;
-          }
+          this.catchError = error;
         }
       );
   }

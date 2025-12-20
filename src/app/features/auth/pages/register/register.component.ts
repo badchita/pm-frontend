@@ -10,12 +10,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/features/auth/services/auth.service';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import {
-  ALERT_DESCRIPTION,
-  ALERT_MESAGE,
-  MODAL_TITLE,
-  SPINNER_TIP,
-} from '@app/shared/constants/ui.constants';
+import { MODAL_TITLE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import {
@@ -53,13 +48,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private _destroying$ = new Subject<void>();
 
   registerForm!: FormGroup;
+  catchError!: any;
 
   SPINNER_TIP = SPINNER_TIP;
-  ALERT_MESAGE = ALERT_MESAGE;
-  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
   MODAL_TITLE = MODAL_TITLE;
   isLoading = false;
-  catchError!: any;
 
   ngOnInit() {
     this.registerForm = this.fb.group({
