@@ -130,31 +130,16 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       );
   }
 
-  onInputFocus(input: string) {
-    switch (input) {
-      case 'title':
-        this.hoverdInputs.title = true;
-        break;
-      case 'assignedTo':
-        this.hoverdInputs.assignedTo = true;
-        break;
-      case 'state':
-        this.hoverdInputs.state = true;
-        break;
-    }
-  }
+  handleInputFocusBlur(input: string, isFocus = false) {
+    const hoverStateMap: Record<string, keyof typeof this.hoverdInputs> = {
+      title: 'title',
+      assignedTo: 'assignedTo',
+      state: 'state',
+    };
 
-  onInputBlur(input: string) {
-    switch (input) {
-      case 'title':
-        this.hoverdInputs.title = false;
-        break;
-      case 'assignedTo':
-        this.hoverdInputs.assignedTo = false;
-        break;
-      case 'state':
-        this.hoverdInputs.state = false;
-        break;
+    if (hoverStateMap[input]) {
+      this.hoverdInputs[hoverStateMap[input]] = isFocus;
+      return;
     }
   }
 

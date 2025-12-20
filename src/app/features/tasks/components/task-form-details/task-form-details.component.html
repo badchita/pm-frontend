@@ -32,7 +32,7 @@
           <quill-editor #descriptionRef class="rich-text"
             [class]="descriptionTheme === 'bubble' ? 'bubble-rich-text' : ''" formControlName="description"
             [modules]="descriptionQuillmodules" [theme]="descriptionTheme" placeholder="description..."
-            (onFocus)="onInputFocus('description')" (onBlur)="onInputBlur('description')"
+            (onFocus)="handleInputFocusBlur('description', true)" (onBlur)="handleInputFocusBlur('description')"
             (onEditorCreated)="onEditorCreated($event)">
           </quill-editor>
           }
@@ -73,7 +73,7 @@
             [class]="acceptanceCriteriaTheme === 'bubble' ? 'bubble-rich-text' : ''"
             formControlName="acceptanceCriteria" [modules]="acceptanceCriteriaQuillmodules"
             [theme]="acceptanceCriteriaTheme" placeholder="acceptance criteria..."
-            (onFocus)="onInputFocus('acceptanceCriteria')" (onBlur)="onInputBlur('acceptanceCriteria')"
+            (onFocus)="handleInputFocusBlur('acceptanceCriteria', true)" (onBlur)="handleInputFocusBlur('acceptanceCriteria')"
             (onEditorCreated)="onEditorCreated($event)">
           </quill-editor>
           }
@@ -93,7 +93,7 @@
           <nz-input-wrapper>
             <input [class]="hoverdInputs.taskPoints ? 'portal-input-form' : 'create-edit-input-form'" type="text"
               nz-input formControlName="taskPoints" nzSize="large" appPopoverFormValidator
-              (focus)="onInputFocus('taskPoints')" (blur)="onInputBlur('taskPoints')" />
+              (focus)="handleInputFocusBlur('taskPoints', true)" (blur)="handleInputFocusBlur('taskPoints')" />
           </nz-input-wrapper>
         </nz-form-control>
       </nz-form-item>
@@ -103,16 +103,16 @@
           <nz-date-picker
             [class]="hoverdInputs.readyForDevelopmentDate ? 'input-search' : 'create-edit-task-date-picker'"
             formControlName="readyForDevelopmentDate" nzFormat="MMM dd, yyyy"
-            (focus)="onInputFocus('readyForDevelopmentDate')"
-            (blur)="onInputBlur('readyForDevelopmentDate')"></nz-date-picker>
+            (focus)="handleInputFocusBlur('readyForDevelopmentDate', true)"
+            (blur)="handleInputFocusBlur('readyForDevelopmentDate')"></nz-date-picker>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label>Done Date</nz-form-label>
         <nz-form-control>
           <nz-date-picker [class]="hoverdInputs.doneDate ? 'input-search' : 'create-edit-task-date-picker'"
-            formControlName="doneDate" nzFormat="MMM dd, yyyy" (focus)="onInputFocus('doneDate')"
-            (blur)="onInputBlur('doneDate')"></nz-date-picker>
+            formControlName="doneDate" nzFormat="MMM dd, yyyy" (focus)="handleInputFocusBlur('doneDate', true)"
+            (blur)="handleInputFocusBlur('doneDate')"></nz-date-picker>
         </nz-form-control>
       </nz-form-item>
     </nz-col>
@@ -124,8 +124,8 @@
         <nz-form-label>Testing Start Date</nz-form-label>
         <nz-form-control>
           <nz-date-picker [class]="hoverdInputs.testingStartDate ? 'input-search' : 'create-edit-task-date-picker'"
-            formControlName="testingStartDate" nzFormat="MMM dd, yyyy" (focus)="onInputFocus('testingStartDate')"
-            (blur)="onInputBlur('testingStartDate')"></nz-date-picker>
+            formControlName="testingStartDate" nzFormat="MMM dd, yyyy" (focus)="handleInputFocusBlur('testingStartDate', true)"
+            (blur)="handleInputFocusBlur('testingStartDate')"></nz-date-picker>
         </nz-form-control>
       </nz-form-item>
 
@@ -133,8 +133,8 @@
         <nz-form-label>Testing End Date</nz-form-label>
         <nz-form-control>
           <nz-date-picker [class]="hoverdInputs.testingEndDate ? 'input-search' : 'create-edit-task-date-picker'"
-            formControlName="testingEndDate" nzFormat="MMM dd, yyyy" (focus)="onInputFocus('testingEndDate')"
-            (blur)="onInputBlur('testingEndDate')"></nz-date-picker>
+            formControlName="testingEndDate" nzFormat="MMM dd, yyyy" (focus)="handleInputFocusBlur('testingEndDate', true)"
+            (blur)="handleInputFocusBlur('testingEndDate')"></nz-date-picker>
         </nz-form-control>
       </nz-form-item>
     </nz-col>

@@ -21,7 +21,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { RequiredValidator } from '@app/shared/constants/validators';
 import { TaskService } from '../../services/task.service';
-import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 
@@ -117,37 +117,36 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onInputFocus(input: string) {
-    switch (input) {
-      case 'taskPoints':
-        this.hoverdInputs.taskPoints = true;
-        break;
-      case 'readyForDevelopmentDate':
-        this.hoverdInputs.readyForDevelopmentDate = true;
-        break;
-      case 'doneDate':
-        this.hoverdInputs.doneDate = true;
-        break;
-      case 'testingStartDate':
-        this.hoverdInputs.testingStartDate = true;
-        break;
-      case 'testingEndDate':
-        this.hoverdInputs.testingEndDate = true;
-        break;
-      case 'description':
-        if (this.descriptionTheme === 'snow') return;
+  handleInputFocusBlur(input: string, isFocus = false) {
+    if (!isFocus && this.toolbarInteracting) return;
 
-        this.descriptionTheme = 'snow';
+    const hoverStateMap: Record<string, keyof typeof this.hoverdInputs> = {
+      taskPoints: 'taskPoints',
+      readyForDevelopmentDate: 'readyForDevelopmentDate',
+      doneDate: 'doneDate',
+      testingStartDate: 'testingStartDate',
+      testingEndDate: 'testingEndDate',
+    };
 
-        this.reRenderEditor(input, false);
-        break;
-      case 'acceptanceCriteria':
-        if (this.acceptanceCriteriaTheme === 'snow') return;
+    if (hoverStateMap[input]) {
+      this.hoverdInputs[hoverStateMap[input]] = isFocus;
+      return;
+    }
 
-        this.acceptanceCriteriaTheme = 'snow';
+    const editorMap: Record<string, { themeProp: 'descriptionTheme' | 'acceptanceCriteriaTheme' }> =
+      {
+        description: { themeProp: 'descriptionTheme' },
+        acceptanceCriteria: { themeProp: 'acceptanceCriteriaTheme' },
+      };
 
-        this.reRenderEditor(input, false);
-        break;
+    if (editorMap[input]) {
+      const themeProp = editorMap[input].themeProp;
+      const newTheme = isFocus ? 'snow' : 'bubble';
+
+      if (this[themeProp] === newTheme) return;
+
+      this[themeProp] = newTheme;
+      this.reRenderEditor(input, !isFocus);
     }
   }
 
@@ -170,38 +169,6 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
         this.toolbarInteracting = false;
       }, 0);
     });
-  }
-
-  onInputBlur(input: string) {
-    if (this.toolbarInteracting) return;
-
-    switch (input) {
-      case 'taskPoints':
-        this.hoverdInputs.taskPoints = false;
-        break;
-      case 'readyForDevelopmentDate':
-        this.hoverdInputs.readyForDevelopmentDate = false;
-        break;
-      case 'doneDate':
-        this.hoverdInputs.doneDate = false;
-        break;
-      case 'testingStartDate':
-        this.hoverdInputs.testingStartDate = false;
-        break;
-      case 'testingEndDate':
-        this.hoverdInputs.testingEndDate = false;
-        break;
-      case 'description':
-        if (this.descriptionTheme === 'bubble') return;
-        this.descriptionTheme = 'bubble';
-        this.reRenderEditor(input, true);
-        break;
-      case 'acceptanceCriteria':
-        if (this.acceptanceCriteriaTheme === 'bubble') return;
-        this.acceptanceCriteriaTheme = 'bubble';
-        this.reRenderEditor(input, true);
-        break;
-    }
   }
 
   expandMinimize(richText: string, isExpand: boolean, isDiscussionRow = false) {

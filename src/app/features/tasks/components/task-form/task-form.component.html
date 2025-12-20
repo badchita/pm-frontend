@@ -10,7 +10,7 @@
               <nz-input-wrapper>
                 <input [class]="hoverdInputs.title ? 'portal-input-form' : 'create-edit-input-form'" type="text"
                   nz-input formControlName="taskName" nzSize="large" placeholder="Task Name" appPopoverFormValidator
-                  (focus)="onInputFocus('title')" (blur)="onInputBlur('title')" />
+                  (focus)="handleInputFocusBlur('title', true)" (blur)="handleInputFocusBlur('title')" />
               </nz-input-wrapper>
             </nz-form-control>
           </nz-form-item>
@@ -22,7 +22,7 @@
             <nz-form-control>
               <nz-select [class]="hoverdInputs.assignedTo ? 'select-search' : 'create-edit-select-form'"
                 nzSuffixIcon="user" formControlName="assignedTo" nzPlaceHolder="No one selected" [nzAllowClear]="true"
-                (nzFocus)="onInputFocus('assignedTo')" (nzBlur)="onInputBlur('assignedTo')">
+                (nzFocus)="handleInputFocusBlur('assignedTo', true)" (nzBlur)="handleInputFocusBlur('assignedTo')">
               </nz-select>
             </nz-form-control>
           </nz-form-item>
@@ -53,7 +53,7 @@
               <div class="state-flex">
                 <nz-select [class]="hoverdInputs.state ? 'select-search' : 'create-edit-select-form'"
                   formControlName="state" nzPlaceHolder="State" [nzOptions]="stateOptions" [nzAllowClear]="true"
-                  (nzFocus)="onInputFocus('state')" (nzBlur)="onInputBlur('state')">
+                  (nzFocus)="handleInputFocusBlur('state', true)" (nzBlur)="handleInputFocusBlur('state')">
                 </nz-select>
                 <app-task-state-tag [state]="state"></app-task-state-tag>
               </div>
