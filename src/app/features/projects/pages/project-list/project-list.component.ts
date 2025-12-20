@@ -6,15 +6,16 @@ import { CreateProjectModalComponent } from './modals/create-project-modal/creat
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
 import { Project } from '@app/features/projects/models/project.model';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { catchError, finalize, Subject, takeUntil } from 'rxjs';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { ProjectService } from '../../services/project.service';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 
 @Component({
   selector: 'app-project-list',
-  imports: [ProjectListTableComponent, NzButtonModule, NzModalModule],
+  imports: [ProjectListTableComponent, NzButtonModule, NzModalModule, ErrorAlertComponent],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
 })
@@ -49,6 +50,7 @@ export class ProjectListComponent implements OnDestroy {
     pageSize: 10,
   };
   isLoading = false;
+  catchError!: any;
 
   addNewProject() {
     const modal = this.modalService.create({
@@ -96,9 +98,14 @@ export class ProjectListComponent implements OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe((dataTable) => {
-        this.projectDataTable = dataTable;
-      });
+      .subscribe(
+        (dataTable) => {
+          this.projectDataTable = dataTable;
+        },
+        (error) => {
+          this.catchError = error;
+        }
+      );
   }
 
   tableUpdate(tableParams: NzTableQueryParams) {

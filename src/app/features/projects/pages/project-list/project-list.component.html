@@ -1,4 +1,5 @@
 <div class="container">
+  <app-error-alert [error]="catchError"></app-error-alert>
   <div class="header">
     <span>Project List</span>
     <button nz-button nzShape="round" nzType="primary" (click)="addNewProject()">
@@ -7,11 +8,8 @@
   </div>
 
   <div class="content">
-    <app-project-list-table
-      [dataTable]="projectDataTable"
-      [dataList]="projectDataTable.data.length > 0 ? projectDataTable.data : []"
-      [loading]="isLoading"
-      (onUpdateTable)="tableUpdate($event)"
-    ></app-project-list-table>
+    <app-project-list-table [dataTable]="projectDataTable"
+      [dataList]="projectDataTable.data.length > 0 ? projectDataTable.data : []" [loading]="isLoading"
+      (onUpdateTable)="tableUpdate($event)"></app-project-list-table>
   </div>
 </div>
