@@ -73,8 +73,8 @@
             [class]="acceptanceCriteriaTheme === 'bubble' ? 'bubble-rich-text' : ''"
             formControlName="acceptanceCriteria" [modules]="acceptanceCriteriaQuillmodules"
             [theme]="acceptanceCriteriaTheme" placeholder="acceptance criteria..."
-            (onFocus)="handleInputFocusBlur('acceptanceCriteria', true)" (onBlur)="handleInputFocusBlur('acceptanceCriteria')"
-            (onEditorCreated)="onEditorCreated($event)">
+            (onFocus)="handleInputFocusBlur('acceptanceCriteria', true)"
+            (onBlur)="handleInputFocusBlur('acceptanceCriteria')" (onEditorCreated)="onEditorCreated($event)">
           </quill-editor>
           }
         </nz-form-control>
@@ -124,7 +124,8 @@
         <nz-form-label>Testing Start Date</nz-form-label>
         <nz-form-control>
           <nz-date-picker [class]="hoverdInputs.testingStartDate ? 'input-search' : 'create-edit-task-date-picker'"
-            formControlName="testingStartDate" nzFormat="MMM dd, yyyy" (focus)="handleInputFocusBlur('testingStartDate', true)"
+            formControlName="testingStartDate" nzFormat="MMM dd, yyyy"
+            (focus)="handleInputFocusBlur('testingStartDate', true)"
             (blur)="handleInputFocusBlur('testingStartDate')"></nz-date-picker>
         </nz-form-control>
       </nz-form-item>
@@ -133,7 +134,8 @@
         <nz-form-label>Testing End Date</nz-form-label>
         <nz-form-control>
           <nz-date-picker [class]="hoverdInputs.testingEndDate ? 'input-search' : 'create-edit-task-date-picker'"
-            formControlName="testingEndDate" nzFormat="MMM dd, yyyy" (focus)="handleInputFocusBlur('testingEndDate', true)"
+            formControlName="testingEndDate" nzFormat="MMM dd, yyyy"
+            (focus)="handleInputFocusBlur('testingEndDate', true)"
             (blur)="handleInputFocusBlur('testingEndDate')"></nz-date-picker>
         </nz-form-control>
       </nz-form-item>
@@ -174,8 +176,7 @@
 
         <form nz-form [formGroup]="createTaskCommentForm">
           <nz-comment>
-            <nz-avatar nz-comment-avatar nzIcon="user"
-              [nzSrc]="'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'"></nz-avatar>
+            <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="/src/app/assets/images/profile-default.svg"></nz-avatar>
             <nz-comment-content>
               <nz-form-item>
                 <textarea nz-input rows="4" formControlName="content"></textarea>
@@ -188,14 +189,13 @@
             </nz-comment-content>
           </nz-comment>
         </form>
-        <nz-card>
-          <nz-comment nzAuthor="Han Solo">
-            <nz-avatar nz-comment-avatar nzIcon="user"
-              nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+        @for (comment of taskComments; track comment.id) {
+        <nz-card class="comments-card">
+          <nz-comment [nzAuthor]="comment.user.name" [nzDatetime]="comment.displayTime">
+            <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="/src/app/assets/images/profile-default.svg"></nz-avatar>
             <nz-comment-content>
               <p>
-                We supply a series of design principles, practical patterns and high quality design resources(Sketch and
-                Axure), to help people create their product prototypes beautifully and efficiently.
+                {{ comment.content }}
               </p>
             </nz-comment-content>
             <nz-comment-action>
@@ -208,6 +208,7 @@
             </nz-comment-action>
           </nz-comment>
         </nz-card>
+        }
       </nz-spin>
       }
     </nz-col>

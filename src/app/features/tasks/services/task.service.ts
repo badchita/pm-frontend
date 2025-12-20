@@ -37,4 +37,8 @@ export class TaskService {
   saveTaskComment(taskComment: TaskComment, taskId: number): Observable<TaskComment> {
     return this.http.post<TaskComment>(`${this.apiTasks}/${taskId}/comments`, taskComment);
   }
+
+  getAllTaskComments(taskId: number): Observable<TaskComment[]> {
+    return this.http.get<TaskComment[]>(`${this.apiTasks}/${taskId}/comments`);
+  }
 }
