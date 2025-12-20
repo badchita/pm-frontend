@@ -5,6 +5,7 @@ import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { Task } from '@app/features/tasks/models/task.model';
 import { TableUtilityService } from '@app/shared/services/table-utility.service';
 import { Observable } from 'rxjs';
+import { TaskComment } from '../models/task-comment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ export class TaskService {
   private http = inject(HttpClient);
   private tableUtilityService = inject(TableUtilityService);
   private apiProjects = `${environment.url}/projects`;
+  private apiTasks = `${environment.url}/tasks`;
 
   save(task: Task, projectId: number): Observable<Task> {
     if (!task.id) {
@@ -30,5 +32,9 @@ export class TaskService {
 
   getById(projectId: number, id: number): Observable<Task> {
     return this.http.get<Task>(`${this.apiProjects}/${projectId}/tasks/${id}`);
+  }
+
+  saveTaskComment(taskComment: TaskComment, taskId: number): Observable<TaskComment> {
+    return this.http.post<TaskComment>(`${this.apiTasks}/${taskId}/comments`, taskComment);
   }
 }

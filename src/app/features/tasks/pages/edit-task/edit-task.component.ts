@@ -28,6 +28,5 @@ export class EditTaskComponent implements OnInit {
 
   getTaskIdNumber(taskIdNumber: string) {
     this.taskIdNumber = taskIdNumber;
-    console.log(taskIdNumber);
   }
 }

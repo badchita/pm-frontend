@@ -169,40 +169,44 @@
       </div>
 
       @if (!hideDiscussionCol) {
-      <nz-comment>
-        <nz-avatar nz-comment-avatar nzIcon="user"
-          [nzSrc]="'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'"></nz-avatar>
-        <nz-comment-content>
-          <nz-form-item>
-            <textarea nz-input rows="4"></textarea>
-          </nz-form-item>
-          <nz-form-item>
-            <button nz-button nzType="primary">
-              Add Comment
-            </button>
-          </nz-form-item>
-        </nz-comment-content>
-      </nz-comment>
-      <nz-card>
-        <nz-comment nzAuthor="Han Solo">
-          <nz-avatar nz-comment-avatar nzIcon="user"
-            nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
-          <nz-comment-content>
-            <p>
-              We supply a series of design principles, practical patterns and high quality design resources(Sketch and
-              Axure), to help people create their product prototypes beautifully and efficiently.
-            </p>
-          </nz-comment-content>
-          <nz-comment-action>
-            <nz-icon nz-tooltip nzTooltipTitle="Like" nzType="like" />
-            <span class="count like">1</span>
-          </nz-comment-action>
-          <nz-comment-action>
-            <nz-icon nz-tooltip nzTooltipTitle="Dislike" nzType="dislike" />
-            <span class="count dislike">0</span>
-          </nz-comment-action>
-        </nz-comment>
-      </nz-card>
+      <nz-spin [nzSpinning]="isCommentsLoading" [nzTip]="commentsSpinnerTip">
+        <form nz-form [formGroup]="createTaskCommentForm">
+          <nz-comment>
+            <nz-avatar nz-comment-avatar nzIcon="user"
+              [nzSrc]="'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'"></nz-avatar>
+            <nz-comment-content>
+              <nz-form-item>
+                <textarea nz-input rows="4" formControlName="content"></textarea>
+              </nz-form-item>
+              <nz-form-item>
+                <button nz-button nzType="primary" (click)="addComment()">
+                  Add Comment
+                </button>
+              </nz-form-item>
+            </nz-comment-content>
+          </nz-comment>
+        </form>
+        <nz-card>
+          <nz-comment nzAuthor="Han Solo">
+            <nz-avatar nz-comment-avatar nzIcon="user"
+              nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+            <nz-comment-content>
+              <p>
+                We supply a series of design principles, practical patterns and high quality design resources(Sketch and
+                Axure), to help people create their product prototypes beautifully and efficiently.
+              </p>
+            </nz-comment-content>
+            <nz-comment-action>
+              <nz-icon nz-tooltip nzTooltipTitle="Like" nzType="like" />
+              <span class="count like">1</span>
+            </nz-comment-action>
+            <nz-comment-action>
+              <nz-icon nz-tooltip nzTooltipTitle="Dislike" nzType="dislike" />
+              <span class="count dislike">0</span>
+            </nz-comment-action>
+          </nz-comment>
+        </nz-card>
+      </nz-spin>
       }
     </nz-col>
   </nz-row>

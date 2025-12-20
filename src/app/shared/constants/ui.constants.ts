@@ -4,6 +4,7 @@ export const SPINNER_TIP = {
   Creating: 'Creating {{1}}...',
   Updating: 'Updating {{1}}...',
   loadingData: 'Loading data...',
+  Adding: 'Adding {{1}}...',
 };
 
 export const ALERT_MESAGE = {
@@ -37,4 +38,4 @@ export const NOTIFICATION_MESSAGE = {
   FormUpdatedSuccess: '{{1}} was updated successfully.',
   ProjectFormPublishedSuccess: '{{1}} was published successfully.',
   ProjectFormDeactivatedSuccess: '{{1}} was deactivated successfully.',
-}
+};

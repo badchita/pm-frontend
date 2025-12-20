@@ -72,7 +72,7 @@
           }
         </ng-template>
         @if (tab.name === 'Details' ) {
-        <app-task-form-details [taskDetailForm]="createEditTaskForm"></app-task-form-details>
+        <app-task-form-details [taskDetailForm]="createEditTaskForm" [taskId]="id()"></app-task-form-details>
         }
       </nz-tab>
       }
