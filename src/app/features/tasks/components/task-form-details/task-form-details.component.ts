@@ -271,7 +271,9 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
           this.taskComments = comments.map((comment) => {
             return {
               ...comment,
-              displayTime: formatDistance(new Date(), comment.createdAt),
+              displayTime: formatDistance(new Date(comment.createdAt + 'Z'), new Date(), {
+                addSuffix: true,
+              }),
             };
           });
         },
