@@ -11,16 +11,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
-  ALERT_DESCRIPTION,
-  ALERT_MESAGE,
   NOTIFICATION_MESSAGE,
   NOTIFICATION_TITLE,
   SPINNER_TIP,
 } from '@app/shared/constants/ui.constants';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { RequiredValidator } from '@app/shared/constants/validators';
-import { AlertType } from '@app/shared/models/alert.model';
-import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { TaskListTableComponent } from './components/task-list-table.component/task-list-table.component';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
@@ -31,6 +27,7 @@ import { Task } from '@app/features/tasks/models/task.model';
 import { ProjectService } from '../../services/project.service';
 import { CreateTaskModalComponent } from '@app/features/tasks/modals/create-task-modal/create-task-modal.component';
 import { TaskService } from '@app/features/tasks/services/task.service';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 
 @Component({
   selector: 'app-edit-project',
@@ -44,9 +41,9 @@ import { TaskService } from '@app/features/tasks/services/task.service';
     NzTagModule,
     NzButtonModule,
     NzSpinModule,
-    NzAlertModule,
     TaskListTableComponent,
     NzModalModule,
+    ErrorAlertComponent,
   ],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss',
@@ -67,15 +64,11 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   projectName!: string;
   projectIdNumber!: string;
   isPublished!: string;
+  catchError!: any;
 
   isLoading = false;
+  isTableError = false;
   isTableLoading = false;
-  hasError = false;
-  alertDetails: AlertType = {
-    type: 'info',
-    message: '',
-    description: '',
-  };
   spinnerTip!: string;
   taskDataTable: DataTable<Task> = {
     data: [],
@@ -96,14 +89,11 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     pageSize: 10,
     sortDirection: 'desc',
   };
-
   stateColorOptions = this.genericUtilityService.objectToArray(TaskStateColorOptions, false, true);
   stateOptions = this.genericUtilityService.objectToArray(TaskStateOptions, false, true);
   SPINNER_TIP = SPINNER_TIP;
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;
   NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
-  ALERT_MESAGE = ALERT_MESAGE;
-  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
 
   ngOnInit() {
     this.spinnerTip = SPINNER_TIP.loadingData;
@@ -204,30 +194,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          this.hasError = true;
-          switch (error.status) {
-            case 0:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.NoInternetConnection,
-                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
-              };
-              break;
-            case 401:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.LoginFailed,
-                description: ALERT_DESCRIPTION.LoginFailedMessage,
-              };
-              break;
-            case 500:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
-                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
-              };
-              break;
-          }
+          this.catchError = error;
         }
       );
   }
@@ -265,30 +232,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          this.hasError = true;
-          switch (error.status) {
-            case 0:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.NoInternetConnection,
-                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
-              };
-              break;
-            case 401:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.LoginFailed,
-                description: ALERT_DESCRIPTION.LoginFailedMessage,
-              };
-              break;
-            case 500:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
-                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
-              };
-              break;
-          }
+          this.catchError = error;
         }
       );
   }
@@ -327,11 +271,12 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   }
 
   tableUpdate(params: NzTableQueryParams) {
+    this.isTableError = false;
     this.isTableLoading = true;
     this.tableParams.page = params.pageIndex;
     this.tableParams.pageSize = params.pageSize;
-    const filters = Object.assign({}, ...params.filter);
     this.tableParams.sort = params.sort;
+    const filters = Object.assign({}, ...params.filter);
 
     this.taskService
       .getList(this.tableParams, filters, this.id?.value)
@@ -346,7 +291,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           this.setTableData(tasks);
         },
         (error) => {
-          console.error('Failed to load project data', error);
+          this.catchError = error;
+          this.isTableError = true;
         }
       );
   }

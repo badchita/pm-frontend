@@ -10,9 +10,8 @@
     </div>
 
     <div class="content">
-      @if (hasError) {
-      <nz-alert class="pm-alert" nzBanner nzShowIcon [nzType]="alertDetails.type" [nzMessage]="alertDetails.message"
-        [nzDescription]="alertDetails.description"></nz-alert>
+      @if (!isTableError) {
+      <app-error-alert [error]="catchError"></app-error-alert>
       }
 
       <form nz-form nzLayout="vertical" [formGroup]="editProjectForm">
@@ -77,6 +76,10 @@
             </nz-form-item>
           </nz-col>
         </nz-row>
+
+        @if (isTableError) {
+        <app-error-alert [error]="catchError"></app-error-alert>
+        }
 
         @if (isPublished === 'Y') {
         <div class="header task-header">
