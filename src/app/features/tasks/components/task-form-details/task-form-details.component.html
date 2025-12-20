@@ -2,15 +2,15 @@
   <nz-row class="details-row">
     <nz-col [nzSpan]="richTextSpan">
       @if (!hideDescription) {
-      <div class="header">
+      <div class="col-header">
         <span>Description</span>
         <div class="description-buttons">
           @if (richTextSpan === 13) {
-          <button nz-button nzSize="default" nzType="link" (click)="expandMinimizeRichText('description', true)">
+          <button nz-button nzSize="default" nzType="link" (click)="expandMinimize('description', true)">
             <nz-icon nzType="expand-alt" nzTheme="outline" />
           </button>
           } @else {
-          <button nz-button nzSize="default" nzType="link" (click)="expandMinimizeRichText('description', false)">
+          <button nz-button nzSize="default" nzType="link" (click)="expandMinimize('description', false)">
             <nz-icon nzType="shrink" nzTheme="outline" />
           </button>
           }
@@ -42,16 +42,15 @@
       }
 
       @if (!hideacceptanceCriteria) {
-      <div class="header">
+      <div class="col-header">
         <span>Acceptance Criteria</span>
         <div class="description-buttons">
           @if (richTextSpan === 13) {
-          <button nz-button nzSize="default" nzType="link" (click)="expandMinimizeRichText('acceptanceCriteria', true)">
+          <button nz-button nzSize="default" nzType="link" (click)="expandMinimize('acceptanceCriteria', true)">
             <nz-icon nzType="expand-alt" nzTheme="outline" />
           </button>
           } @else {
-          <button nz-button nzSize="default" nzType="link"
-            (click)="expandMinimizeRichText('acceptanceCriteria', false)">
+          <button nz-button nzSize="default" nzType="link" (click)="expandMinimize('acceptanceCriteria', false)">
             <nz-icon nzType="shrink" nzTheme="outline" />
           </button>
           }
@@ -85,7 +84,7 @@
     </nz-col>
     @if (!hideOtherCol) {
     <nz-col nzSpan="5">
-      <div class="header">
+      <div class="col-header">
         <span>Planning</span>
       </div>
       <nz-form-item>
@@ -118,7 +117,7 @@
       </nz-form-item>
     </nz-col>
     <nz-col nzSpan="5">
-      <div class="header">
+      <div class="col-header">
         <span>Testing</span>
       </div>
       <nz-form-item>
@@ -141,4 +140,71 @@
     </nz-col>
     }
   </nz-row>
+
+  @if (!hideDiscussionRow) {
+  <nz-row class="discussion-row">
+    <nz-col [nzSpan]="discussionSpan">
+      <div class="col-header">
+        <span>Discussion</span>
+        <div class="description-buttons">
+          @if (discussionSpan === 13) {
+          <button nz-button nzSize="default" nzType="link" (click)="expandMinimize('description', true, true)">
+            <nz-icon nzType="expand-alt" nzTheme="outline" />
+          </button>
+          } @else {
+          <button nz-button nzSize="default" nzType="link" (click)="expandMinimize('description', false, true)">
+            <nz-icon nzType="shrink" nzTheme="outline" />
+          </button>
+          }
+          @if (!hideDiscussionCol) {
+          <button nz-button nzSize="default" nzType="link" (click)="hideDiscussionCol=true">
+            <nz-icon nzType="up" nzTheme="outline" />
+          </button>
+          } @else {
+          <button nz-button nzSize="default" nzType="link" (click)="hideDiscussionCol=false">
+            <nz-icon nzType="down" nzTheme="outline" />
+          </button>
+          }
+        </div>
+      </div>
+
+      @if (!hideDiscussionCol) {
+      <nz-comment>
+        <nz-avatar nz-comment-avatar nzIcon="user"
+          [nzSrc]="'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'"></nz-avatar>
+        <nz-comment-content>
+          <nz-form-item>
+            <textarea nz-input rows="4"></textarea>
+          </nz-form-item>
+          <nz-form-item>
+            <button nz-button nzType="primary">
+              Add Comment
+            </button>
+          </nz-form-item>
+        </nz-comment-content>
+      </nz-comment>
+      <nz-card>
+        <nz-comment nzAuthor="Han Solo">
+          <nz-avatar nz-comment-avatar nzIcon="user"
+            nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+          <nz-comment-content>
+            <p>
+              We supply a series of design principles, practical patterns and high quality design resources(Sketch and
+              Axure), to help people create their product prototypes beautifully and efficiently.
+            </p>
+          </nz-comment-content>
+          <nz-comment-action>
+            <nz-icon nz-tooltip nzTooltipTitle="Like" nzType="like" />
+            <span class="count like">1</span>
+          </nz-comment-action>
+          <nz-comment-action>
+            <nz-icon nz-tooltip nzTooltipTitle="Dislike" nzType="dislike" />
+            <span class="count dislike">0</span>
+          </nz-comment-action>
+        </nz-comment>
+      </nz-card>
+      }
+    </nz-col>
+  </nz-row>
+  }
 </div>

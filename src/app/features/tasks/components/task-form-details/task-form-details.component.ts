@@ -6,7 +6,10 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { QuillModule } from 'ngx-quill';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzCommentModule } from 'ng-zorro-antd/comment';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import Quill from 'quill';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 @Component({
   selector: 'app-task-form-details',
@@ -19,6 +22,9 @@ import Quill from 'quill';
     NzFormModule,
     NzInputModule,
     NzDatePickerModule,
+    NzCommentModule,
+    NzAvatarModule,
+    NzCardModule,
   ],
   templateUrl: './task-form-details.component.html',
   styleUrl: './task-form-details.component.scss',
@@ -53,7 +59,11 @@ export class TaskFormDetailsComponent {
   hideacceptanceCriteriaRichText = false;
   hideacceptanceCriteria = false;
   hideOtherCol = false;
+  hideDiscussionRow = false;
+  hideDiscussionCol = false;
+  hideDetailsRow = false;
   richTextSpan = 13;
+  discussionSpan = 13;
   hoverdInputs = {
     taskPoints: false,
     readyForDevelopmentDate: false,
@@ -150,17 +160,31 @@ export class TaskFormDetailsComponent {
     }
   }
 
-  expandMinimizeRichText(richText: string, isExpand: boolean) {
-    if (richText === 'description') {
-      this.richTextSpan = isExpand ? 24 : 13;
+  expandMinimize(richText: string, isExpand: boolean, isDiscussionRow = false) {
+    const span = isExpand ? 24 : 13;
+
+    if (isDiscussionRow) {
+      this.discussionSpan = span;
       this.hideOtherCol = isExpand;
       this.hideacceptanceCriteria = isExpand;
+      this.hideDescription = isExpand;
       return;
     }
 
-    this.richTextSpan = isExpand ? 24 : 13;
+    this.richTextSpan = span;
     this.hideOtherCol = isExpand;
-    this.hideDescription = isExpand;
+    this.hideDiscussionRow = isExpand;
+
+    if (richText === 'description') {
+      this.hideacceptanceCriteria = isExpand;
+    } else {
+      this.hideDescription = isExpand;
+    }
+  }
+
+  expandMinimizeDiscussion(isExpand: boolean) {
+    this.hideDetailsRow = isExpand;
+    this.discussionSpan = isExpand ? 24 : 13;
   }
 
   private reRenderEditor(richTextInput: string, isBlur: boolean) {
