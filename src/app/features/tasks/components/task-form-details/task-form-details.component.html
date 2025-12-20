@@ -170,6 +170,8 @@
 
       @if (!hideDiscussionCol) {
       <nz-spin [nzSpinning]="isCommentsLoading" [nzTip]="commentsSpinnerTip">
+        <app-error-alert [error]="catchError"></app-error-alert>
+
         <form nz-form [formGroup]="createTaskCommentForm">
           <nz-comment>
             <nz-avatar nz-comment-avatar nzIcon="user"

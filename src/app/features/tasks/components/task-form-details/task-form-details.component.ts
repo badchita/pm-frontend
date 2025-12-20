@@ -23,7 +23,7 @@ import { RequiredValidator } from '@app/shared/constants/validators';
 import { TaskService } from '../../services/task.service';
 import { ALERT_DESCRIPTION, ALERT_MESAGE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import { AlertType } from '@app/shared/models/alert.model';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 
 @Component({
   selector: 'app-task-form-details',
@@ -41,6 +41,7 @@ import { AlertType } from '@app/shared/models/alert.model';
     NzCardModule,
     NzSpinModule,
     FormsModule,
+    ErrorAlertComponent,
   ],
   templateUrl: './task-form-details.component.html',
   styleUrl: './task-form-details.component.scss',
@@ -61,6 +62,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   clearToolbarTimer: any;
   commentsSpinnerTip!: string;
   createTaskCommentForm!: FormGroup;
+  catchError!: any;
 
   quillToolbar = [
     ['bold', 'italic', 'underline'],
@@ -97,14 +99,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   };
   toolbarInteracting = false;
   isCommentsLoading = false;
-  hasError = false;
   SPINNER_TIP = SPINNER_TIP;
-  ALERT_DESCRIPTION = ALERT_DESCRIPTION;
-  alertDetails: AlertType = {
-    type: 'info',
-    message: '',
-    description: '',
-  };
 
   ngOnInit() {
     if (this.taskId()) {
@@ -231,11 +226,6 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  expandMinimizeDiscussion(isExpand: boolean) {
-    this.hideDetailsRow = isExpand;
-    this.discussionSpan = isExpand ? 24 : 13;
-  }
-
   private reRenderEditor(richTextInput: string, isBlur: boolean) {
     if (richTextInput === 'description') {
       this.showDescriptionRichText = false;
@@ -288,30 +278,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
           this.createTaskCommentForm.get('content')?.reset();
         },
         (error) => {
-          this.hasError = true;
-          switch (error.status) {
-            case 0:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.NoInternetConnection,
-                description: ALERT_DESCRIPTION.PleaseCheckYourNetworkAndTryAgain,
-              };
-              break;
-            case 401:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.LoginFailed,
-                description: ALERT_DESCRIPTION.LoginFailedMessage,
-              };
-              break;
-            case 500:
-              this.alertDetails = {
-                type: 'error',
-                message: ALERT_MESAGE.UnexpectedErroIinternalServerError,
-                description: ALERT_DESCRIPTION.AnUnexpectedErrorOccurredPleaseTryAgainLater,
-              };
-              break;
-          }
+          this.catchError = error;
         }
       );
   }
