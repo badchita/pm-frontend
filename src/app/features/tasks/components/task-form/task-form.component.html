@@ -87,6 +87,9 @@
         <app-task-form-details [taskDetailForm]="createEditTaskForm" [taskId]="id()"
           (onGetTotalComments)="getTotalComments($event)"></app-task-form-details>
         }
+        @else {
+        <app-task-form-history></app-task-form-history>
+        }
       </nz-tab>
       }
     </nz-tabs>
