@@ -25,6 +25,7 @@ export class TaskService {
   }
 
   getList(tableParams: TableParams, filters: any, projectId: number): Observable<DataTable<Task>> {
+    console.log(filters)
     const params = this.tableUtilityService.buildParams(tableParams, filters);
 
     return this.http.get<DataTable<Task>>(`${this.apiProjects}/${projectId}/tasks`, { params });
