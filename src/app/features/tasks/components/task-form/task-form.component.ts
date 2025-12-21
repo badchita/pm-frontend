@@ -26,6 +26,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import { UserService } from '@app/shared/services/api/user.service';
 import { User } from '@app/features/auth/models/user.model';
+import { TaskFormHistoryComponent } from '../task-form-history/task-form-history.component';
 
 @Component({
   selector: 'app-task-form',
@@ -45,6 +46,7 @@ import { User } from '@app/features/auth/models/user.model';
     PopoverFormValidatorDirective,
     NzSpinModule,
     ErrorAlertComponent,
+    TaskFormHistoryComponent,
   ],
   templateUrl: './task-form.component.html',
   styleUrl: './task-form.component.scss',
