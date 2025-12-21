@@ -8,7 +8,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { finalize, forkJoin, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
   NOTIFICATION_MESSAGE,
@@ -28,6 +28,8 @@ import { ProjectService } from '../../services/project.service';
 import { CreateTaskModalComponent } from '@app/features/tasks/modals/create-task-modal/create-task-modal.component';
 import { TaskService } from '@app/features/tasks/services/task.service';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
+import { UserService } from '@app/shared/services/api/user.service';
+import { User } from '@app/features/auth/models/user.model';
 
 @Component({
   selector: 'app-edit-project',
@@ -51,6 +53,7 @@ import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-al
 export class EditProjectComponent implements OnInit, OnDestroy {
   private projectService = inject(ProjectService);
   private taskService = inject(TaskService);
+  private userService = inject(UserService);
   private notificationService = inject(NzNotificationService);
   private modalService = inject(NzModalService);
   private genericUtilityService = inject(GenericUtilityService);
@@ -65,6 +68,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   projectIdNumber!: string;
   isPublished!: string;
   catchError!: any;
+  users!: { label: string; value: string }[];
 
   isLoading = false;
   isTableError = false;
@@ -108,14 +112,19 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   loadData(id: string) {
     this.isLoading = true;
 
-    this.projectService
-      .getById(+id)
+    forkJoin({
+      project: this.projectService.getById(+id),
+      users: this.loadUsers({}),
+    })
       .pipe(
         takeUntil(this._destroying$),
+        switchMap(({ project, users }) => {
+          this.users = users.map((user) => ({
+            label: user.name,
+            value: user.email,
+          }));
 
-        switchMap((project) => {
           const { projectName, projectIdNumber, isPublished } = project;
-
           this.projectName = projectName;
           this.projectIdNumber = projectIdNumber;
           this.isPublished = isPublished;
@@ -132,19 +141,38 @@ export class EditProjectComponent implements OnInit, OnDestroy {
 
           return this.taskService.getList(this.tableParams, {}, +id);
         }),
-
         finalize(() => {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (tasksTable: DataTable<Task>) => {
+      .subscribe({
+        next: (tasksTable: DataTable<Task>) => {
           this.setTableData(tasksTable);
         },
-        (error) => {
-          console.error('Failed to load project data', error);
-        }
-      );
+        error: (error) => {
+          console.error('Failed to load project or users', error);
+        },
+      });
+  }
+
+  loadUsers(filter?: any): Observable<User[]> {
+    return this.userService.getSearchUsers(filter);
+  }
+
+  searchUsers(searchValue: string) {
+    this.loadUsers({ search: searchValue })
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe((users) => {
+        this.users = users.map((user) => ({
+          label: user.name,
+          value: user.email,
+        }));
+      });
   }
 
   buildForm() {

@@ -90,7 +90,7 @@
         </div>
 
         <app-task-list-table [dataTable]="taskDataTable" [dataList]="taskDataTable.data" [loading]="isTableLoading"
-          (onUpdateTable)="tableUpdate($event)"></app-task-list-table>
+          (onUpdateTable)="tableUpdate($event)" [userOptions]="users" (onAssignedToSearch)="searchUsers($event)"></app-task-list-table>
         }
 
         <div class="buttons-form-container">

@@ -2,6 +2,10 @@
   .filter-container {
     display: flex;
     justify-content: end;
+
+    .select-search {
+      width: 170px;
+    }
   }
 
   .table-container {

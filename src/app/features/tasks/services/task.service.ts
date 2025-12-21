@@ -13,6 +13,7 @@ import { TaskComment } from '../models/task-comment.model';
 export class TaskService {
   private http = inject(HttpClient);
   private tableUtilityService = inject(TableUtilityService);
+
   private apiProjects = `${environment.url}/projects`;
   private apiTasks = `${environment.url}/tasks`;
 
