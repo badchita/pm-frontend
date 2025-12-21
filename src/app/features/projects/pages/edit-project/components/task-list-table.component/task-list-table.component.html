@@ -12,6 +12,21 @@
         </nz-select>
       </nz-form-control>
     </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-select class="select-search" nzSuffixIcon="user" formControlName="assignedTo" nzPlaceHolder="Assigned To"
+          [nzAllowClear]="true" nzShowSearch (nzOnSearch)="assignedToSearch($event)" [nzFilterOption]="disableFilter">
+          @for (user of userOptions(); track user.value) {
+          <nz-option nzCustomContent [nzLabel]="user.label" [nzValue]="user.value">
+            <div class="assigned-to-options">
+              <span class="user-name">{{ user.label }}</span>
+              <span class="user-email"><i>{{ user.value }}</i></span>
+            </div>
+          </nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
     <button class="reset-search-button" nz-button (click)="reset()">Reset</button>
   </form>
 </div>

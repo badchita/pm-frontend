@@ -92,7 +92,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     this.buildForm();
 
     if (this.id() > 0) {
-      this.loadTask();
+      this.loadData();
     }
   }
 
@@ -113,7 +113,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadTask() {
+  loadData() {
     this.isLoading = true;
 
     forkJoin({
@@ -221,7 +221,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
   refresh() {
     if (this.id() > 0) {
-      this.loadTask();
+      this.loadData();
     }
   }
 

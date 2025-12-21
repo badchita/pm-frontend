@@ -144,6 +144,10 @@
       border-radius: 8px;
       height: 35px;
     }
+
+    &.ant-select-focused .ant-select-selector {
+      width: 170px;
+    }
   }
 
   .ant-table-thead th.ant-table-column-has-sorters:hover {

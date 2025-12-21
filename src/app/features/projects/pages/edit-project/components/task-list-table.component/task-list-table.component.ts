@@ -10,7 +10,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSelectItemInterface, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { debounceTime } from 'rxjs';
@@ -37,13 +37,16 @@ export class TaskListTableComponent {
   readonly dataTable = input.required<DataTable<any>>();
   readonly dataList = input.required<Task[] | []>();
   readonly loading = input.required<boolean>();
+  readonly userOptions = input.required<{ label: string; value: string }[]>();
   readonly onUpdateTable = output<NzTableQueryParams>();
+  readonly onAssignedToSearch = output<string>();
 
   private genericUtilityService = inject(GenericUtilityService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
 
   searchProjectTaskForm!: FormGroup;
+  disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
 
   stateOptions = this.genericUtilityService.objectToArray(TaskStateOptions);
 
@@ -55,6 +58,7 @@ export class TaskListTableComponent {
     this.searchProjectTaskForm = this.formBuilder.group({
       search: [null],
       state: [null],
+      assignedTo: [null],
     });
 
     this.searchProjectTaskForm
@@ -64,6 +68,11 @@ export class TaskListTableComponent {
 
     this.searchProjectTaskForm
       .get('state')
+      ?.valueChanges.pipe(debounceTime(500))
+      .subscribe(() => this.updateTable());
+
+    this.searchProjectTaskForm
+      .get('assignedTo')
       ?.valueChanges.pipe(debounceTime(500))
       .subscribe(() => this.updateTable());
   }
@@ -92,5 +101,9 @@ export class TaskListTableComponent {
     const { projectId, id } = task;
 
     this.router.navigate([`/portal/tasks/${projectId}/${id}`]);
+  }
+
+  assignedToSearch(searchValue: string) {
+    this.onAssignedToSearch.emit(searchValue);
   }
 }
