@@ -17,6 +17,6 @@ export class UserService {
   getSearchUsers(filters: any): Observable<User[]> {
     const params = this.tableUtilityService.buildParams(null, filters);
 
-    return this.http.get<User[]>(`${this.api}`, { params });
+    return this.http.get<User[]>(`${this.api}/search`, { params });
   }
 }

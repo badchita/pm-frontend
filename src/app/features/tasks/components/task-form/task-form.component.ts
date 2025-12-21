@@ -6,7 +6,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSelectItemInterface, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
@@ -18,12 +18,14 @@ import {
   NOTIFICATION_TITLE,
   SPINNER_TIP,
 } from '@app/shared/constants/ui.constants';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, forkJoin, Observable, Subject, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { TaskFormDetailsComponent } from '../../components/task-form-details/task-form-details.component';
 import { TaskService } from '../../services/task.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
+import { UserService } from '@app/shared/services/api/user.service';
+import { User } from '@app/features/auth/models/user.model';
 
 @Component({
   selector: 'app-task-form',
@@ -55,6 +57,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
   private genericUtilityService = inject(GenericUtilityService);
   private taskService = inject(TaskService);
+  private userService = inject(UserService);
   private notificationService = inject(NzNotificationService);
   private formBuilder = inject(FormBuilder);
 
@@ -63,6 +66,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   createEditTaskForm!: FormGroup;
   spinnerTip!: string;
   catchError!: any;
+  users!: { label: string; value: string }[];
+  disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
 
   hoverdInputs = {
     title: false,
@@ -111,23 +116,53 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   loadTask() {
     this.isLoading = true;
 
-    this.taskService
-      .getById(this.projectId(), this.id())
+    forkJoin({
+      task: this.taskService.getById(this.projectId(), this.id()),
+      users: this.loadUsers(),
+    })
       .pipe(
         takeUntil(this._destroying$),
         finalize(() => {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (task) => {
+      .subscribe({
+        next: ({ task, users }) => {
           this.createEditTaskForm.patchValue(task);
           this.onGetTaskIdNumber.emit(task.taskIdNumber);
+
+          this.users = this.setUsersOptions(users);
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
+  }
+
+  loadUsers(filter?: any): Observable<User[]> {
+    return this.userService.getSearchUsers(filter);
+  }
+
+  assignedToSearch(searchValue: string) {
+    this.loadUsers({ search: searchValue })
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe((users) => {
+        this.users = this.setUsersOptions(users);
+      });
+  }
+
+  setUsersOptions(users: User[]): { label: string; value: string }[] {
+    return users.map((user) => {
+      return {
+        label: user.name,
+        value: user.email,
+      };
+    });
   }
 
   handleInputFocusBlur(input: string, isFocus = false) {

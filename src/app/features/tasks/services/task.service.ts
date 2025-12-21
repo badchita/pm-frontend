@@ -13,6 +13,7 @@ import { TaskComment } from '../models/task-comment.model';
 export class TaskService {
   private http = inject(HttpClient);
   private tableUtilityService = inject(TableUtilityService);
+
   private apiProjects = `${environment.url}/projects`;
   private apiTasks = `${environment.url}/tasks`;
 
@@ -25,7 +26,6 @@ export class TaskService {
   }
 
   getList(tableParams: TableParams, filters: any, projectId: number): Observable<DataTable<Task>> {
-    console.log(filters)
     const params = this.tableUtilityService.buildParams(tableParams, filters);
 
     return this.http.get<DataTable<Task>>(`${this.apiProjects}/${projectId}/tasks`, { params });
