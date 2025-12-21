@@ -1,10 +1,12 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   inject,
   input,
   OnDestroy,
   OnInit,
+  output,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -51,9 +53,11 @@ import { formatDistance } from 'date-fns';
 export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('descriptionRef') descriptionRef!: any;
   @ViewChild('acceptanceCriteriaRef') acceptanceCriteriaRef!: any;
+  @ViewChild('discussionsRef') discussionsRef!: ElementRef;
 
   taskDetailForm = input.required<FormGroup>();
   taskId = input.required<number>();
+  onGetTotalComments = output<number | null>();
 
   private changeDetectorRef = inject(ChangeDetectorRef);
   private formBuilder = inject(FormBuilder);
@@ -107,6 +111,8 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.taskId()) {
       this.buildForm();
+    } else {
+      this.onGetTotalComments.emit(null);
     }
   }
 
@@ -268,6 +274,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         (comments) => {
+          this.onGetTotalComments.emit(comments.length);
           this.taskComments = comments.map((comment) => {
             return {
               ...comment,
@@ -281,6 +288,12 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
           this.catchError = error;
         }
       );
+  }
+
+  scrollToDiscussions() {
+    if (this.discussionsRef) {
+      this.discussionsRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   ngOnDestroy() {
