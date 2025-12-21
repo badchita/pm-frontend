@@ -12,5 +12,6 @@ export interface TaskStateHistory {
 export interface TaskHistory {
   label: string;
   color: string;
+  changedBy: string;
   changedAt: Date;
 }

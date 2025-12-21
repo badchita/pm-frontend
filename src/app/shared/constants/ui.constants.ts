@@ -41,5 +41,6 @@ export const NOTIFICATION_MESSAGE = {
 };
 
 export const STATE_HISTORY_LABEL = {
-  MovedTo: 'Moved state {{1}} to ',
+  MovedTo: 'Task moved {{1}} to',
+  Set: 'State set to',
 };

@@ -60,10 +60,15 @@ export class TaskFormHistoryComponent implements OnInit, OnDestroy {
               '{{1}}',
               history.newState < history.previousState ? 'back' : ''
             );
+            const setLabel = STATE_HISTORY_LABEL.Set;
 
             return {
-              label: `${historyLabel} ${this.TaskStateOptions[history.newState]}`,
+              label:
+                histories.length === 1
+                  ? `${setLabel}` + ` ${this.TaskStateOptions[history.newState]}`
+                  : `${historyLabel}` + ` ${this.TaskStateOptions[history.newState]}`,
               color: this.TaskStateColorOptions[history.newState],
+              changedBy: history.changedBy,
               changedAt: history.changedAt,
             };
           });

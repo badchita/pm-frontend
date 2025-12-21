@@ -53,6 +53,7 @@ import { TaskFormHistoryComponent } from '../task-form-history/task-form-history
 })
 export class TaskFormComponent implements OnInit, OnDestroy {
   @ViewChild(TaskFormDetailsComponent) taskFormDetails!: TaskFormDetailsComponent;
+  @ViewChild(TaskFormHistoryComponent) taskFormHistory!: TaskFormHistoryComponent;
 
   readonly projectId = input.required<number>();
   readonly id = input.required<number>();
@@ -203,6 +204,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
             return;
           }
 
+          this.taskFormHistory.loadHistories();
           this.notificationService.create(
             'success',
             NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Task Updated'),
@@ -227,6 +229,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   refresh() {
     if (this.id() > 0) {
       this.loadData();
+      this.taskFormHistory.loadHistories();
     }
   }
 

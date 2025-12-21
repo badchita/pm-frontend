@@ -2,7 +2,7 @@
   <app-error-alert [error]="catchError"></app-error-alert>
   <nz-timeline nzMode="left">
     @for (history of taskHistories; track history) {
-    <nz-timeline-item [nzLabel]="history.label" [nzColor]="history.color">Val Ryan bachita <br />
+    <nz-timeline-item [nzLabel]="history.label" [nzColor]="history.color">{{ history.changedBy }} <br />
       <i class="history-date">{{ history.changedAt | date: 'MMM dd, yyy' }}</i>
     </nz-timeline-item>
     }
