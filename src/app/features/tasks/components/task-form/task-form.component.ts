@@ -1,4 +1,4 @@
-import { Component, inject, input, OnDestroy, OnInit, output } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit, output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -50,6 +50,8 @@ import { User } from '@app/features/auth/models/user.model';
   styleUrl: './task-form.component.scss',
 })
 export class TaskFormComponent implements OnInit, OnDestroy {
+  @ViewChild(TaskFormDetailsComponent) taskFormDetails!: TaskFormDetailsComponent;
+
   readonly projectId = input.required<number>();
   readonly id = input.required<number>();
   readonly onSave = output<string>();
@@ -68,6 +70,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   catchError!: any;
   users!: { label: string; value: string }[];
   disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
+  totalComments!: number | null;
 
   hoverdInputs = {
     title: false,
@@ -223,6 +226,14 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     if (this.id() > 0) {
       this.loadData();
     }
+  }
+
+  getTotalComments(totalComments: number | null) {
+    this.totalComments = totalComments;
+  }
+
+  scrollToDiscussions() {
+    this.taskFormDetails.scrollToDiscussions();
   }
 
   ngOnDestroy() {

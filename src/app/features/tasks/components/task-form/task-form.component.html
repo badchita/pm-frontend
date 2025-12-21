@@ -39,9 +39,9 @@
         </nz-col>
         <nz-col nzSpan="8">
           <span nz-typography>
-            <a>
+            <a (click)="scrollToDiscussions()">
               <nz-icon nzType="comment" nzTheme="outline" />
-              0 Comments
+              {{ totalComments ? totalComments : 0 }} Comments
             </a>
           </span>
         </nz-col>
@@ -84,7 +84,8 @@
           }
         </ng-template>
         @if (tab.name === 'Details' ) {
-        <app-task-form-details [taskDetailForm]="createEditTaskForm" [taskId]="id()"></app-task-form-details>
+        <app-task-form-details [taskDetailForm]="createEditTaskForm" [taskId]="id()"
+          (onGetTotalComments)="getTotalComments($event)"></app-task-form-details>
         }
       </nz-tab>
       }

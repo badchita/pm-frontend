@@ -144,74 +144,76 @@
   </nz-row>
 
   @if (!hideDiscussionRow && taskId()) {
-  <nz-row class="discussion-row">
-    <nz-col [nzSpan]="discussionSpan">
-      <div class="col-header">
-        <span>Discussion</span>
-        <div class="description-buttons">
-          @if (discussionSpan === 13) {
-          <button nz-button nzSize="default" nzType="link" (click)="expandMinimize('description', true, true)">
-            <nz-icon nzType="expand-alt" nzTheme="outline" />
-          </button>
-          } @else {
-          <button nz-button nzSize="default" nzType="link" (click)="expandMinimize('description', false, true)">
-            <nz-icon nzType="shrink" nzTheme="outline" />
-          </button>
-          }
-          @if (!hideDiscussionCol) {
-          <button nz-button nzSize="default" nzType="link" (click)="hideDiscussionCol=true">
-            <nz-icon nzType="up" nzTheme="outline" />
-          </button>
-          } @else {
-          <button nz-button nzSize="default" nzType="link" (click)="hideDiscussionCol=false">
-            <nz-icon nzType="down" nzTheme="outline" />
-          </button>
-          }
+  <div #discussionsRef>
+    <nz-row class="discussion-row">
+      <nz-col [nzSpan]="discussionSpan">
+        <div class="col-header">
+          <span>Discussion</span>
+          <div class="description-buttons">
+            @if (discussionSpan === 13) {
+            <button nz-button nzSize="default" nzType="link" (click)="expandMinimize('description', true, true)">
+              <nz-icon nzType="expand-alt" nzTheme="outline" />
+            </button>
+            } @else {
+            <button nz-button nzSize="default" nzType="link" (click)="expandMinimize('description', false, true)">
+              <nz-icon nzType="shrink" nzTheme="outline" />
+            </button>
+            }
+            @if (!hideDiscussionCol) {
+            <button nz-button nzSize="default" nzType="link" (click)="hideDiscussionCol=true">
+              <nz-icon nzType="up" nzTheme="outline" />
+            </button>
+            } @else {
+            <button nz-button nzSize="default" nzType="link" (click)="hideDiscussionCol=false">
+              <nz-icon nzType="down" nzTheme="outline" />
+            </button>
+            }
+          </div>
         </div>
-      </div>
 
-      @if (!hideDiscussionCol) {
-      <nz-spin [nzSpinning]="isCommentsLoading" [nzTip]="commentsSpinnerTip">
-        <app-error-alert [error]="catchError"></app-error-alert>
+        @if (!hideDiscussionCol) {
+        <nz-spin [nzSpinning]="isCommentsLoading" [nzTip]="commentsSpinnerTip">
+          <app-error-alert [error]="catchError"></app-error-alert>
 
-        <form nz-form [formGroup]="createTaskCommentForm">
-          <nz-comment>
-            <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="/src/app/assets/images/profile-default.svg"></nz-avatar>
-            <nz-comment-content>
-              <nz-form-item>
-                <textarea nz-input rows="4" formControlName="content"></textarea>
-              </nz-form-item>
-              <nz-form-item>
-                <button nz-button nzType="primary" (click)="addComment()">
-                  Add Comment
-                </button>
-              </nz-form-item>
-            </nz-comment-content>
-          </nz-comment>
-        </form>
-        @for (comment of taskComments; track comment.id) {
-        <nz-card class="comments-card">
-          <nz-comment [nzAuthor]="comment.user.name" [nzDatetime]="comment.displayTime">
-            <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="/src/app/assets/images/profile-default.svg"></nz-avatar>
-            <nz-comment-content>
-              <p>
-                {{ comment.content }}
-              </p>
-            </nz-comment-content>
-            <nz-comment-action>
-              <nz-icon nz-tooltip nzTooltipTitle="Like" nzType="like" />
-              <span class="count like">1</span>
-            </nz-comment-action>
-            <nz-comment-action>
-              <nz-icon nz-tooltip nzTooltipTitle="Dislike" nzType="dislike" />
-              <span class="count dislike">0</span>
-            </nz-comment-action>
-          </nz-comment>
-        </nz-card>
+          <form nz-form [formGroup]="createTaskCommentForm">
+            <nz-comment>
+              <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="/src/app/assets/images/profile-default.svg"></nz-avatar>
+              <nz-comment-content>
+                <nz-form-item>
+                  <textarea nz-input rows="4" formControlName="content"></textarea>
+                </nz-form-item>
+                <nz-form-item>
+                  <button nz-button nzType="primary" (click)="addComment()">
+                    Add Comment
+                  </button>
+                </nz-form-item>
+              </nz-comment-content>
+            </nz-comment>
+          </form>
+          @for (comment of taskComments; track comment.id) {
+          <nz-card class="comments-card">
+            <nz-comment [nzAuthor]="comment.user.name" [nzDatetime]="comment.displayTime">
+              <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="/src/app/assets/images/profile-default.svg"></nz-avatar>
+              <nz-comment-content>
+                <p>
+                  {{ comment.content }}
+                </p>
+              </nz-comment-content>
+              <nz-comment-action>
+                <nz-icon nz-tooltip nzTooltipTitle="Like" nzType="like" />
+                <span class="count like">1</span>
+              </nz-comment-action>
+              <nz-comment-action>
+                <nz-icon nz-tooltip nzTooltipTitle="Dislike" nzType="dislike" />
+                <span class="count dislike">0</span>
+              </nz-comment-action>
+            </nz-comment>
+          </nz-card>
+          }
+        </nz-spin>
         }
-      </nz-spin>
-      }
-    </nz-col>
-  </nz-row>
+      </nz-col>
+    </nz-row>
+  </div>
   }
 </div>
