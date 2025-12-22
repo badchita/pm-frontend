@@ -39,3 +39,8 @@ export const NOTIFICATION_MESSAGE = {
   ProjectFormPublishedSuccess: '{{1}} was published successfully.',
   ProjectFormDeactivatedSuccess: '{{1}} was deactivated successfully.',
 };
+
+export const STATE_HISTORY_LABEL = {
+  MovedTo: 'Task moved {{1}} to',
+  Set: 'State set to',
+};

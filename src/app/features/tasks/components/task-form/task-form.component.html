@@ -88,7 +88,7 @@
           (onGetTotalComments)="getTotalComments($event)"></app-task-form-details>
         }
         @else {
-        <app-task-form-history></app-task-form-history>
+        <app-task-form-history [taskId]="id()"></app-task-form-history>
         }
       </nz-tab>
       }

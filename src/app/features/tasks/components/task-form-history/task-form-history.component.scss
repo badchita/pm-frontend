@@ -1,6 +1,9 @@
 :host {
   .timeline-container {
     padding-top: 34px;
-    border: 1px solid black;
+
+    .history-date {
+      font-weight: 500;
+    }
   }
 }

@@ -53,6 +53,7 @@ import { TaskFormHistoryComponent } from '../task-form-history/task-form-history
 })
 export class TaskFormComponent implements OnInit, OnDestroy {
   @ViewChild(TaskFormDetailsComponent) taskFormDetails!: TaskFormDetailsComponent;
+  @ViewChild(TaskFormHistoryComponent) taskFormHistory!: TaskFormHistoryComponent;
 
   readonly projectId = input.required<number>();
   readonly id = input.required<number>();
@@ -79,12 +80,9 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     assignedTo: false,
     state: false,
   };
-  tabs = [
+  tabs: { name?: string; icon?: string }[] = [
     {
       name: 'Details',
-    },
-    {
-      icon: 'redo',
     },
   ];
   stateOptions = this.genericUtilityService.objectToArray(TaskStateOptions, false, true);
@@ -97,6 +95,9 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     this.buildForm();
 
     if (this.id() > 0) {
+      this.tabs.push({
+        icon: 'redo',
+      });
       this.loadData();
     }
   }
@@ -106,7 +107,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
       id: [null],
       taskName: [null, RequiredValidator],
       assignedTo: [null],
-      state: [0],
+      state: [{ disabled: this.id() === 0, value: 0 }],
       description: [null],
       acceptanceCriteria: [null],
       taskPoints: [null],
@@ -203,6 +204,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
             return;
           }
 
+          this.taskFormHistory.loadHistories();
           this.notificationService.create(
             'success',
             NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Task Updated'),
@@ -227,6 +229,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   refresh() {
     if (this.id() > 0) {
       this.loadData();
+      this.taskFormHistory.loadHistories();
+      this.taskFormDetails.loadComments();
     }
   }
 

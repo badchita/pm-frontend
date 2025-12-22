@@ -6,6 +6,7 @@ import { Task } from '@app/features/tasks/models/task.model';
 import { TableUtilityService } from '@app/shared/services/table-utility.service';
 import { Observable } from 'rxjs';
 import { TaskComment } from '../models/task-comment.model';
+import { TaskStateHistory } from '../models/task-state-history.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,5 +42,9 @@ export class TaskService {
 
   getAllTaskComments(taskId: number): Observable<TaskComment[]> {
     return this.http.get<TaskComment[]>(`${this.apiTasks}/${taskId}/comments`);
+  }
+
+  getAllTaskStateHistory(taskId: number): Observable<TaskStateHistory[]> {
+    return this.http.get<TaskStateHistory[]>(`${this.apiTasks}/${taskId}/histories`);
   }
 }

@@ -59,9 +59,9 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   taskId = input.required<number>();
   onGetTotalComments = output<number | null>();
 
+  private taskService = inject(TaskService);
   private changeDetectorRef = inject(ChangeDetectorRef);
   private formBuilder = inject(FormBuilder);
-  private taskService = inject(TaskService);
 
   private _destroying$ = new Subject<void>();
 
