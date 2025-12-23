@@ -296,8 +296,6 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   }
 
   likeDislike(reaction: TaskCommentReactionType, taskCommentId: number) {
-    console.log(reaction);
-
     const payload: TaskCommentReaction = {
       taskCommentId: taskCommentId,
       userId: this.userDetails.id,
