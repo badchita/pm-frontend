@@ -31,6 +31,7 @@ import { formatDistance } from 'date-fns';
 import { TaskCommentReactionType } from '@app/shared/enums/task-comment-reaction.enum';
 import { TaskCommentReaction } from '../../models/task-comment-reaction-model';
 import { User } from '@app/features/auth/models/user.model';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 
 @Component({
   selector: 'app-task-form-details',
@@ -49,6 +50,7 @@ import { User } from '@app/features/auth/models/user.model';
     NzSpinModule,
     FormsModule,
     ErrorAlertComponent,
+    NzTooltipModule,
   ],
   templateUrl: './task-form-details.component.html',
   styleUrl: './task-form-details.component.scss',
@@ -74,6 +76,8 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   catchError!: any;
   taskComments: TaskComment[] = [];
   taskCommentsReactions!: TaskCommentReaction[];
+  reactionLikeUsers: User[] = [];
+  reactionDislikeUsers: User[] = [];
   userDetails!: User;
 
   quillToolbar = [
@@ -282,8 +286,16 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
         (comments) => {
           this.onGetTotalComments.emit(comments.length);
           this.taskComments = comments.map((comment) => {
-            if (comment.reactions) {
+            if (comment.reactions?.length) {
               this.taskCommentsReactions = comment.reactions;
+
+              this.reactionLikeUsers = comment.reactions
+                .filter((r) => r.user && r.reactionType === this.TaskCommentReactionType.Like)
+                .map((r) => r.user!);
+
+              this.reactionDislikeUsers = comment.reactions
+                .filter((r) => r.user && r.reactionType === this.TaskCommentReactionType.Dislike)
+                .map((r) => r.user!);
             }
 
             const likeReactions = comment.reactions?.filter(

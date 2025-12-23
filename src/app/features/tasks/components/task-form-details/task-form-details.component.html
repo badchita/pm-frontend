@@ -200,16 +200,18 @@
                 </p>
               </nz-comment-content>
               <nz-comment-action>
-                <nz-icon nz-tooltip nzTooltipTitle="Like" nzType="like"
-                  [nzTheme]="hasUserReacted(TaskCommentReactionType.Like) ? 'twotone' : 'outline'"
+                <nz-icon nzType="like" [nzTheme]="hasUserReacted(TaskCommentReactionType.Like) ? 'twotone' : 'outline'"
                   (click)="likeDislike(TaskCommentReactionType.Like, comment.id)" />
-                <span class="count like">{{ comment.totalLikeReaction }}</span>
+                <span class="count like" nz-tooltip
+                  [nzTooltipTitle]="reactionLikeUsers.length > 0 ? userLikeReactionTemplate : null">{{comment.totalLikeReaction}}</span>
               </nz-comment-action>
               <nz-comment-action>
-                <nz-icon nz-tooltip nzTooltipTitle="Dislike" nzType="dislike"
+                <nz-icon nzType="dislike"
                   [nzTheme]="hasUserReacted(TaskCommentReactionType.Dislike) ? 'twotone' : 'outline'"
                   (click)="likeDislike(TaskCommentReactionType.Dislike, comment.id)" />
-                <span class="count dislike">{{ comment.totalDislikeReaction }}</span>
+                <span class="count dislike" nz-tooltip
+                  [nzTooltipTitle]="reactionDislikeUsers.length > 0 ? userDislikeReactionTemplate : null">{{
+                  comment.totalDislikeReaction }}</span>
               </nz-comment-action>
             </nz-comment>
           </nz-card>
@@ -221,3 +223,15 @@
   </div>
   }
 </div>
+
+<ng-template #userLikeReactionTemplate>
+  @for (user of reactionLikeUsers; track user) {
+  <span>{{ user.name }}</span> <br />
+  }
+</ng-template>
+
+<ng-template #userDislikeReactionTemplate>
+  @for (user of reactionDislikeUsers; track user) {
+  <span>{{ user.name }}</span> <br />
+  }
+</ng-template>
