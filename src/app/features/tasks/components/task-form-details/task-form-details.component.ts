@@ -28,6 +28,9 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import { TaskComment } from '../../models/task-comment.model';
 import { formatDistance } from 'date-fns';
+import { TaskCommentReactionType } from '@app/shared/enums/task-comment-reaction.enum';
+import { TaskCommentReaction } from '../../models/task-comment-reaction-model';
+import { User } from '@app/features/auth/models/user.model';
 
 @Component({
   selector: 'app-task-form-details',
@@ -70,6 +73,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   createTaskCommentForm!: FormGroup;
   catchError!: any;
   taskComments!: TaskComment[];
+  userDetails!: User;
 
   quillToolbar = [
     ['bold', 'italic', 'underline'],
@@ -107,6 +111,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   toolbarInteracting = false;
   isCommentsLoading = false;
   SPINNER_TIP = SPINNER_TIP;
+  TaskCommentReactionType = TaskCommentReactionType;
 
   ngOnInit() {
     if (this.taskId()) {
@@ -118,11 +123,11 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
 
   buildForm() {
     const userDetailsSession = sessionStorage.getItem('user_details');
-    const userDetails = userDetailsSession ? JSON.parse(userDetailsSession) : null;
+    this.userDetails = userDetailsSession ? JSON.parse(userDetailsSession) : null;
     this.createTaskCommentForm = this.formBuilder.group({
       id: [null],
       content: [null, RequiredValidator],
-      userId: [userDetails.id],
+      userId: [this.userDetails.id],
     });
     this.loadComments();
   }
@@ -283,6 +288,31 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
               }),
             };
           });
+        },
+        (error) => {
+          this.catchError = error;
+        }
+      );
+  }
+
+  likeDislike(reaction: TaskCommentReactionType, taskCommentId: number) {
+    const payload: TaskCommentReaction = {
+      taskCommentId: taskCommentId,
+      userId: this.userDetails.id,
+      reactionType: reaction,
+    };
+
+    this.taskService
+      .updateTaskCommentReaction(payload, this.taskId(), taskCommentId)
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isCommentsLoading = false;
+        })
+      )
+      .subscribe(
+        (reaction) => {
+          console.log(reaction);
         },
         (error) => {
           this.catchError = error;

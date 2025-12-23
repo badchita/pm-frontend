@@ -200,11 +200,13 @@
                 </p>
               </nz-comment-content>
               <nz-comment-action>
-                <nz-icon nz-tooltip nzTooltipTitle="Like" nzType="like" />
+                <nz-icon nz-tooltip nzTooltipTitle="Like" nzType="like"
+                  (click)="likeDislike(TaskCommentReactionType.Like, comment.id)" />
                 <span class="count like">1</span>
               </nz-comment-action>
               <nz-comment-action>
-                <nz-icon nz-tooltip nzTooltipTitle="Dislike" nzType="dislike" />
+                <nz-icon nz-tooltip nzTooltipTitle="Dislike" nzType="dislike"
+                  (click)="likeDislike(TaskCommentReactionType.Dislike, comment.id)" />
                 <span class="count dislike">0</span>
               </nz-comment-action>
             </nz-comment>
