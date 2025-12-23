@@ -72,7 +72,8 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   commentsSpinnerTip!: string;
   createTaskCommentForm!: FormGroup;
   catchError!: any;
-  taskComments!: TaskComment[];
+  taskComments: TaskComment[] = [];
+  taskCommentsReactions!: TaskCommentReaction[];
   userDetails!: User;
 
   quillToolbar = [
@@ -281,6 +282,10 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
         (comments) => {
           this.onGetTotalComments.emit(comments.length);
           this.taskComments = comments.map((comment) => {
+            if (comment.reactions) {
+              this.taskCommentsReactions = comment.reactions;
+            }
+
             const likeReactions = comment.reactions?.filter(
               (reaction) => reaction.reactionType === this.TaskCommentReactionType.Like
             );
@@ -306,28 +311,38 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   }
 
   likeDislike(reaction: TaskCommentReactionType, taskCommentId: number) {
+    const userId = this.userDetails.id;
+    const userReaction = this.taskCommentsReactions.find((reaction) => reaction.userId === userId);
     const payload: TaskCommentReaction = {
       taskCommentId: taskCommentId,
-      userId: this.userDetails.id,
-      reactionType: reaction,
+      userId: userId,
+      reactionType: userReaction?.reactionType === reaction ? null : reaction,
     };
+
+    if (userReaction?.id != null) {
+      payload.id = userReaction.id;
+    }
 
     this.taskService
       .updateTaskCommentReaction(payload, this.taskId(), taskCommentId)
-      .pipe(
-        takeUntil(this._destroying$),
-        finalize(() => {
-          this.isCommentsLoading = false;
-        })
-      )
+      .pipe(takeUntil(this._destroying$))
       .subscribe(
-        (reaction) => {
-          console.log(reaction);
+        () => {
+          this.loadComments();
         },
         (error) => {
           this.catchError = error;
         }
       );
+  }
+
+  hasUserReacted(reactionType: TaskCommentReactionType): boolean {
+    if (!this.taskCommentsReactions?.length) return false;
+
+    const userId = this.userDetails.id;
+    return this.taskCommentsReactions.some(
+      (r) => r.userId === userId && (!reactionType || r.reactionType === reactionType)
+    );
   }
 
   scrollToDiscussions() {
