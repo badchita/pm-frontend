@@ -48,7 +48,11 @@
 
       .count {
         padding-left: 8px;
-        cursor: auto;
+        cursor: pointer;
+      }
+
+      .count:hover {
+        text-decoration: underline;
       }
 
       .ant-comment-rtl .count {

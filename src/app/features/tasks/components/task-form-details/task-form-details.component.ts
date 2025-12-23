@@ -31,6 +31,7 @@ import { formatDistance } from 'date-fns';
 import { TaskCommentReactionType } from '@app/shared/enums/task-comment-reaction.enum';
 import { TaskCommentReaction } from '../../models/task-comment-reaction-model';
 import { User } from '@app/features/auth/models/user.model';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 
 @Component({
   selector: 'app-task-form-details',
@@ -49,6 +50,7 @@ import { User } from '@app/features/auth/models/user.model';
     NzSpinModule,
     FormsModule,
     ErrorAlertComponent,
+    NzTooltipModule,
   ],
   templateUrl: './task-form-details.component.html',
   styleUrl: './task-form-details.component.scss',
@@ -72,7 +74,10 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   commentsSpinnerTip!: string;
   createTaskCommentForm!: FormGroup;
   catchError!: any;
-  taskComments!: TaskComment[];
+  taskComments: TaskComment[] = [];
+  taskCommentsReactions!: TaskCommentReaction[];
+  reactionLikeUsers: User[] = [];
+  reactionDislikeUsers: User[] = [];
   userDetails!: User;
 
   quillToolbar = [
@@ -281,11 +286,33 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
         (comments) => {
           this.onGetTotalComments.emit(comments.length);
           this.taskComments = comments.map((comment) => {
+            if (comment.reactions?.length) {
+              this.taskCommentsReactions = comment.reactions;
+
+              this.reactionLikeUsers = comment.reactions
+                .filter((r) => r.user && r.reactionType === this.TaskCommentReactionType.Like)
+                .map((r) => r.user!);
+
+              this.reactionDislikeUsers = comment.reactions
+                .filter((r) => r.user && r.reactionType === this.TaskCommentReactionType.Dislike)
+                .map((r) => r.user!);
+            }
+
+            const likeReactions = comment.reactions?.filter(
+              (reaction) => reaction.reactionType === this.TaskCommentReactionType.Like
+            );
+
+            const disLikeReactions = comment.reactions?.filter(
+              (reaction) => reaction.reactionType === this.TaskCommentReactionType.Dislike
+            );
+
             return {
               ...comment,
               displayTime: formatDistance(new Date(comment.createdAt + 'Z'), new Date(), {
                 addSuffix: true,
               }),
+              totalLikeReaction: likeReactions?.length,
+              totalDislikeReaction: disLikeReactions?.length,
             };
           });
         },
@@ -296,28 +323,38 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   }
 
   likeDislike(reaction: TaskCommentReactionType, taskCommentId: number) {
+    const userId = this.userDetails.id;
+    const userReaction = this.taskCommentsReactions.find((reaction) => reaction.userId === userId);
     const payload: TaskCommentReaction = {
       taskCommentId: taskCommentId,
-      userId: this.userDetails.id,
-      reactionType: reaction,
+      userId: userId,
+      reactionType: userReaction?.reactionType === reaction ? null : reaction,
     };
+
+    if (userReaction?.id != null) {
+      payload.id = userReaction.id;
+    }
 
     this.taskService
       .updateTaskCommentReaction(payload, this.taskId(), taskCommentId)
-      .pipe(
-        takeUntil(this._destroying$),
-        finalize(() => {
-          this.isCommentsLoading = false;
-        })
-      )
+      .pipe(takeUntil(this._destroying$))
       .subscribe(
-        (reaction) => {
-          console.log(reaction);
+        () => {
+          this.loadComments();
         },
         (error) => {
           this.catchError = error;
         }
       );
+  }
+
+  hasUserReacted(reactionType: TaskCommentReactionType): boolean {
+    if (!this.taskCommentsReactions?.length) return false;
+
+    const userId = this.userDetails.id;
+    return this.taskCommentsReactions.some(
+      (r) => r.userId === userId && (!reactionType || r.reactionType === reactionType)
+    );
   }
 
   scrollToDiscussions() {
