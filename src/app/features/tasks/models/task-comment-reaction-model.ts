@@ -2,10 +2,10 @@ import { TaskCommentReactionType } from '@app/shared/enums/task-comment-reaction
 import { TaskComment } from './task-comment.model';
 
 export interface TaskCommentReaction {
-  id: number;
+  id?: number;
   taskCommentId: number;
   taskComment?: TaskComment;
   userId: number;
-  reactionType?: TaskCommentReactionType | null;
-  createdAt: Date;
+  reactionType: TaskCommentReactionType | null;
+  createdAt?: Date;
 }

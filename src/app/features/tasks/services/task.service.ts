@@ -55,7 +55,7 @@ export class TaskService {
     taskCommentId: number
   ): Observable<TaskCommentReaction> {
     return this.http.put<TaskCommentReaction>(
-      `${this.apiTasks}/${taskId}/comments/${taskCommentId}`,
+      `${this.apiTasks}/${taskId}/comments/${taskCommentId}/reactions`,
       taskCommentReaction
     );
   }
