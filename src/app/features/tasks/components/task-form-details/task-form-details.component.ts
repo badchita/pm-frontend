@@ -281,11 +281,21 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
         (comments) => {
           this.onGetTotalComments.emit(comments.length);
           this.taskComments = comments.map((comment) => {
+            const likeReactions = comment.reactions?.filter(
+              (reaction) => reaction.reactionType === this.TaskCommentReactionType.Like
+            );
+
+            const disLikeReactions = comment.reactions?.filter(
+              (reaction) => reaction.reactionType === this.TaskCommentReactionType.Dislike
+            );
+
             return {
               ...comment,
               displayTime: formatDistance(new Date(comment.createdAt + 'Z'), new Date(), {
                 addSuffix: true,
               }),
+              totalLikeReaction: likeReactions?.length,
+              totalDislikeReaction: disLikeReactions?.length,
             };
           });
         },

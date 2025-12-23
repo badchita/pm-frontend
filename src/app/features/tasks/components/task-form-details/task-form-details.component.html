@@ -202,12 +202,12 @@
               <nz-comment-action>
                 <nz-icon nz-tooltip nzTooltipTitle="Like" nzType="like"
                   (click)="likeDislike(TaskCommentReactionType.Like, comment.id)" />
-                <span class="count like">1</span>
+                <span class="count like">{{ comment.totalLikeReaction }}</span>
               </nz-comment-action>
               <nz-comment-action>
                 <nz-icon nz-tooltip nzTooltipTitle="Dislike" nzType="dislike"
                   (click)="likeDislike(TaskCommentReactionType.Dislike, comment.id)" />
-                <span class="count dislike">0</span>
+                <span class="count dislike">{{ comment.totalDislikeReaction }}</span>
               </nz-comment-action>
             </nz-comment>
           </nz-card>
