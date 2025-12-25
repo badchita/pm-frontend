@@ -43,6 +43,13 @@ export class PortalComponent {
       title: 'Task Board',
       icon: 'paper-clip',
       route: '/portal/task',
+      child: [
+        {
+          title: 'Test',
+          icon: 'Test',
+          route: '/portal/task',
+        },
+      ],
     },
     {
       title: 'Profile Settings',

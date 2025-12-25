@@ -29,7 +29,8 @@
           padding-right: 10px;
         }
 
-        .ant-menu-item:hover {
+        .ant-menu-item:hover,
+        .ant-menu-submenu-title:hover {
           color: white;
           background-color: transparent;
           color: var(--pm-primary);

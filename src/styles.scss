@@ -236,4 +236,33 @@
       color: var(--pm-primary);
     }
   }
+
+  .ant-menu-submenu {
+    .ant-menu-submenu-title {
+      nz-icon {
+        padding-right: 10px;
+      }
+
+      &:hover {
+        background-color: transparent;
+        color: var(--pm-primary);
+      }
+    }
+
+    &-selected {
+      color: var(--pm-primary);
+    }
+
+    &:hover {
+      .ant-menu-submenu-expand-icon,
+      .ant-menu-submenu-arrow {
+        color: var(--pm-primary);
+      }
+    }
+
+    .ant-menu-sub.ant-menu-inline {
+      background-color: transparent;
+      padding-left: 10px;
+    }
+  }
 }

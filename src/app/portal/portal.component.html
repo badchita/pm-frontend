@@ -7,12 +7,24 @@
     <nz-sider nzWidth="256px" nzTheme="light" class="side-bar" [(nzCollapsed)]="isCollapsed">
       <div class="sidebar-items">
         <ul nz-menu class="sider-menu" nzMode="inline">
-          @for (nav of navItem; track nav) {
-          <li nz-menu-item class="sider-menu-item" (click)="navigate(nav.route)"
-            [nzSelected]="currentRoute.includes(nav.route)">
-            <nz-icon [nzType]="nav.icon" nzTheme="outline" />
+          @for (nav of navItem; track nav.route) {
+          @if (nav.child?.length) {
+          <li nz-submenu [nzTitle]="nav.title" [nzIcon]="nav.icon">
+            <ul>
+              @for (child of nav.child; track child.route) {
+              <li nz-menu-item [nzSelected]="currentRoute.includes(child.route)" (click)="navigate(child.route)">
+                {{ child.title }}
+              </li>
+              }
+            </ul>
+          </li>
+          }
+          @else {
+          <li nz-menu-item (click)="navigate(nav.route)" [nzSelected]="currentRoute.includes(nav.route)">
+            <nz-icon [nzType]="nav.icon" />
             <span>{{ nav.title }}</span>
           </li>
+          }
           }
         </ul>
 
