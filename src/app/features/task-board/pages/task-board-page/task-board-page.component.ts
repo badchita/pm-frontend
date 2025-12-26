@@ -17,7 +17,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { TaskboardService } from '../../services/taskboard.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import { TaskBoardColumn } from '../../models/task-board.model';
 
@@ -42,6 +42,7 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
 
   private readonly taskboardService = inject(TaskboardService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   private readonly _destroying$ = new Subject<void>();
 
@@ -55,48 +56,55 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
   State = TaskStateOptions;
   StateColor = TaskStateColorOptions;
 
-  columns: TaskBoardColumn[] = [
-    { state: State.New, label: 'New', tasks: [] as Task[], color: this.StateColor[State.New] },
-    {
-      state: State.Refinement,
-      label: 'Refinement',
-      tasks: [] as Task[],
-      color: this.StateColor[State.Refinement],
-    },
-    {
-      state: State.ReadyForDevelopment,
-      label: 'Ready',
-      tasks: [] as Task[],
-      color: this.StateColor[State.ReadyForDevelopment],
-    },
-    {
-      state: State.InProgress,
-      label: 'In Progress',
-      tasks: [] as Task[],
-      color: this.StateColor[State.InProgress],
-    },
-    {
-      state: State.Testing,
-      label: 'Testing',
-      tasks: [] as Task[],
-      color: this.StateColor[State.Testing],
-    },
-    {
-      state: State.Deployed,
-      label: 'Deployed',
-      tasks: [] as Task[],
-      color: this.StateColor[State.Deployed],
-    },
-    {
-      state: State.Closed,
-      label: 'Closed',
-      tasks: [] as Task[],
-      color: this.StateColor[State.Closed],
-    },
-  ];
+  columns!: TaskBoardColumn[];
 
   ngOnInit() {
     this.isLoading = true;
+
+    this.columns = [
+      {
+        state: State.New,
+        label: this.State[State.New],
+        tasks: [],
+        color: this.StateColor[State.New],
+      },
+      {
+        state: State.Refinement,
+        label: this.State[State.Refinement],
+        tasks: [],
+        color: this.StateColor[State.Refinement],
+      },
+      {
+        state: State.ReadyForDevelopment,
+        label: this.State[State.ReadyForDevelopment],
+        tasks: [],
+        color: this.StateColor[State.ReadyForDevelopment],
+      },
+      {
+        state: State.InProgress,
+        label: this.State[State.InProgress],
+        tasks: [],
+        color: this.StateColor[State.InProgress],
+      },
+      {
+        state: State.Testing,
+        label: this.State[State.Testing],
+        tasks: [],
+        color: this.StateColor[State.Testing],
+      },
+      {
+        state: State.Deployed,
+        label: this.State[State.Deployed],
+        tasks: [],
+        color: this.StateColor[State.Deployed],
+      },
+      {
+        state: State.Closed,
+        label: this.State[State.Closed],
+        tasks: [],
+        color: this.StateColor[State.Closed],
+      },
+    ];
 
     this.route.paramMap.subscribe((params) => {
       const projectId = params.get('projectId')!;
@@ -191,6 +199,10 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
       const movedTask = event.container.data[event.currentIndex];
       movedTask.state = targetState;
     }
+  }
+
+  navigateToEditTask(projectId: number, taskId: number) {
+    this.router.navigate([`/portal/tasks/${projectId}/${taskId}`]);
   }
 
   ngOnDestroy() {

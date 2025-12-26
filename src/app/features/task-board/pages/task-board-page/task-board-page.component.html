@@ -18,7 +18,7 @@
             <nz-card-meta [nzTitle]="taskCardTitle" [nzDescription]="taskCardDescription"></nz-card-meta>
             <ng-template #taskCardTitle>
               <span>{{ task.taskIdNumber }} </span>
-              <a class="task-name">{{ task.taskName }}</a>
+              <a class="task-name" (click)="navigateToEditTask(task.projectId, task.id)">{{ task.taskName }}</a>
             </ng-template>
             <ng-template #taskCardDescription>
               <nz-tag [nzColor]="task.stateColor">{{ task.stateLabel }}</nz-tag>
