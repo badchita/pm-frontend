@@ -1,5 +1,5 @@
 import { I18nPluralPipe } from '@angular/common';
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, OnInit, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { DataTable } from '@app/shared/models/data-table.model';
@@ -33,7 +33,7 @@ import { Router } from '@angular/router';
   templateUrl: './task-list-table.component.html',
   styleUrl: './task-list-table.component.scss',
 })
-export class TaskListTableComponent {
+export class TaskListTableComponent implements OnInit {
   readonly dataTable = input.required<DataTable<any>>();
   readonly dataList = input.required<Task[] | []>();
   readonly loading = input.required<boolean>();
@@ -41,9 +41,9 @@ export class TaskListTableComponent {
   readonly onUpdateTable = output<NzTableQueryParams>();
   readonly onAssignedToSearch = output<string>();
 
-  private genericUtilityService = inject(GenericUtilityService);
-  private formBuilder = inject(FormBuilder);
-  private router = inject(Router);
+  private readonly genericUtilityService = inject(GenericUtilityService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   searchProjectTaskForm!: FormGroup;
   disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;

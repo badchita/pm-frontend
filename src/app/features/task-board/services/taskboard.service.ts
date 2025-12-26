@@ -12,6 +12,6 @@ export class TaskboardService {
   private readonly apiProjects = `${environment.url}/projects`;
 
   getProject(projectId: number): Observable<Project> {
-    return this.http.get<Project>(`${this.apiProjects}/${projectId}`);
+    return this.http.get<Project>(`${this.apiProjects}/${projectId}/task-board`);
   }
 }

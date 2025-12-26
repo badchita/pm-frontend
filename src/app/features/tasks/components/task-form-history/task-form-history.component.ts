@@ -17,9 +17,9 @@ import { TaskHistory } from '../../models/task-state-history.model';
 export class TaskFormHistoryComponent implements OnInit, OnDestroy {
   taskId = input.required<number>();
 
-  private taskService = inject(TaskService);
+  private readonly taskService = inject(TaskService);
 
-  private _destroying$ = new Subject<void>();
+  private readonly _destroying$ = new Subject<void>();
 
   catchError!: any;
   taskHistories!: TaskHistory[];

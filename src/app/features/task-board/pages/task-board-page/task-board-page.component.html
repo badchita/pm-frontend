@@ -4,6 +4,8 @@
       <span>MBK Portal: PRJ-0001</span>
     </div>
 
+    <app-error-alert [error]="catchError"></app-error-alert>
+
     <div class="board" cdkDropListGroup #board>
       @for (column of columns; track column.state) {
       <div class="column" cdkDropList [cdkDropListData]="column.tasks"

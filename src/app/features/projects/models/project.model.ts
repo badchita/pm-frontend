@@ -1,3 +1,5 @@
+import { Task } from '@app/features/tasks/models/task.model';
+
 export interface ProjectForm {
   projectName: string;
   description: string;
@@ -13,4 +15,5 @@ export interface Project {
   isDeleted: string;
   createdAt: Date;
   dueDate?: Date | string;
+  tasks?: Task[];
 }

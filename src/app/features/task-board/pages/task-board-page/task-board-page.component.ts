@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Task } from '@app/features/tasks/models/task.model';
 import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
-import { State, TaskStateColorOptions } from '@app/shared/enums/task-state.enum';
+import { State, TaskStateColorOptions, TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
   CdkDrag,
@@ -15,6 +15,11 @@ import {
 } from '@angular/cdk/drag-drop';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { TaskboardService } from '../../services/taskboard.service';
+import { ActivatedRoute } from '@angular/router';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
+import { TaskBoardColumn } from '../../models/task-board.model';
 
 @Component({
   selector: 'app-task-board-page',
@@ -26,92 +31,31 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
     CdkDrag,
     NzCardModule,
     NzTagModule,
+    ErrorAlertComponent,
   ],
   templateUrl: './task-board-page.component.html',
   styleUrl: './task-board-page.component.scss',
 })
-export class TaskBoardPageComponent {
+export class TaskBoardPageComponent implements OnInit, OnDestroy {
   @ViewChild('board', { static: true })
   boardRef!: ElementRef<HTMLDivElement>;
 
+  private readonly taskboardService = inject(TaskboardService);
+  private readonly route = inject(ActivatedRoute);
+
+  private readonly _destroying$ = new Subject<void>();
+
   scrollInterval?: number;
   spinnerTip!: string;
+  catchError!: any;
+  tasks!: Task[];
 
   isLoading = false;
   SPINNER_TIP = SPINNER_TIP;
-  State = State;
+  State = TaskStateOptions;
   StateColor = TaskStateColorOptions;
 
-  tasks: Task[] = [
-    {
-      id: 1,
-      taskName: 'Setup project',
-      description: 'Initialize repository and base config',
-      acceptanceCriteria: 'Project builds successfully',
-      assignedTo: 'John Doe',
-      taskPoints: 3,
-      taskIdNumber: 'TASK-001',
-      state: State.New,
-      stateLabel: 'New',
-      stateColor: this.StateColor[State.New],
-      createdBy: 'Admin',
-      updatedBy: 'Admin',
-      projectId: 101,
-    },
-    {
-      id: 2,
-      taskName: 'Refine requirements',
-      description: 'Clarify functional scope',
-      acceptanceCriteria: 'Requirements approved',
-      assignedTo: 'Jane Smith',
-      taskPoints: 5,
-      taskIdNumber: 'TASK-002',
-      state: State.Refinement,
-      stateLabel: 'Refinement',
-      stateColor: this.StateColor[State.Refinement],
-      createdBy: 'Admin',
-      updatedBy: 'Admin',
-      projectId: 101,
-    },
-    {
-      id: 3,
-      taskName: 'Create UI',
-      description: 'Build task board UI',
-      acceptanceCriteria: 'Board supports drag & drop',
-      assignedTo: 'Val Ryan',
-      taskPoints: 8,
-      taskIdNumber: 'TASK-003',
-      state: State.InProgress,
-      stateLabel: 'In Progress',
-      stateColor: this.StateColor[State.InProgress],
-    },
-    {
-      id: 4,
-      taskName: 'Write tests',
-      description: 'Add unit and e2e tests',
-      acceptanceCriteria: 'Coverage above 80%',
-      assignedTo: 'QA Team',
-      taskPoints: 5,
-      taskIdNumber: 'TASK-004',
-      state: State.Testing,
-      stateLabel: 'Testing',
-      stateColor: this.StateColor[State.Testing],
-    },
-    {
-      id: 5,
-      taskName: 'Deploy app',
-      description: 'Deploy to production',
-      acceptanceCriteria: 'App accessible in prod',
-      assignedTo: 'DevOps',
-      taskPoints: 2,
-      taskIdNumber: 'TASK-005',
-      state: State.Deployed,
-      stateLabel: 'Deployed',
-      stateColor: this.StateColor[State.Deployed],
-    },
-  ];
-
-  columns = [
+  columns: TaskBoardColumn[] = [
     { state: State.New, label: 'New', tasks: [] as Task[], color: this.StateColor[State.New] },
     {
       state: State.Refinement,
@@ -151,8 +95,40 @@ export class TaskBoardPageComponent {
     },
   ];
 
-  constructor() {
-    this.mapTasksToColumns();
+  ngOnInit() {
+    this.isLoading = true;
+
+    this.route.paramMap.subscribe((params) => {
+      const projectId = params.get('projectId')!;
+      this.loadProjects(projectId);
+    });
+  }
+
+  loadProjects(projectId: string) {
+    this.taskboardService
+      .getProject(+projectId)
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe(
+        (project) => {
+          if (project.tasks) {
+            this.tasks = project.tasks.map((task) => ({
+              ...task,
+              stateLabel: this.State[task.state as State],
+              stateColor: this.StateColor[task.state as State],
+            }));
+
+            this.mapTasksToColumns();
+          }
+        },
+        (error) => {
+          this.catchError = error;
+        }
+      );
   }
 
   private mapTasksToColumns(): void {
@@ -215,5 +191,10 @@ export class TaskBoardPageComponent {
       const movedTask = event.container.data[event.currentIndex];
       movedTask.state = targetState;
     }
+  }
+
+  ngOnDestroy() {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
 }
