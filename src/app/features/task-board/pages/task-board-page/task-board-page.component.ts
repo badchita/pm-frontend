@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Task } from '@app/features/tasks/models/task.model';
 import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
-import { State, TaskStateColorOptions } from '@app/shared/enums/task-state.enum';
+import { State, TaskStateColorOptions, TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
   CdkDrag,
@@ -15,6 +15,12 @@ import {
 } from '@angular/cdk/drag-drop';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { TaskboardService } from '../../services/taskboard.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
+import { TaskBoardColumn } from '../../models/task-board.model';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-task-board-page',
@@ -26,136 +32,120 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
     CdkDrag,
     NzCardModule,
     NzTagModule,
+    ErrorAlertComponent,
+    NzIconModule,
   ],
   templateUrl: './task-board-page.component.html',
   styleUrl: './task-board-page.component.scss',
 })
-export class TaskBoardPageComponent {
+export class TaskBoardPageComponent implements OnInit, OnDestroy {
   @ViewChild('board', { static: true })
   boardRef!: ElementRef<HTMLDivElement>;
 
+  private readonly taskboardService = inject(TaskboardService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  private readonly _destroying$ = new Subject<void>();
+
   scrollInterval?: number;
   spinnerTip!: string;
+  catchError!: any;
+  tasks!: Task[];
+  projectName!: string;
+  projectIdNumber!: string;
+  columns!: TaskBoardColumn[];
 
   isLoading = false;
   SPINNER_TIP = SPINNER_TIP;
-  State = State;
+  State = TaskStateOptions;
   StateColor = TaskStateColorOptions;
 
-  tasks: Task[] = [
-    {
-      id: 1,
-      taskName: 'Setup project',
-      description: 'Initialize repository and base config',
-      acceptanceCriteria: 'Project builds successfully',
-      assignedTo: 'John Doe',
-      taskPoints: 3,
-      taskIdNumber: 'TASK-001',
-      state: State.New,
-      stateLabel: 'New',
-      stateColor: this.StateColor[State.New],
-      createdBy: 'Admin',
-      updatedBy: 'Admin',
-      projectId: 101,
-    },
-    {
-      id: 2,
-      taskName: 'Refine requirements',
-      description: 'Clarify functional scope',
-      acceptanceCriteria: 'Requirements approved',
-      assignedTo: 'Jane Smith',
-      taskPoints: 5,
-      taskIdNumber: 'TASK-002',
-      state: State.Refinement,
-      stateLabel: 'Refinement',
-      stateColor: this.StateColor[State.Refinement],
-      createdBy: 'Admin',
-      updatedBy: 'Admin',
-      projectId: 101,
-    },
-    {
-      id: 3,
-      taskName: 'Create UI',
-      description: 'Build task board UI',
-      acceptanceCriteria: 'Board supports drag & drop',
-      assignedTo: 'Val Ryan',
-      taskPoints: 8,
-      taskIdNumber: 'TASK-003',
-      state: State.InProgress,
-      stateLabel: 'In Progress',
-      stateColor: this.StateColor[State.InProgress],
-    },
-    {
-      id: 4,
-      taskName: 'Write tests',
-      description: 'Add unit and e2e tests',
-      acceptanceCriteria: 'Coverage above 80%',
-      assignedTo: 'QA Team',
-      taskPoints: 5,
-      taskIdNumber: 'TASK-004',
-      state: State.Testing,
-      stateLabel: 'Testing',
-      stateColor: this.StateColor[State.Testing],
-    },
-    {
-      id: 5,
-      taskName: 'Deploy app',
-      description: 'Deploy to production',
-      acceptanceCriteria: 'App accessible in prod',
-      assignedTo: 'DevOps',
-      taskPoints: 2,
-      taskIdNumber: 'TASK-005',
-      state: State.Deployed,
-      stateLabel: 'Deployed',
-      stateColor: this.StateColor[State.Deployed],
-    },
-  ];
+  ngOnInit() {
+    this.isLoading = true;
 
-  columns = [
-    { state: State.New, label: 'New', tasks: [] as Task[], color: this.StateColor[State.New] },
-    {
-      state: State.Refinement,
-      label: 'Refinement',
-      tasks: [] as Task[],
-      color: this.StateColor[State.Refinement],
-    },
-    {
-      state: State.ReadyForDevelopment,
-      label: 'Ready',
-      tasks: [] as Task[],
-      color: this.StateColor[State.ReadyForDevelopment],
-    },
-    {
-      state: State.InProgress,
-      label: 'In Progress',
-      tasks: [] as Task[],
-      color: this.StateColor[State.InProgress],
-    },
-    {
-      state: State.Testing,
-      label: 'Testing',
-      tasks: [] as Task[],
-      color: this.StateColor[State.Testing],
-    },
-    {
-      state: State.Deployed,
-      label: 'Deployed',
-      tasks: [] as Task[],
-      color: this.StateColor[State.Deployed],
-    },
-    {
-      state: State.Closed,
-      label: 'Closed',
-      tasks: [] as Task[],
-      color: this.StateColor[State.Closed],
-    },
-  ];
+    this.columns = [
+      {
+        state: State.New,
+        label: this.State[State.New],
+        tasks: [],
+        color: this.StateColor[State.New],
+      },
+      {
+        state: State.Refinement,
+        label: this.State[State.Refinement],
+        tasks: [],
+        color: this.StateColor[State.Refinement],
+      },
+      {
+        state: State.ReadyForDevelopment,
+        label: this.State[State.ReadyForDevelopment],
+        tasks: [],
+        color: this.StateColor[State.ReadyForDevelopment],
+      },
+      {
+        state: State.InProgress,
+        label: this.State[State.InProgress],
+        tasks: [],
+        color: this.StateColor[State.InProgress],
+      },
+      {
+        state: State.Testing,
+        label: this.State[State.Testing],
+        tasks: [],
+        color: this.StateColor[State.Testing],
+      },
+      {
+        state: State.Deployed,
+        label: this.State[State.Deployed],
+        tasks: [],
+        color: this.StateColor[State.Deployed],
+      },
+      {
+        state: State.Closed,
+        label: this.State[State.Closed],
+        tasks: [],
+        color: this.StateColor[State.Closed],
+      },
+    ];
 
-  constructor() {
-    this.mapTasksToColumns();
+    this.route.paramMap.subscribe((params) => {
+      const projectId = params.get('projectId')!;
+      this.loadProjects(projectId);
+    });
   }
 
-  private mapTasksToColumns(): void {
+  loadProjects(projectId: string) {
+    this.taskboardService
+      .getProject(+projectId)
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe(
+        (project) => {
+          if (project.tasks) {
+            this.projectName = project.projectName;
+            this.projectIdNumber = project.projectIdNumber;
+
+            this.tasks = project.tasks.map((task) => ({
+              ...task,
+              stateLabel: this.State[task.state as State],
+              stateColor: this.StateColor[task.state as State],
+            }));
+
+            this.mapTasksToColumns();
+          }
+        },
+        (error) => {
+          this.catchError = error;
+        }
+      );
+  }
+
+  private mapTasksToColumns() {
     this.columns.forEach((col) => (col.tasks = []));
     this.tasks.forEach((task) => {
       const column = this.columns.find((c) => c.state === task.state);
@@ -163,7 +153,7 @@ export class TaskBoardPageComponent {
     });
   }
 
-  onDragMoved(event: CdkDragMove): void {
+  onDragMoved(event: CdkDragMove) {
     const board = this.boardRef.nativeElement;
     const boardRect = board.getBoundingClientRect();
     const pointerX = event.pointerPosition.x;
@@ -180,11 +170,11 @@ export class TaskBoardPageComponent {
     }
   }
 
-  onDragEnded(): void {
+  onDragEnded() {
     this.stopAutoScroll();
   }
 
-  private startAutoScroll(speed: number): void {
+  private startAutoScroll(speed: number) {
     if (this.scrollInterval) return;
 
     const board = this.boardRef.nativeElement;
@@ -194,26 +184,59 @@ export class TaskBoardPageComponent {
     }, 16);
   }
 
-  private stopAutoScroll(): void {
+  private stopAutoScroll() {
     if (this.scrollInterval) {
       clearInterval(this.scrollInterval);
       this.scrollInterval = undefined;
     }
   }
 
-  onDrop(event: CdkDragDrop<Task[]>, targetState: State): void {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+  private getStateMeta(state: State) {
+    return this.columns.find((c) => c.state === state);
+  }
 
-      const movedTask = event.container.data[event.currentIndex];
-      movedTask.state = targetState;
+  onDrop(event: CdkDragDrop<Task[]>, targetState: State) {
+    const task = event.previousContainer.data[event.previousIndex];
+
+    if (!task || task.state === targetState) {
+      return;
     }
+
+    this.taskboardService
+      .updateTaskState(task.id, { state: targetState })
+      .pipe(takeUntil(this._destroying$))
+      .subscribe({
+        next: () => {
+          if (event.previousContainer === event.container) {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+          } else {
+            transferArrayItem(
+              event.previousContainer.data,
+              event.container.data,
+              event.previousIndex,
+              event.currentIndex
+            );
+          }
+
+          const meta = this.getStateMeta(targetState);
+          if (meta) {
+            task.state = targetState;
+            task.stateLabel = meta.label;
+            task.stateColor = meta.color;
+          }
+        },
+        error: (error) => {
+          this.catchError = error;
+        },
+      });
+  }
+
+  navigateToEditTask(projectId: number, taskId: number) {
+    this.router.navigate([`/portal/tasks/${projectId}/${taskId}`]);
+  }
+
+  ngOnDestroy() {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
 }

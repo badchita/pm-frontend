@@ -1,8 +1,10 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="spinnerTip">
   <div class="container">
     <div class="header">
-      <span>MBK Portal: PRJ-0001</span>
+      <span>{{ projectName }}: {{ projectIdNumber }}</span>
     </div>
+
+    <app-error-alert [error]="catchError"></app-error-alert>
 
     <div class="board" cdkDropListGroup #board>
       @for (column of columns; track column.state) {
@@ -16,9 +18,17 @@
             <nz-card-meta [nzTitle]="taskCardTitle" [nzDescription]="taskCardDescription"></nz-card-meta>
             <ng-template #taskCardTitle>
               <span>{{ task.taskIdNumber }} </span>
-              <a class="task-name">{{ task.taskName }}</a>
+              <a class="task-name" (click)="navigateToEditTask(task.projectId, task.id)">{{ task.taskName }}</a>
             </ng-template>
             <ng-template #taskCardDescription>
+              <div class="assign-to-container">
+                <nz-icon nzType="user" nzTheme="outline"></nz-icon>
+                @if (task.assignedTo) {
+                <span>{{ task.assignedTo }}</span>
+                } @else {
+                <span>No one selected</span>
+                }
+              </div>
               <nz-tag [nzColor]="task.stateColor">{{ task.stateLabel }}</nz-tag>
             </ng-template>
           </nz-card>
