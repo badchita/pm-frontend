@@ -1,0 +1,14 @@
+:host {
+  .container {
+    .header {
+      display: flex;
+      align-items: center;
+
+      span {
+        padding-right: 20px;
+        font-size: 24px;
+        line-height: 32px;
+      }
+    }
+  }
+}
