@@ -45,7 +45,7 @@ export class TaskBoardPageComponent {
   tasks: Task[] = [
     {
       id: 1,
-      taskName: 'Setup project asdasdasd asdads',
+      taskName: 'Setup project',
       description: 'Initialize repository and base config',
       acceptanceCriteria: 'Project builds successfully',
       assignedTo: 'John Doe',

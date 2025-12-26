@@ -85,7 +85,9 @@ export class PortalComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroying$))
       .subscribe((dataTable) => {
         const { data } = dataTable;
-        this.navItem[2].child = data.map((project) => ({
+        const publishedProjects = data.filter((project) => project.isPublished === 'Y');
+
+        this.navItem[2].child = publishedProjects.map((project) => ({
           title: project.projectIdNumber,
           icon: '',
           route: `/portal/task-board/${project.id}`,
