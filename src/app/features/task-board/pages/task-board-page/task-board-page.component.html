@@ -21,6 +21,14 @@
               <a class="task-name" (click)="navigateToEditTask(task.projectId, task.id)">{{ task.taskName }}</a>
             </ng-template>
             <ng-template #taskCardDescription>
+              <div class="assign-to-container">
+                <nz-icon nzType="user" nzTheme="outline"></nz-icon>
+                @if (task.assignedTo) {
+                <span>{{ task.assignedTo }}</span>
+                } @else {
+                <span>No one selected</span>
+                }
+              </div>
               <nz-tag [nzColor]="task.stateColor">{{ task.stateLabel }}</nz-tag>
             </ng-template>
           </nz-card>

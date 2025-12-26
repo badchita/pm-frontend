@@ -20,6 +20,7 @@ import { TaskboardService } from '../../services/taskboard.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import { TaskBoardColumn } from '../../models/task-board.model';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-task-board-page',
@@ -32,6 +33,7 @@ import { TaskBoardColumn } from '../../models/task-board.model';
     NzCardModule,
     NzTagModule,
     ErrorAlertComponent,
+    NzIconModule,
   ],
   templateUrl: './task-board-page.component.html',
   styleUrl: './task-board-page.component.scss',

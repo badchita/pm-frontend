@@ -54,7 +54,18 @@
         height: 6px;
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
-        background-color: var(--column-color, #1890ff); // dynamic
+        background-color: var(--column-color, #1890ff);
+      }
+
+      .assign-to-container {
+        display: flex;
+        align-items: center;
+        padding-bottom: 4px;
+        padding-top: 8px;
+
+        nz-icon {
+          padding-right: 6px;
+        }
       }
     }
 
