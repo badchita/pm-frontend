@@ -7,3 +7,7 @@ export interface TaskBoardColumn {
   tasks: Task[];
   color: string;
 }
+
+export interface TaskStateUpdate {
+  state: State;
+}
