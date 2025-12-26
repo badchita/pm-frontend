@@ -36,8 +36,8 @@ export const routes: Routes = [
       {
         path: 'task-board/:projectId',
         loadComponent: () =>
-          import('@app/features/projects/pages/project-list/project-list.component').then(
-            (m) => m.ProjectListComponent
+          import('@app/features/task-board/pages/task-board-page/task-board-page.component').then(
+            (m) => m.TaskBoardPageComponent
           ),
       },
     ],

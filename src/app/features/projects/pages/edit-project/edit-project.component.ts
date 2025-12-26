@@ -51,17 +51,17 @@ import { User } from '@app/features/auth/models/user.model';
   styleUrl: './edit-project.component.scss',
 })
 export class EditProjectComponent implements OnInit, OnDestroy {
-  private projectService = inject(ProjectService);
-  private taskService = inject(TaskService);
-  private userService = inject(UserService);
-  private notificationService = inject(NzNotificationService);
-  private modalService = inject(NzModalService);
-  private genericUtilityService = inject(GenericUtilityService);
-  private formBuilder = inject(FormBuilder);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  private readonly projectService = inject(ProjectService);
+  private readonly taskService = inject(TaskService);
+  private readonly userService = inject(UserService);
+  private readonly notificationService = inject(NzNotificationService);
+  private readonly modalService = inject(NzModalService);
+  private readonly genericUtilityService = inject(GenericUtilityService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
-  private _destroying$ = new Subject<void>();
+  private readonly _destroying$ = new Subject<void>();
 
   editProjectForm!: FormGroup;
   projectName!: string;
