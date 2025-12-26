@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@app/environments/environment';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { Project, ProjectForm } from '@app/features/projects/models/project.model';
-import { Task } from '@app/features/tasks/models/task.model';
 import { TableUtilityService } from '@app/shared/services/table-utility.service';
 import { Observable } from 'rxjs';
 
@@ -11,9 +10,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProjectService {
-  private http = inject(HttpClient);
-  private tableUtilityService = inject(TableUtilityService);
-  private api = `${environment.url}/projects`;
+  private readonly http = inject(HttpClient);
+  private readonly tableUtilityService = inject(TableUtilityService);
+  private readonly api = `${environment.url}/projects`;
 
   create(project: ProjectForm): Observable<Project> {
     return this.http.post<Project>(`${this.api}`, project);
@@ -27,7 +26,7 @@ export class ProjectService {
     return this.http.put<Project>(`${this.api}/${project.id}`, project);
   }
 
-  getList(tableParams: TableParams, filters: any): Observable<DataTable<Project>> {
+  getList(tableParams?: TableParams, filters?: any): Observable<DataTable<Project>> {
     const params = this.tableUtilityService.buildParams(tableParams, filters);
 
     return this.http.get<DataTable<Project>>(`${this.api}`, { params });

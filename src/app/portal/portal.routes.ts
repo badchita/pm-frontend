@@ -33,6 +33,13 @@ export const routes: Routes = [
             (m) => m.EditTaskComponent
           ),
       },
+      {
+        path: 'task-board/:projectId',
+        loadComponent: () =>
+          import('@app/features/projects/pages/project-list/project-list.component').then(
+            (m) => m.ProjectListComponent
+          ),
+      },
     ],
   },
 ];

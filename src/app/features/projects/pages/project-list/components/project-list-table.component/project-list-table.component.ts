@@ -45,9 +45,9 @@ export class ProjectListTableComponent implements OnInit {
   readonly loading = input.required<boolean>();
   readonly onUpdateTable = output<NzTableQueryParams>();
 
-  private genericUtilityService = inject(GenericUtilityService);
-  private formBuilder = inject(FormBuilder);
-  private router = inject(Router);
+  private readonly genericUtilityService = inject(GenericUtilityService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   searchProjectForm!: FormGroup;
 
