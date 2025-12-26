@@ -1,13 +1,14 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@app/core/layout/header/header.component';
+import { ProjectService } from '@app/features/projects/services/project.service';
 import { NavItem } from '@app/shared/models/nav-item.model';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { filter } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-portal',
@@ -23,8 +24,11 @@ import { filter } from 'rxjs';
   templateUrl: './portal.component.html',
   styleUrl: './portal.component.scss',
 })
-export class PortalComponent {
-  private router = inject(Router);
+export class PortalComponent implements OnInit, OnDestroy {
+  private readonly projectService = inject(ProjectService);
+  private readonly router = inject(Router);
+
+  private readonly _destroying$ = new Subject<void>();
 
   @ViewChild('collapseButtonContainer') collapseButtonContainerRef!: ElementRef;
 
@@ -42,14 +46,8 @@ export class PortalComponent {
     {
       title: 'Task Board',
       icon: 'paper-clip',
-      route: '/portal/task',
-      child: [
-        {
-          title: 'Test',
-          icon: 'Test',
-          route: '/portal/task',
-        },
-      ],
+      route: '/portal/task-board',
+      child: [],
     },
     {
       title: 'Profile Settings',
@@ -77,7 +75,30 @@ export class PortalComponent {
       });
   }
 
+  ngOnInit() {
+    this.loadProjects();
+  }
+
+  loadProjects() {
+    this.projectService
+      .getList()
+      .pipe(takeUntil(this._destroying$))
+      .subscribe((dataTable) => {
+        const { data } = dataTable;
+        this.navItem[2].child = data.map((project) => ({
+          title: project.projectIdNumber,
+          icon: '',
+          route: `/portal/task-board/${project.id}`,
+        }));
+      });
+  }
+
   navigate(url: string) {
     this.router.navigate([url]);
+  }
+
+  ngOnDestroy() {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
 }

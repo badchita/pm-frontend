@@ -20,12 +20,12 @@ import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-al
   styleUrl: './project-list.component.scss',
 })
 export class ProjectListComponent implements OnDestroy {
-  private modalService = inject(NzModalService);
-  private notificationService = inject(NzNotificationService);
-  private projectService = inject(ProjectService);
-  private genericUtilityService = inject(GenericUtilityService);
+  private readonly modalService = inject(NzModalService);
+  private readonly notificationService = inject(NzNotificationService);
+  private readonly projectService = inject(ProjectService);
+  private readonly genericUtilityService = inject(GenericUtilityService);
 
-  private _destroying$ = new Subject<void>();
+  private readonly _destroying$ = new Subject<void>();
 
   NOTIFICATION_TITLE = NOTIFICATION_TITLE;
   NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;

@@ -9,7 +9,7 @@
         <ul nz-menu class="sider-menu" nzMode="inline">
           @for (nav of navItem; track nav.route) {
           @if (nav.child?.length) {
-          <li nz-submenu [nzTitle]="nav.title" [nzIcon]="nav.icon">
+          <li nz-submenu [nzTitle]="nav.title" [nzIcon]="nav.icon" [nzOpen]="currentRoute.includes(nav.route)">
             <ul>
               @for (child of nav.child; track child.route) {
               <li nz-menu-item [nzSelected]="currentRoute.includes(child.route)" (click)="navigate(child.route)">
