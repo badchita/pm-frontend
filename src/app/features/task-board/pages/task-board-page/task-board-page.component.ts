@@ -52,13 +52,12 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
   tasks!: Task[];
   projectName!: string;
   projectIdNumber!: string;
+  columns!: TaskBoardColumn[];
 
   isLoading = false;
   SPINNER_TIP = SPINNER_TIP;
   State = TaskStateOptions;
   StateColor = TaskStateColorOptions;
-
-  columns!: TaskBoardColumn[];
 
   ngOnInit() {
     this.isLoading = true;
@@ -144,7 +143,7 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
       );
   }
 
-  private mapTasksToColumns(): void {
+  private mapTasksToColumns() {
     this.columns.forEach((col) => (col.tasks = []));
     this.tasks.forEach((task) => {
       const column = this.columns.find((c) => c.state === task.state);
@@ -152,7 +151,7 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDragMoved(event: CdkDragMove): void {
+  onDragMoved(event: CdkDragMove) {
     const board = this.boardRef.nativeElement;
     const boardRect = board.getBoundingClientRect();
     const pointerX = event.pointerPosition.x;
@@ -169,11 +168,11 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDragEnded(): void {
+  onDragEnded() {
     this.stopAutoScroll();
   }
 
-  private startAutoScroll(speed: number): void {
+  private startAutoScroll(speed: number) {
     if (this.scrollInterval) return;
 
     const board = this.boardRef.nativeElement;
@@ -183,27 +182,51 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
     }, 16);
   }
 
-  private stopAutoScroll(): void {
+  private stopAutoScroll() {
     if (this.scrollInterval) {
       clearInterval(this.scrollInterval);
       this.scrollInterval = undefined;
     }
   }
 
-  onDrop(event: CdkDragDrop<Task[]>, targetState: State): void {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+  private getStateMeta(state: State) {
+    return this.columns.find((c) => c.state === state);
+  }
 
-      const movedTask = event.container.data[event.currentIndex];
-      movedTask.state = targetState;
+  onDrop(event: CdkDragDrop<Task[]>, targetState: State) {
+    const task = event.previousContainer.data[event.previousIndex];
+
+    if (!task || task.state === targetState) {
+      return;
     }
+
+    this.taskboardService
+      .updateTaskState(task.id, { state: targetState })
+      .pipe(takeUntil(this._destroying$))
+      .subscribe({
+        next: () => {
+          if (event.previousContainer === event.container) {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+          } else {
+            transferArrayItem(
+              event.previousContainer.data,
+              event.container.data,
+              event.previousIndex,
+              event.currentIndex
+            );
+          }
+
+          const meta = this.getStateMeta(targetState);
+          if (meta) {
+            task.state = targetState;
+            task.stateLabel = meta.label;
+            task.stateColor = meta.color;
+          }
+        },
+        error: (error) => {
+          this.catchError = error;
+        },
+      });
   }
 
   navigateToEditTask(projectId: number, taskId: number) {
