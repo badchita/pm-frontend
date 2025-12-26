@@ -77,6 +77,10 @@ export class PortalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadProjects();
+
+    this.projectService.projectPublished$.pipe(takeUntil(this._destroying$)).subscribe(() => {
+      this.loadProjects();
+    });
   }
 
   loadProjects() {

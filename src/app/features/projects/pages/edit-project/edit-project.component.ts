@@ -256,6 +256,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
                 nzDuration: 5000,
               }
             );
+
+            this.projectService.projectPublished();
             this.close();
           }
         },

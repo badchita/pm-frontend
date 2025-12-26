@@ -4,7 +4,7 @@ import { environment } from '@app/environments/environment';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { Project, ProjectForm } from '@app/features/projects/models/project.model';
 import { TableUtilityService } from '@app/shared/services/table-utility.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +13,9 @@ export class ProjectService {
   private readonly http = inject(HttpClient);
   private readonly tableUtilityService = inject(TableUtilityService);
   private readonly api = `${environment.url}/projects`;
+  private readonly _projectPublished$ = new Subject<void>();
+
+  projectPublished$ = this._projectPublished$.asObservable();
 
   create(project: ProjectForm): Observable<Project> {
     return this.http.post<Project>(`${this.api}`, project);
@@ -38,5 +41,9 @@ export class ProjectService {
     } else {
       return this.http.put<Project>(`${this.api}/${id}/unpublish`, {});
     }
+  }
+
+  projectPublished() {
+    this._projectPublished$.next();
   }
 }
