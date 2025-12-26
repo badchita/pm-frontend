@@ -3,5 +3,23 @@
     <div class="header">
       <span>MBK Portal: PRJ-0001</span>
     </div>
+
+    <div class="board" cdkDropListGroup #board>
+      @for (column of columns; track column.state) {
+      <div class="column" cdkDropList [cdkDropListData]="column.tasks"
+        (cdkDropListDropped)="onDrop($event, column.state)">
+        <h3>{{ column.label }}</h3>
+
+        @for (task of column.tasks; track task.id) {
+        <div class="task" cdkDrag (cdkDragMoved)="onDragMoved($event)" (cdkDragEnded)="onDragEnded()">
+          <nz-card nzSize="small" nzHoverable>
+            <nz-card-meta [nzTitle]="task.taskName" [nzDescription]="task.description"></nz-card-meta>
+          </nz-card>
+        </div>
+        }
+      </div>
+      }
+    </div>
+
   </div>
 </nz-spin>

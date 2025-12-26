@@ -11,12 +11,12 @@ export interface Task {
   state: number;
   stateColor?: string;
   stateLabel?: string;
-  readyForDevelopmentDate: Date;
-  doneDate: Date;
-  testingStartDate: Date;
-  testingEndDate: Date;
-  createdBy: string;
-  updatedBy: string;
-  projectId: number;
-  project: Project;
+  readyForDevelopmentDate?: Date;
+  doneDate?: Date;
+  testingStartDate?: Date;
+  testingEndDate?: Date;
+  createdBy?: string;
+  updatedBy?: string;
+  projectId?: number;
+  project?: Project;
 }
