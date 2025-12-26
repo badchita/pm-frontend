@@ -60,13 +60,13 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   readonly onSave = output<string>();
   readonly onGetTaskIdNumber = output<string>();
 
-  private genericUtilityService = inject(GenericUtilityService);
-  private taskService = inject(TaskService);
-  private userService = inject(UserService);
-  private notificationService = inject(NzNotificationService);
-  private formBuilder = inject(FormBuilder);
+  private readonly genericUtilityService = inject(GenericUtilityService);
+  private readonly taskService = inject(TaskService);
+  private readonly userService = inject(UserService);
+  private readonly notificationService = inject(NzNotificationService);
+  private readonly formBuilder = inject(FormBuilder);
 
-  private _destroying$ = new Subject<void>();
+  private readonly _destroying$ = new Subject<void>();
 
   createEditTaskForm!: FormGroup;
   spinnerTip!: string;

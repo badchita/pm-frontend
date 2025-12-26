@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Task } from '@app/features/tasks/models/task.model';
 import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
-import { State } from '@app/shared/enums/task-state.enum';
+import { State, TaskStateColorOptions } from '@app/shared/enums/task-state.enum';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
   CdkDrag,
@@ -40,11 +40,12 @@ export class TaskBoardPageComponent {
   isLoading = false;
   SPINNER_TIP = SPINNER_TIP;
   State = State;
+  StateColor = TaskStateColorOptions;
 
   tasks: Task[] = [
     {
       id: 1,
-      taskName: 'Setup project',
+      taskName: 'Setup project asdasdasd asdads',
       description: 'Initialize repository and base config',
       acceptanceCriteria: 'Project builds successfully',
       assignedTo: 'John Doe',
@@ -52,7 +53,7 @@ export class TaskBoardPageComponent {
       taskIdNumber: 'TASK-001',
       state: State.New,
       stateLabel: 'New',
-      stateColor: '#1890ff',
+      stateColor: this.StateColor[State.New],
       createdBy: 'Admin',
       updatedBy: 'Admin',
       projectId: 101,
@@ -67,7 +68,7 @@ export class TaskBoardPageComponent {
       taskIdNumber: 'TASK-002',
       state: State.Refinement,
       stateLabel: 'Refinement',
-      stateColor: '#722ed1',
+      stateColor: this.StateColor[State.Refinement],
       createdBy: 'Admin',
       updatedBy: 'Admin',
       projectId: 101,
@@ -82,7 +83,7 @@ export class TaskBoardPageComponent {
       taskIdNumber: 'TASK-003',
       state: State.InProgress,
       stateLabel: 'In Progress',
-      stateColor: '#faad14',
+      stateColor: this.StateColor[State.InProgress],
     },
     {
       id: 4,
@@ -94,7 +95,7 @@ export class TaskBoardPageComponent {
       taskIdNumber: 'TASK-004',
       state: State.Testing,
       stateLabel: 'Testing',
-      stateColor: '#13c2c2',
+      stateColor: this.StateColor[State.Testing],
     },
     {
       id: 5,
@@ -106,18 +107,48 @@ export class TaskBoardPageComponent {
       taskIdNumber: 'TASK-005',
       state: State.Deployed,
       stateLabel: 'Deployed',
-      stateColor: '#52c41a',
+      stateColor: this.StateColor[State.Deployed],
     },
   ];
 
   columns = [
-    { state: State.New, label: 'New', tasks: [] as Task[] },
-    { state: State.Refinement, label: 'Refinement', tasks: [] as Task[] },
-    { state: State.ReadyForDevelopment, label: 'Ready', tasks: [] as Task[] },
-    { state: State.InProgress, label: 'In Progress', tasks: [] as Task[] },
-    { state: State.Testing, label: 'Testing', tasks: [] as Task[] },
-    { state: State.Deployed, label: 'Deployed', tasks: [] as Task[] },
-    { state: State.Closed, label: 'Closed', tasks: [] as Task[] },
+    { state: State.New, label: 'New', tasks: [] as Task[], color: this.StateColor[State.New] },
+    {
+      state: State.Refinement,
+      label: 'Refinement',
+      tasks: [] as Task[],
+      color: this.StateColor[State.Refinement],
+    },
+    {
+      state: State.ReadyForDevelopment,
+      label: 'Ready',
+      tasks: [] as Task[],
+      color: this.StateColor[State.ReadyForDevelopment],
+    },
+    {
+      state: State.InProgress,
+      label: 'In Progress',
+      tasks: [] as Task[],
+      color: this.StateColor[State.InProgress],
+    },
+    {
+      state: State.Testing,
+      label: 'Testing',
+      tasks: [] as Task[],
+      color: this.StateColor[State.Testing],
+    },
+    {
+      state: State.Deployed,
+      label: 'Deployed',
+      tasks: [] as Task[],
+      color: this.StateColor[State.Deployed],
+    },
+    {
+      state: State.Closed,
+      label: 'Closed',
+      tasks: [] as Task[],
+      color: this.StateColor[State.Closed],
+    },
   ];
 
   constructor() {
@@ -142,8 +173,7 @@ export class TaskBoardPageComponent {
 
     if (pointerX > boardRect.right - edgeThreshold) {
       this.startAutoScroll(scrollSpeed);
-    }
-    else if (pointerX < boardRect.left + edgeThreshold) {
+    } else if (pointerX < boardRect.left + edgeThreshold) {
       this.startAutoScroll(-scrollSpeed);
     } else {
       this.stopAutoScroll();

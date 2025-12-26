@@ -15,7 +15,7 @@ import { startWith } from 'rxjs';
 export class TaskStateTagComponent implements OnInit {
   readonly state = input.required<AbstractControl | null | undefined>();
 
-  private genericUtilityService = inject(GenericUtilityService);
+  private readonly genericUtilityService = inject(GenericUtilityService);
 
   color!: string;
 

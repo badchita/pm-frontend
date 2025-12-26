@@ -7,13 +7,20 @@
     <div class="board" cdkDropListGroup #board>
       @for (column of columns; track column.state) {
       <div class="column" cdkDropList [cdkDropListData]="column.tasks"
-        (cdkDropListDropped)="onDrop($event, column.state)">
+        (cdkDropListDropped)="onDrop($event, column.state)" [style.--column-color]="column.color">
         <h3>{{ column.label }}</h3>
 
         @for (task of column.tasks; track task.id) {
-        <div class="task" cdkDrag (cdkDragMoved)="onDragMoved($event)" (cdkDragEnded)="onDragEnded()">
+        <div class="task-board-task" cdkDrag (cdkDragMoved)="onDragMoved($event)" (cdkDragEnded)="onDragEnded()">
           <nz-card nzSize="small" nzHoverable>
-            <nz-card-meta [nzTitle]="task.taskName" [nzDescription]="task.description"></nz-card-meta>
+            <nz-card-meta [nzTitle]="taskCardTitle" [nzDescription]="taskCardDescription"></nz-card-meta>
+            <ng-template #taskCardTitle>
+              <span>{{ task.taskIdNumber }} </span>
+              <a class="task-name">{{ task.taskName }}</a>
+            </ng-template>
+            <ng-template #taskCardDescription>
+              <nz-tag [nzColor]="task.stateColor">{{ task.stateLabel }}</nz-tag>
+            </ng-template>
           </nz-card>
         </div>
         }

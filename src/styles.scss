@@ -265,4 +265,40 @@
       padding-left: 10px;
     }
   }
+
+  .task-board-task {
+    cursor: grab;
+
+    nz-card {
+      width: 100%;
+      padding: 8px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .ant-card-meta-title {
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: 4px;
+
+        .task-name {
+          cursor: pointer;
+
+          &:hover {
+            text-decoration: underline;
+            color: var(--pm-primary);
+          }
+        }
+      }
+    }
+  }
 }
