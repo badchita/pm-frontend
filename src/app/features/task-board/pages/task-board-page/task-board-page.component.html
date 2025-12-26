@@ -1,7 +1,7 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="spinnerTip">
   <div class="container">
     <div class="header">
-      <span>MBK Portal: PRJ-0001</span>
+      <span>{{ projectName }}: {{ projectIdNumber }}</span>
     </div>
 
     <app-error-alert [error]="catchError"></app-error-alert>

@@ -50,6 +50,8 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
   spinnerTip!: string;
   catchError!: any;
   tasks!: Task[];
+  projectName!: string;
+  projectIdNumber!: string;
 
   isLoading = false;
   SPINNER_TIP = SPINNER_TIP;
@@ -124,6 +126,9 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
       .subscribe(
         (project) => {
           if (project.tasks) {
+            this.projectName = project.projectName;
+            this.projectIdNumber = project.projectIdNumber;
+
             this.tasks = project.tasks.map((task) => ({
               ...task,
               stateLabel: this.State[task.state as State],
