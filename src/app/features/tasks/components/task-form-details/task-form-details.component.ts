@@ -64,18 +64,18 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   taskId = input.required<number>();
   onGetTotalComments = output<number | null>();
 
-  private taskService = inject(TaskService);
-  private changeDetectorRef = inject(ChangeDetectorRef);
-  private formBuilder = inject(FormBuilder);
+  private readonly taskService = inject(TaskService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly formBuilder = inject(FormBuilder);
 
-  private _destroying$ = new Subject<void>();
+  private readonly _destroying$ = new Subject<void>();
 
   clearToolbarTimer: any;
   commentsSpinnerTip!: string;
   createTaskCommentForm!: FormGroup;
   catchError!: any;
   taskComments: TaskComment[] = [];
-  taskCommentsReactions!: TaskCommentReaction[];
+  taskCommentsReactions: TaskCommentReaction[] = [];
   reactionLikeUsers: User[] = [];
   reactionDislikeUsers: User[] = [];
   userDetails!: User;
@@ -117,6 +117,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   isCommentsLoading = false;
   SPINNER_TIP = SPINNER_TIP;
   TaskCommentReactionType = TaskCommentReactionType;
+  userReactionsByComment = new Map<number, TaskCommentReactionType | null>();
 
   ngOnInit() {
     if (this.taskId()) {
@@ -287,7 +288,9 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
           this.onGetTotalComments.emit(comments.length);
           this.taskComments = comments.map((comment) => {
             if (comment.reactions?.length) {
-              this.taskCommentsReactions = comment.reactions;
+              this.taskCommentsReactions = comment.reactions ?? [];
+
+              this.buildUserReactionMap();
 
               this.reactionLikeUsers = comment.reactions
                 .filter((r) => r.user && r.reactionType === this.TaskCommentReactionType.Like)
@@ -348,18 +351,25 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
       );
   }
 
-  hasUserReacted(reactionType: TaskCommentReactionType): boolean {
-    if (!this.taskCommentsReactions?.length) return false;
-
-    const userId = this.userDetails.id;
-    return this.taskCommentsReactions.some(
-      (r) => r.userId === userId && (!reactionType || r.reactionType === reactionType)
-    );
+  hasUserReacted(taskCommentId: number, reactionType: TaskCommentReactionType): boolean {
+    return this.userReactionsByComment.get(taskCommentId) === reactionType;
   }
 
   scrollToDiscussions() {
     if (this.discussionsRef) {
       this.discussionsRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  private buildUserReactionMap(): void {
+    this.userReactionsByComment.clear();
+
+    const userId = this.userDetails.id;
+
+    for (const reaction of this.taskCommentsReactions) {
+      if (reaction.userId === userId) {
+        this.userReactionsByComment.set(reaction.taskCommentId, reaction.reactionType);
+      }
     }
   }
 
