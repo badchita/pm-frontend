@@ -202,30 +202,42 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const previousState = task.state;
+    const previousContainerData = [...event.previousContainer.data];
+    const targetContainerData = [...event.container.data];
+
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+
+    const meta = this.getStateMeta(targetState);
+    if (meta) {
+      task.state = targetState;
+      task.stateLabel = meta.label;
+      task.stateColor = meta.color;
+    }
+
     this.taskboardService
       .updateTaskState(task.id, { state: targetState })
       .pipe(takeUntil(this._destroying$))
       .subscribe({
-        next: () => {
-          if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-          } else {
-            transferArrayItem(
-              event.previousContainer.data,
-              event.container.data,
-              event.previousIndex,
-              event.currentIndex
-            );
-          }
-
-          const meta = this.getStateMeta(targetState);
-          if (meta) {
-            task.state = targetState;
-            task.stateLabel = meta.label;
-            task.stateColor = meta.color;
-          }
-        },
         error: (error) => {
+          event.previousContainer.data.splice(
+            0,
+            event.previousContainer.data.length,
+            ...previousContainerData
+          );
+
+          event.container.data.splice(0, event.container.data.length, ...targetContainerData);
+
+          task.state = previousState;
           this.catchError = error;
         },
       });
