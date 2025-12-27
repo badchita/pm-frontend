@@ -115,12 +115,15 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   };
   toolbarInteracting = false;
   isCommentsLoading = false;
+  hasUserLiked = false;
+  hasUserDisliked = false;
   SPINNER_TIP = SPINNER_TIP;
   TaskCommentReactionType = TaskCommentReactionType;
   userReactionsByComment = new Map<number, TaskCommentReactionType | null>();
 
   ngOnInit() {
     if (this.taskId()) {
+      this.isCommentsLoading = true;
       this.buildForm();
     } else {
       this.onGetTotalComments.emit(null);
@@ -273,8 +276,6 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadComments() {
-    this.isCommentsLoading = true;
-
     this.taskService
       .getAllTaskComments(this.taskId())
       .pipe(
@@ -287,11 +288,12 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
         (comments) => {
           this.onGetTotalComments.emit(comments.length);
           this.taskComments = comments.map((comment) => {
+            this.taskCommentsReactions = comment.reactions ?? [];
+            this.buildUserReactionMap();
+            this.hasUserLiked = this.hasUserReacted(comment.id, TaskCommentReactionType.Like);
+            this.hasUserDisliked = this.hasUserReacted(comment.id, TaskCommentReactionType.Dislike);
+
             if (comment.reactions?.length) {
-              this.taskCommentsReactions = comment.reactions ?? [];
-
-              this.buildUserReactionMap();
-
               this.reactionLikeUsers = comment.reactions
                 .filter((r) => r.user && r.reactionType === this.TaskCommentReactionType.Like)
                 .map((r) => r.user!);
@@ -361,7 +363,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private buildUserReactionMap(): void {
+  private buildUserReactionMap() {
     this.userReactionsByComment.clear();
 
     const userId = this.userDetails.id;

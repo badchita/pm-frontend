@@ -200,15 +200,13 @@
                 </p>
               </nz-comment-content>
               <nz-comment-action>
-                <nz-icon nzType="like"
-                  [nzTheme]="hasUserReacted(comment.id, TaskCommentReactionType.Like) ? 'twotone' : 'outline'"
+                <nz-icon nzType="like" [nzTheme]="hasUserLiked ? 'twotone' : 'outline'"
                   (click)="likeDislike(TaskCommentReactionType.Like, comment.id)" />
                 <span class="count like" nz-tooltip
                   [nzTooltipTitle]="reactionLikeUsers.length > 0 ? userLikeReactionTemplate : null">{{comment.totalLikeReaction}}</span>
               </nz-comment-action>
               <nz-comment-action>
-                <nz-icon nzType="dislike"
-                  [nzTheme]="hasUserReacted(comment.id, TaskCommentReactionType.Dislike) ? 'twotone' : 'outline'"
+                <nz-icon nzType="dislike" [nzTheme]="hasUserDisliked ? 'twotone' : 'outline'"
                   (click)="likeDislike(TaskCommentReactionType.Dislike, comment.id)" />
                 <span class="count dislike" nz-tooltip
                   [nzTooltipTitle]="reactionDislikeUsers.length > 0 ? userDislikeReactionTemplate : null">{{
