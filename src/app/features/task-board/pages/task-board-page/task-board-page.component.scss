@@ -12,6 +12,11 @@
       }
     }
 
+    .task-button-container {
+      display: flex;
+      justify-content: end;
+    }
+
     .board {
       scroll-behavior: smooth;
       display: flex;

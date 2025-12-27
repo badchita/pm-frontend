@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Task } from '@app/features/tasks/models/task.model';
-import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import {
+  NOTIFICATION_MESSAGE,
+  NOTIFICATION_TITLE,
+  SPINNER_TIP,
+} from '@app/shared/constants/ui.constants';
 import { State, TaskStateColorOptions, TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import {
@@ -21,6 +25,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import { TaskBoardColumn } from '../../models/task-board.model';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { CreateTaskModalComponent } from '@app/features/tasks/modals/create-task-modal/create-task-modal.component';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 
 @Component({
   selector: 'app-task-board-page',
@@ -34,6 +43,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzTagModule,
     ErrorAlertComponent,
     NzIconModule,
+    NzButtonModule,
+    NzModalModule,
   ],
   templateUrl: './task-board-page.component.html',
   styleUrl: './task-board-page.component.scss',
@@ -43,6 +54,9 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
   boardRef!: ElementRef<HTMLDivElement>;
 
   private readonly taskboardService = inject(TaskboardService);
+  private readonly genericUtilityService = inject(GenericUtilityService);
+  private readonly modalService = inject(NzModalService);
+  private readonly notificationService = inject(NzNotificationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -54,12 +68,15 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
   tasks!: Task[];
   projectName!: string;
   projectIdNumber!: string;
+  projectId!: number;
   columns!: TaskBoardColumn[];
 
   isLoading = false;
   SPINNER_TIP = SPINNER_TIP;
   State = TaskStateOptions;
   StateColor = TaskStateColorOptions;
+  NOTIFICATION_TITLE = NOTIFICATION_TITLE;
+  NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
 
   ngOnInit() {
     this.isLoading = true;
@@ -110,12 +127,12 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
     ];
 
     this.route.paramMap.subscribe((params) => {
-      const projectId = params.get('projectId')!;
-      this.loadProjects(projectId);
+      this.projectId = +params.get('projectId')!;
+      this.loadProject(this.projectId);
     });
   }
 
-  loadProjects(projectId: string) {
+  loadProject(projectId: number) {
     this.taskboardService
       .getProject(+projectId)
       .pipe(
@@ -202,30 +219,42 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const previousState = task.state;
+    const previousContainerData = [...event.previousContainer.data];
+    const targetContainerData = [...event.container.data];
+
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+
+    const meta = this.getStateMeta(targetState);
+    if (meta) {
+      task.state = targetState;
+      task.stateLabel = meta.label;
+      task.stateColor = meta.color;
+    }
+
     this.taskboardService
       .updateTaskState(task.id, { state: targetState })
       .pipe(takeUntil(this._destroying$))
       .subscribe({
-        next: () => {
-          if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-          } else {
-            transferArrayItem(
-              event.previousContainer.data,
-              event.container.data,
-              event.previousIndex,
-              event.currentIndex
-            );
-          }
-
-          const meta = this.getStateMeta(targetState);
-          if (meta) {
-            task.state = targetState;
-            task.stateLabel = meta.label;
-            task.stateColor = meta.color;
-          }
-        },
         error: (error) => {
+          event.previousContainer.data.splice(
+            0,
+            event.previousContainer.data.length,
+            ...previousContainerData
+          );
+
+          event.container.data.splice(0, event.container.data.length, ...targetContainerData);
+
+          task.state = previousState;
           this.catchError = error;
         },
       });
@@ -233,6 +262,39 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
 
   navigateToEditTask(projectId: number, taskId: number) {
     this.router.navigate([`/portal/tasks/${projectId}/${taskId}`]);
+  }
+
+  addNewTask() {
+    const modal = this.modalService.create({
+      nzContent: CreateTaskModalComponent,
+      nzClassName: 'create-modal',
+      nzData: {
+        projectId: this.projectId,
+      },
+      nzFooter: null,
+      nzWidth: '1000px',
+      nzTitle: 'Create task',
+      nzCentered: true,
+    });
+
+    modal.afterClose.subscribe((taskNumber: string) => {
+      if (taskNumber) {
+        this.loadProject(this.projectId);
+        this.notificationService.create(
+          'success',
+          NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Task Created'),
+          this.genericUtilityService.formatMessage(NOTIFICATION_MESSAGE.FormCreatedSuccess, [
+            'task',
+            'task',
+            taskNumber,
+          ]),
+          {
+            nzClass: 'form-notification',
+            nzDuration: 5000,
+          }
+        );
+      }
+    });
   }
 
   ngOnDestroy() {
