@@ -27,6 +27,12 @@ export const ALERT_DESCRIPTION = {
 
 export const MODAL_TITLE = {
   AccountCreated: '🎉 Account Successfully Created',
+  SoftDeleteConfirmation: 'Delete {{1}}',
+};
+
+export const MODAL_DESCRIPTION = {
+  SoftDeleteConfirmationMessage:
+    'This {{1}} will be moved to the Recycle Bin and can be restored later.',
 };
 
 export const NOTIFICATION_TITLE = {

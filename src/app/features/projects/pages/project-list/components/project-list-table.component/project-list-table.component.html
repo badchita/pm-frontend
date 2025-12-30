@@ -74,7 +74,7 @@
             <nz-icon nzType="edit" nzTheme="outline" />
           </button>
           <nz-divider nzType="vertical"></nz-divider>
-          <button class="delete-button" nz-button nzType="link" nzDanger>
+          <button class="delete-button" nz-button nzType="link" nzDanger (click)="deleteProject(data.id)">
             <nz-icon nzType="delete" nzTheme="outline" />
           </button>
         </td>

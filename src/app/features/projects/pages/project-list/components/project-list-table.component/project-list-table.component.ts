@@ -17,6 +17,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { StatusOptions } from '@app/shared/enums/search.enum';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { MODAL_DESCRIPTION, MODAL_TITLE } from '@app/shared/constants/ui.constants';
 
 @Component({
   selector: 'app-project-list-table',
@@ -35,6 +37,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
     NzButtonModule,
     NzSelectModule,
     NzTagModule,
+    NzModalModule,
   ],
   templateUrl: './project-list-table.component.html',
   styleUrl: './project-list-table.component.scss',
@@ -46,6 +49,7 @@ export class ProjectListTableComponent implements OnInit {
   readonly onUpdateTable = output<NzTableQueryParams>();
 
   private readonly genericUtilityService = inject(GenericUtilityService);
+  private readonly modalService = inject(NzModalService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
 
@@ -54,6 +58,8 @@ export class ProjectListTableComponent implements OnInit {
   showTooltipDescription = false;
   statusOptions = this.genericUtilityService.objectToArray(StatusOptions);
   isDeleted = 'N';
+  MODAL_TITLE = MODAL_TITLE;
+  MODAL_DESCRIPTION = MODAL_DESCRIPTION;
 
   ngOnInit() {
     this.buildForm();
@@ -112,6 +118,18 @@ export class ProjectListTableComponent implements OnInit {
     event.stopPropagation();
     this.isDeleted = isOpen;
     this.updateTable();
+  }
+
+  deleteProject(id: number) {
+    this.modalService.confirm({
+      nzTitle: this.MODAL_TITLE.SoftDeleteConfirmation.replace('{{1}}', 'project'),
+      nzContent: this.MODAL_DESCRIPTION.SoftDeleteConfirmationMessage.replace('{{1}}', 'project'),
+      nzOkText: 'Yes',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => {},
+      nzCancelText: 'No',
+    });
   }
 
   reset() {
