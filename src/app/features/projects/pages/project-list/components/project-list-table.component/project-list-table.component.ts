@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, output } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit, output } from '@angular/core';
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Project } from '@app/features/projects/models/project.model';
 import { DataTable } from '@app/shared/models/data-table.model';
 import { DatePipe, I18nPluralPipe } from '@angular/common';
-import { debounceTime } from 'rxjs';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -17,6 +17,15 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { StatusOptions } from '@app/shared/enums/search.enum';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import {
+  MODAL_DESCRIPTION,
+  MODAL_TITLE,
+  NOTIFICATION_MESSAGE,
+  NOTIFICATION_TITLE,
+} from '@app/shared/constants/ui.constants';
+import { ProjectService } from '@app/features/projects/services/project.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-project-list-table',
@@ -35,24 +44,31 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
     NzButtonModule,
     NzSelectModule,
     NzTagModule,
+    NzModalModule,
   ],
   templateUrl: './project-list-table.component.html',
   styleUrl: './project-list-table.component.scss',
 })
-export class ProjectListTableComponent implements OnInit {
+export class ProjectListTableComponent implements OnInit, OnDestroy {
   readonly dataTable = input.required<DataTable<Project>>();
   readonly dataList = input.required<Project[] | []>();
   readonly loading = input.required<boolean>();
   readonly onUpdateTable = output<NzTableQueryParams>();
 
+  private readonly projectService = inject(ProjectService);
   private readonly genericUtilityService = inject(GenericUtilityService);
+  private readonly modalService = inject(NzModalService);
+  private readonly notificationService = inject(NzNotificationService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
+
+  private readonly _destroying$ = new Subject<void>();
 
   searchProjectForm!: FormGroup;
 
   showTooltipDescription = false;
   statusOptions = this.genericUtilityService.objectToArray(StatusOptions);
+  isDeleted = 'N';
 
   ngOnInit() {
     this.buildForm();
@@ -93,7 +109,9 @@ export class ProjectListTableComponent implements OnInit {
     const searchFormValues = this.searchProjectForm.getRawValue();
     const isFiltering =
       searchFormValues.search || searchFormValues.description || searchFormValues.dueDate;
-    const filter: NzTableQueryParams['filter'] = [{ ...searchFormValues }];
+    const filter: NzTableQueryParams['filter'] = [
+      { ...searchFormValues, isDeleted: this.isDeleted },
+    ];
 
     const tableParams: NzTableQueryParams = {
       pageIndex: isFiltering ? 1 : params?.pageIndex ?? this.dataTable().page,
@@ -105,7 +123,60 @@ export class ProjectListTableComponent implements OnInit {
     this.onUpdateTable.emit(tableParams);
   }
 
+  recycleBin(event: MouseEvent, isOpen = 'N') {
+    event.stopPropagation();
+    this.isDeleted = isOpen;
+    this.updateTable();
+  }
+
+  deleteProject(id: number, isDeleted: string) {
+    const modalTitle =
+      isDeleted === 'Y'
+        ? MODAL_TITLE.SoftDeleteConfirmation.replace('{{1}}', 'project')
+        : MODAL_TITLE.RestoreConfirmation.replace('{{1}}', 'project');
+    const modaDescription =
+      isDeleted === 'Y'
+        ? MODAL_DESCRIPTION.SoftDeleteConfirmationMessage.replace('{{1}}', 'project')
+        : MODAL_DESCRIPTION.RestoreConfirmationMessage.replace('{{1}}', 'project');
+
+    this.modalService.confirm({
+      nzTitle: modalTitle,
+      nzContent: modaDescription,
+      nzOkText: 'Yes',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.projectService
+          .softDelete(id, isDeleted)
+          .pipe(takeUntil(this._destroying$))
+          .subscribe(() => {
+            const notificationTitle =
+              isDeleted === 'Y'
+                ? NOTIFICATION_TITLE.SoftDeleteSuccess.replace('{{1}}', 'Project')
+                : NOTIFICATION_TITLE.RestoreSuccess.replace('{{1}}', 'Project');
+            const notificationDescription =
+              isDeleted === 'Y'
+                ? NOTIFICATION_MESSAGE.SoftDeleteMessageSuccess.replace('{{1}}', 'project')
+                : NOTIFICATION_MESSAGE.RestoreMessageSuccess.replace('{{1}}', 'project');
+
+            this.notificationService.create('success', notificationTitle, notificationDescription, {
+              nzClass: 'form-notification',
+              nzDuration: 5000,
+            });
+            this.updateTable();
+            this.projectService.projectPublished();
+          });
+      },
+      nzCancelText: 'No',
+    });
+  }
+
   reset() {
     this.searchProjectForm.reset();
+  }
+
+  ngOnDestroy() {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
 }

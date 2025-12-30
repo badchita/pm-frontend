@@ -91,11 +91,30 @@ export class PortalComponent implements OnInit, OnDestroy {
         const { data } = dataTable;
         const publishedProjects = data.filter((project) => project.isPublished === 'Y');
 
-        this.navItem[2].child = publishedProjects.map((project) => ({
-          title: project.projectIdNumber,
-          icon: '',
-          route: `/portal/task-board/${project.id}`,
-        }));
+        let taskBoardIndex = this.navItem.findIndex((item) => item.title === 'Task Board');
+
+        if (publishedProjects.length === 0) {
+          if (taskBoardIndex !== -1) {
+            this.navItem.splice(taskBoardIndex, 1);
+          }
+        } else {
+          const taskBoardItem = {
+            title: 'Task Board',
+            icon: 'paper-clip',
+            route: '/portal/task-board',
+            child: publishedProjects.map((project) => ({
+              title: project.projectIdNumber,
+              icon: '',
+              route: `/portal/task-board/${project.id}`,
+            })),
+          };
+
+          if (taskBoardIndex === -1) {
+            this.navItem.splice(2, 0, taskBoardItem);
+          } else {
+            this.navItem[taskBoardIndex] = taskBoardItem;
+          }
+        }
       });
   }
 

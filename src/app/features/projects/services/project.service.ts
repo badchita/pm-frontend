@@ -43,6 +43,12 @@ export class ProjectService {
     }
   }
 
+  softDelete(id: number, isDeleted: string): Observable<void> {
+    const payload = { isDeleted: isDeleted };
+
+    return this.http.put<void>(`${this.api}/${id}/isDeleted`, payload);
+  }
+
   projectPublished() {
     this._projectPublished$.next();
   }

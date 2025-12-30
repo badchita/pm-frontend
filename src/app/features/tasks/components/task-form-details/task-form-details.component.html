@@ -177,7 +177,7 @@
 
           <form nz-form [formGroup]="createTaskCommentForm">
             <nz-comment>
-              <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="/src/app/assets/images/profile-default.svg"></nz-avatar>
+              <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="/assets/icons/profile-default.svg"></nz-avatar>
               <nz-comment-content>
                 <nz-form-item>
                   <textarea nz-input rows="4" formControlName="content"></textarea>
@@ -193,7 +193,7 @@
           @for (comment of taskComments; track comment.id) {
           <nz-card class="comments-card">
             <nz-comment [nzAuthor]="comment.user.name" [nzDatetime]="comment.displayTime">
-              <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="/src/app/assets/images/profile-default.svg"></nz-avatar>
+              <nz-avatar nz-comment-avatar nzIcon="user" nzSrc="/assets/icons/profile-default.svg"></nz-avatar>
               <nz-comment-content>
                 <p>
                   {{ comment.content }}
