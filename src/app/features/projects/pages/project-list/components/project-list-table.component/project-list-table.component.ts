@@ -53,6 +53,7 @@ export class ProjectListTableComponent implements OnInit {
 
   showTooltipDescription = false;
   statusOptions = this.genericUtilityService.objectToArray(StatusOptions);
+  isDeleted = 'N';
 
   ngOnInit() {
     this.buildForm();
@@ -93,7 +94,9 @@ export class ProjectListTableComponent implements OnInit {
     const searchFormValues = this.searchProjectForm.getRawValue();
     const isFiltering =
       searchFormValues.search || searchFormValues.description || searchFormValues.dueDate;
-    const filter: NzTableQueryParams['filter'] = [{ ...searchFormValues }];
+    const filter: NzTableQueryParams['filter'] = [
+      { ...searchFormValues, isDeleted: this.isDeleted },
+    ];
 
     const tableParams: NzTableQueryParams = {
       pageIndex: isFiltering ? 1 : params?.pageIndex ?? this.dataTable().page,
@@ -103,6 +106,12 @@ export class ProjectListTableComponent implements OnInit {
     };
 
     this.onUpdateTable.emit(tableParams);
+  }
+
+  recycleBin(event: MouseEvent, isOpen = 'N') {
+    event.stopPropagation();
+    this.isDeleted = isOpen;
+    this.updateTable();
   }
 
   reset() {

@@ -19,9 +19,15 @@
       </nz-form-control>
     </nz-form-item>
     <button class="reset-search-button" nz-button (click)="reset()">Reset</button>
-    <button class="recycle-bin-button" nz-button nzType="link">
+    @if (isDeleted === 'N') {
+    <button class="recycle-bin-button" nz-button nzType="link" (click)="recycleBin($event, 'Y')">
       <img alt="recycle-bin" src="/assets/icons/recycle-bin.svg" width="20" />
     </button>
+    } @else {
+    <button class="recycle-bin-button" nz-button nzType="link" (click)="recycleBin($event)">
+      <nz-icon nzType="unordered-list" nzTheme="outline" />
+    </button>
+    }
   </form>
 </div>
 
