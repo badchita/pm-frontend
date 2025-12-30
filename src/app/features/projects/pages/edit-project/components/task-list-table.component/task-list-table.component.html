@@ -35,11 +35,11 @@
   <nz-table #table class="table" nzTableLayout="fixed" [nzData]="dataList() || []" [nzShowPagination]="true"
     [nzFrontPagination]="false" [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate"
     [nzPageSizeOptions]="[10, 20, 30, 40, 50]" [nzTotal]="dataTable().totalCount" [nzPageSize]="dataTable().pageSize"
-    [nzLoading]="loading()">
+    [nzLoading]="loading()" (nzQueryParams)="updateTable($event)">
     <thead>
       <tr>
-        <th nzWidth="15%">Task ID Number</th>
-        <th nzWidth="15%">Task Name</th>
+        <th nzWidth="15%" [nzSortFn]="true" nzColumnKey="taskIdNumber">Task ID Number</th>
+        <th nzWidth="15%" [nzSortFn]="true" nzColumnKey="taskName">Task Name</th>
         <th nzWidth="15%" nzAlign="center">State</th>
         <th nzWidth="15%" nzAlign="center">Assigned To</th>
         <th nzWidth="10%" nzAlign="center">Actions</th>

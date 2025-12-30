@@ -80,7 +80,7 @@ export class TaskListTableComponent implements OnInit {
   updateTable(params?: NzTableQueryParams) {
     const searchFormValues = this.searchProjectTaskForm.getRawValue();
     const isFiltering =
-      searchFormValues.search || searchFormValues.description || searchFormValues.dueDate;
+      searchFormValues.search || searchFormValues.description || searchFormValues.assignedTo;
     const filter: NzTableQueryParams['filter'] = [{ ...searchFormValues }];
 
     const tableParams: NzTableQueryParams = {
