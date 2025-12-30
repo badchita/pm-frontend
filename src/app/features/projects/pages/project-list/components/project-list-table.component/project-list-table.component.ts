@@ -129,7 +129,7 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
     this.updateTable();
   }
 
-  deleteProject(id: number, isDeleted: string) {
+  deleteRestoreProject(id: number, isDeleted: string) {
     const modalTitle =
       isDeleted === 'Y'
         ? MODAL_TITLE.SoftDeleteConfirmation.replace('{{1}}', 'project')
@@ -163,6 +163,35 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
               nzClass: 'form-notification',
               nzDuration: 5000,
             });
+            this.updateTable();
+            this.projectService.projectPublished();
+          });
+      },
+      nzCancelText: 'No',
+    });
+  }
+
+  delete(id: number) {
+    this.modalService.confirm({
+      nzTitle: MODAL_TITLE.PermanentlyDeleteConfirmation.replace('{{1}}', 'Project'),
+      nzContent: MODAL_DESCRIPTION.PermanentlyDeleteConfirmationMessage.replace('{{1}}', 'project'),
+      nzOkText: 'Yes',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.projectService
+          .delete(id)
+          .pipe(takeUntil(this._destroying$))
+          .subscribe(() => {
+            this.notificationService.create(
+              'success',
+              NOTIFICATION_TITLE.PermanentlyDeleteSuccess.replace('{{1}}', 'Project'),
+              NOTIFICATION_MESSAGE.PermanentlyDeleteMessageSuccess.replace('{{1}}', 'project'),
+              {
+                nzClass: 'form-notification',
+                nzDuration: 5000,
+              }
+            );
             this.updateTable();
             this.projectService.projectPublished();
           });

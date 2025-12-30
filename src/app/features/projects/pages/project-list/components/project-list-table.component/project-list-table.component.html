@@ -75,14 +75,20 @@
             <nz-icon nzType="edit" nzTheme="outline" />
           </button>
           } @else {
-          <button class="restore-button" nz-button nzType="link" (click)="deleteProject(data.id, 'N')">
+          <button class="restore-button" nz-button nzType="link" (click)="deleteRestoreProject(data.id, 'N')">
             <nz-icon nzType="undo" nzTheme="outline" />
           </button>
           }
           <nz-divider nzType="vertical"></nz-divider>
-          <button class="delete-button" nz-button nzType="link" nzDanger (click)="deleteProject(data.id, 'Y')">
+          @if (isDeleted === 'N') {
+          <button class="delete-button" nz-button nzType="link" nzDanger (click)="deleteRestoreProject(data.id, 'Y')">
             <nz-icon nzType="delete" nzTheme="outline" />
           </button>
+          } @else {
+          <button class="delete-button" nz-button nzType="link" nzDanger (click)="delete(data.id)">
+            <nz-icon nzType="delete" nzTheme="outline" />
+          </button>
+          }
         </td>
       </tr>
       }
