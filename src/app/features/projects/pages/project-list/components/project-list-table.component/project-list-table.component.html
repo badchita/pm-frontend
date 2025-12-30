@@ -70,11 +70,17 @@
         </td>
         <td nzAlign="center">{{ data.dueDate | date : 'MMM dd, yyyy' }}</td>
         <td class="table-action-buttons" nzAlign="center">
+          @if (isDeleted === 'N') {
           <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
             <nz-icon nzType="edit" nzTheme="outline" />
           </button>
+          } @else {
+          <button class="restore-button" nz-button nzType="link" (click)="deleteProject(data.id, 'N')">
+            <nz-icon nzType="undo" nzTheme="outline" />
+          </button>
+          }
           <nz-divider nzType="vertical"></nz-divider>
-          <button class="delete-button" nz-button nzType="link" nzDanger (click)="deleteProject(data.id)">
+          <button class="delete-button" nz-button nzType="link" nzDanger (click)="deleteProject(data.id, 'Y')">
             <nz-icon nzType="delete" nzTheme="outline" />
           </button>
         </td>

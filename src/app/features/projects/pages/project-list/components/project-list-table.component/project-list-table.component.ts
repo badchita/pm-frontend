@@ -124,7 +124,7 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
     this.updateTable();
   }
 
-  deleteProject(id: number) {
+  deleteProject(id: number, isDeleted: string) {
     this.modalService.confirm({
       nzTitle: this.MODAL_TITLE.SoftDeleteConfirmation.replace('{{1}}', 'project'),
       nzContent: this.MODAL_DESCRIPTION.SoftDeleteConfirmationMessage.replace('{{1}}', 'project'),
@@ -133,7 +133,7 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
       nzOkDanger: true,
       nzOnOk: () => {
         this.projectService
-          .softDelete(id, 'Y')
+          .softDelete(id, isDeleted)
           .pipe(takeUntil(this._destroying$))
           .subscribe(() => {
             this.updateTable();
