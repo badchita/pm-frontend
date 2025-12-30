@@ -40,6 +40,8 @@ export const MODAL_DESCRIPTION = {
 
 export const NOTIFICATION_TITLE = {
   FormSuccess: '{{1}} Successfully',
+  SoftDeleteSuccess: '{{1}} Moved to Recycle Bin',
+  RestoreSuccess: '{{1}} Restored Successfully',
 };
 
 export const NOTIFICATION_MESSAGE = {
@@ -47,6 +49,9 @@ export const NOTIFICATION_MESSAGE = {
   FormUpdatedSuccess: '{{1}} was updated successfully.',
   ProjectFormPublishedSuccess: '{{1}} was published successfully.',
   ProjectFormDeactivatedSuccess: '{{1}} was deactivated successfully.',
+  SoftDeleteMessageSuccess: 'The {{1}}  has been removed from the active list',
+  RestoreMessageSuccess:
+    'The {{1}} has been restored to the active list and is now available for normal use.',
 };
 
 export const STATE_HISTORY_LABEL = {

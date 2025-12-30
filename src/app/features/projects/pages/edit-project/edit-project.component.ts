@@ -96,8 +96,6 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   stateColorOptions = this.genericUtilityService.objectToArray(TaskStateColorOptions, false, true);
   stateOptions = this.genericUtilityService.objectToArray(TaskStateOptions, false, true);
   SPINNER_TIP = SPINNER_TIP;
-  NOTIFICATION_TITLE = NOTIFICATION_TITLE;
-  NOTIFICATION_MESSAGE = NOTIFICATION_MESSAGE;
 
   ngOnInit() {
     this.spinnerTip = SPINNER_TIP.loadingData;

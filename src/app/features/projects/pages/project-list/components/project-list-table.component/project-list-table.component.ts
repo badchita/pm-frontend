@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Project } from '@app/features/projects/models/project.model';
 import { DataTable } from '@app/shared/models/data-table.model';
 import { DatePipe, I18nPluralPipe } from '@angular/common';
-import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -18,8 +18,14 @@ import { GenericUtilityService } from '@app/shared/services/generic-utility.serv
 import { StatusOptions } from '@app/shared/enums/search.enum';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { MODAL_DESCRIPTION, MODAL_TITLE } from '@app/shared/constants/ui.constants';
+import {
+  MODAL_DESCRIPTION,
+  MODAL_TITLE,
+  NOTIFICATION_MESSAGE,
+  NOTIFICATION_TITLE,
+} from '@app/shared/constants/ui.constants';
 import { ProjectService } from '@app/features/projects/services/project.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-project-list-table',
@@ -52,6 +58,7 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
   private readonly projectService = inject(ProjectService);
   private readonly genericUtilityService = inject(GenericUtilityService);
   private readonly modalService = inject(NzModalService);
+  private readonly notificationService = inject(NzNotificationService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
 
@@ -62,8 +69,6 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
   showTooltipDescription = false;
   statusOptions = this.genericUtilityService.objectToArray(StatusOptions);
   isDeleted = 'N';
-  MODAL_TITLE = MODAL_TITLE;
-  MODAL_DESCRIPTION = MODAL_DESCRIPTION;
 
   ngOnInit() {
     this.buildForm();
@@ -127,12 +132,12 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
   deleteProject(id: number, isDeleted: string) {
     const modalTitle =
       isDeleted === 'Y'
-        ? this.MODAL_TITLE.SoftDeleteConfirmation.replace('{{1}}', 'project')
-        : this.MODAL_TITLE.RestoreConfirmation.replace('{{1}}', 'project');
+        ? MODAL_TITLE.SoftDeleteConfirmation.replace('{{1}}', 'project')
+        : MODAL_TITLE.RestoreConfirmation.replace('{{1}}', 'project');
     const modaDescription =
       isDeleted === 'Y'
-        ? this.MODAL_DESCRIPTION.SoftDeleteConfirmationMessage.replace('{{1}}', 'project')
-        : this.MODAL_DESCRIPTION.RestoreConfirmationMessage.replace('{{1}}', 'project');
+        ? MODAL_DESCRIPTION.SoftDeleteConfirmationMessage.replace('{{1}}', 'project')
+        : MODAL_DESCRIPTION.RestoreConfirmationMessage.replace('{{1}}', 'project');
 
     this.modalService.confirm({
       nzTitle: modalTitle,
@@ -145,6 +150,19 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
           .softDelete(id, isDeleted)
           .pipe(takeUntil(this._destroying$))
           .subscribe(() => {
+            const notificationTitle =
+              isDeleted === 'Y'
+                ? NOTIFICATION_TITLE.SoftDeleteSuccess.replace('{{1}}', 'Project')
+                : NOTIFICATION_TITLE.RestoreSuccess.replace('{{1}}', 'Project');
+            const notificationDescription =
+              isDeleted === 'Y'
+                ? NOTIFICATION_MESSAGE.SoftDeleteMessageSuccess.replace('{{1}}', 'project')
+                : NOTIFICATION_MESSAGE.RestoreMessageSuccess.replace('{{1}}', 'project');
+
+            this.notificationService.create('success', notificationTitle, notificationDescription, {
+              nzClass: 'form-notification',
+              nzDuration: 5000,
+            });
             this.updateTable();
             this.projectService.projectPublished();
           });
