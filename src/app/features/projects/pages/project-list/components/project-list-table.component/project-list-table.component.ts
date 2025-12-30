@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, output } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit, output } from '@angular/core';
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Project } from '@app/features/projects/models/project.model';
 import { DataTable } from '@app/shared/models/data-table.model';
 import { DatePipe, I18nPluralPipe } from '@angular/common';
-import { debounceTime } from 'rxjs';
+import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -19,6 +19,7 @@ import { StatusOptions } from '@app/shared/enums/search.enum';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { MODAL_DESCRIPTION, MODAL_TITLE } from '@app/shared/constants/ui.constants';
+import { ProjectService } from '@app/features/projects/services/project.service';
 
 @Component({
   selector: 'app-project-list-table',
@@ -42,16 +43,19 @@ import { MODAL_DESCRIPTION, MODAL_TITLE } from '@app/shared/constants/ui.constan
   templateUrl: './project-list-table.component.html',
   styleUrl: './project-list-table.component.scss',
 })
-export class ProjectListTableComponent implements OnInit {
+export class ProjectListTableComponent implements OnInit, OnDestroy {
   readonly dataTable = input.required<DataTable<Project>>();
   readonly dataList = input.required<Project[] | []>();
   readonly loading = input.required<boolean>();
   readonly onUpdateTable = output<NzTableQueryParams>();
 
+  private readonly projectService = inject(ProjectService);
   private readonly genericUtilityService = inject(GenericUtilityService);
   private readonly modalService = inject(NzModalService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
+
+  private readonly _destroying$ = new Subject<void>();
 
   searchProjectForm!: FormGroup;
 
@@ -127,12 +131,24 @@ export class ProjectListTableComponent implements OnInit {
       nzOkText: 'Yes',
       nzOkType: 'primary',
       nzOkDanger: true,
-      nzOnOk: () => {},
+      nzOnOk: () => {
+        this.projectService
+          .softDelete(id, 'Y')
+          .pipe(takeUntil(this._destroying$))
+          .subscribe(() => {
+            this.updateTable();
+          });
+      },
       nzCancelText: 'No',
     });
   }
 
   reset() {
     this.searchProjectForm.reset();
+  }
+
+  ngOnDestroy() {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
 }
