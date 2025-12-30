@@ -125,9 +125,18 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
   }
 
   deleteProject(id: number, isDeleted: string) {
+    const modalTitle =
+      isDeleted === 'Y'
+        ? this.MODAL_TITLE.SoftDeleteConfirmation.replace('{{1}}', 'project')
+        : this.MODAL_TITLE.RestoreConfirmation.replace('{{1}}', 'project');
+    const modaDescription =
+      isDeleted === 'Y'
+        ? this.MODAL_DESCRIPTION.SoftDeleteConfirmationMessage.replace('{{1}}', 'project')
+        : this.MODAL_DESCRIPTION.RestoreConfirmationMessage.replace('{{1}}', 'project');
+
     this.modalService.confirm({
-      nzTitle: this.MODAL_TITLE.SoftDeleteConfirmation.replace('{{1}}', 'project'),
-      nzContent: this.MODAL_DESCRIPTION.SoftDeleteConfirmationMessage.replace('{{1}}', 'project'),
+      nzTitle: modalTitle,
+      nzContent: modaDescription,
       nzOkText: 'Yes',
       nzOkType: 'primary',
       nzOkDanger: true,
@@ -137,6 +146,7 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this._destroying$))
           .subscribe(() => {
             this.updateTable();
+            this.projectService.projectPublished();
           });
       },
       nzCancelText: 'No',
