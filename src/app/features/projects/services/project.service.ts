@@ -49,6 +49,10 @@ export class ProjectService {
     return this.http.put<void>(`${this.api}/${id}/isDeleted`, payload);
   }
 
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.api}/${id}`);
+  }
+
   projectPublished() {
     this._projectPublished$.next();
   }
