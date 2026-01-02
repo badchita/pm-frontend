@@ -13,11 +13,11 @@ import { TaskCommentReaction } from '../models/task-comment-reaction-model';
   providedIn: 'root',
 })
 export class TaskService {
-  private http = inject(HttpClient);
-  private tableUtilityService = inject(TableUtilityService);
+  private readonly http = inject(HttpClient);
+  private readonly tableUtilityService = inject(TableUtilityService);
 
-  private apiProjects = `${environment.url}/projects`;
-  private apiTasks = `${environment.url}/tasks`;
+  private readonly apiProjects = `${environment.url}/projects`;
+  private readonly apiTasks = `${environment.url}/tasks`;
 
   save(task: Task, projectId: number): Observable<Task> {
     if (!task.id) {
@@ -35,6 +35,10 @@ export class TaskService {
 
   getById(projectId: number, id: number): Observable<Task> {
     return this.http.get<Task>(`${this.apiProjects}/${projectId}/tasks/${id}`);
+  }
+
+  delete(projectId: number, id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiProjects}/${projectId}/tasks/${id}`);
   }
 
   saveTaskComment(taskComment: TaskComment, taskId: number): Observable<TaskComment> {
