@@ -69,6 +69,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   isPublished!: string;
   catchError!: any;
   users!: { label: string; value: string }[];
+  originalProject: any;
 
   isLoading = false;
   isTableError = false;
@@ -96,6 +97,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   stateColorOptions = this.genericUtilityService.objectToArray(TaskStateColorOptions, false, true);
   stateOptions = this.genericUtilityService.objectToArray(TaskStateOptions, false, true);
   SPINNER_TIP = SPINNER_TIP;
+  hasChanges = false;
 
   ngOnInit() {
     this.spinnerTip = SPINNER_TIP.loadingData;
@@ -126,7 +128,18 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           this.projectName = projectName;
           this.projectIdNumber = projectIdNumber;
           this.isPublished = isPublished;
+          this.originalProject = { ...project };
           this.editProjectForm.patchValue(project, { emitEvent: false });
+          this.editProjectForm.markAsPristine();
+          this.editProjectForm.markAsUntouched();
+
+          this.editProjectForm.valueChanges
+            .pipe(takeUntil(this._destroying$))
+            .subscribe((value) => {
+              this.hasChanges = Object.keys(value).some(
+                (key) => value[key] !== this.originalProject[key]
+              );
+            });
 
           if (isPublished === 'N') {
             return of({
@@ -217,6 +230,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
               }
             );
             this.editProjectForm.patchValue(project, { emitEvent: false });
+            this.editProjectForm.markAsPristine();
+            this.editProjectForm.markAsUntouched();
           }
         },
         (error) => {
