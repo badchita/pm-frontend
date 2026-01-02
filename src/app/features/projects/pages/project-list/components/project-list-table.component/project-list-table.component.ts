@@ -4,7 +4,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '@app/features/projects/models/project.model';
 import { DataTable } from '@app/shared/models/data-table.model';
 import { DatePipe, I18nPluralPipe } from '@angular/common';
@@ -61,6 +61,7 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
   private readonly notificationService = inject(NzNotificationService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   private readonly _destroying$ = new Subject<void>();
 
@@ -69,6 +70,14 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
   showTooltipDescription = false;
   statusOptions = this.genericUtilityService.objectToArray(StatusOptions);
   isDeleted = 'N';
+
+  constructor() {
+    this.route.queryParams.subscribe((params) => {
+      if (params['isDeleted'] === 'Y') {
+        this.isDeleted = params['isDeleted'];
+      }
+    });
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -126,6 +135,12 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
   recycleBin(event: MouseEvent, isOpen = 'N') {
     event.stopPropagation();
     this.isDeleted = isOpen;
+    if (isOpen === 'Y') {
+      this.router.navigate([`/portal/projects`], { queryParams: { isDeleted: 'Y' } });
+    } else {
+      this.router.navigate([`/portal/projects`]);
+    }
+
     this.updateTable();
   }
 

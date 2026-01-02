@@ -1,5 +1,5 @@
 import { I18nPluralPipe } from '@angular/common';
-import { Component, inject, input, OnInit, output } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TaskStateOptions } from '@app/shared/enums/task-state.enum';
 import { DataTable } from '@app/shared/models/data-table.model';
@@ -13,8 +13,17 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectItemInterface, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { debounceTime } from 'rxjs';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import {
+  MODAL_DESCRIPTION,
+  MODAL_TITLE,
+  NOTIFICATION_MESSAGE,
+  NOTIFICATION_TITLE,
+} from '@app/shared/constants/ui.constants';
+import { TaskService } from '@app/features/tasks/services/task.service';
 
 @Component({
   selector: 'app-task-list-table',
@@ -33,7 +42,7 @@ import { Router } from '@angular/router';
   templateUrl: './task-list-table.component.html',
   styleUrl: './task-list-table.component.scss',
 })
-export class TaskListTableComponent implements OnInit {
+export class TaskListTableComponent implements OnInit, OnDestroy {
   readonly dataTable = input.required<DataTable<any>>();
   readonly dataList = input.required<Task[] | []>();
   readonly loading = input.required<boolean>();
@@ -41,9 +50,14 @@ export class TaskListTableComponent implements OnInit {
   readonly onUpdateTable = output<NzTableQueryParams>();
   readonly onAssignedToSearch = output<string>();
 
+  private readonly taskService = inject(TaskService);
+  private readonly modalService = inject(NzModalService);
+  private readonly notificationService = inject(NzNotificationService);
   private readonly genericUtilityService = inject(GenericUtilityService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
+
+  private readonly _destroying$ = new Subject<void>();
 
   searchProjectTaskForm!: FormGroup;
   disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
@@ -93,6 +107,34 @@ export class TaskListTableComponent implements OnInit {
     this.onUpdateTable.emit(tableParams);
   }
 
+  delete(projectId: number, id: number) {
+    this.modalService.confirm({
+      nzTitle: MODAL_TITLE.PermanentlyDeleteConfirmation.replace('{{1}}', 'Task'),
+      nzContent: MODAL_DESCRIPTION.PermanentlyDeleteConfirmationMessage.replace('{{1}}', 'task'),
+      nzOkText: 'Yes',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.taskService
+          .delete(projectId, id)
+          .pipe(takeUntil(this._destroying$))
+          .subscribe(() => {
+            this.notificationService.create(
+              'success',
+              NOTIFICATION_TITLE.PermanentlyDeleteSuccess.replace('{{1}}', 'Task'),
+              NOTIFICATION_MESSAGE.PermanentlyDeleteMessageSuccess.replace('{{1}}', 'task'),
+              {
+                nzClass: 'form-notification',
+                nzDuration: 5000,
+              }
+            );
+            this.updateTable();
+          });
+      },
+      nzCancelText: 'No',
+    });
+  }
+
   reset() {
     this.searchProjectTaskForm.reset();
   }
@@ -105,5 +147,10 @@ export class TaskListTableComponent implements OnInit {
 
   assignedToSearch(searchValue: string) {
     this.onAssignedToSearch.emit(searchValue);
+  }
+
+  ngOnDestroy() {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
 }

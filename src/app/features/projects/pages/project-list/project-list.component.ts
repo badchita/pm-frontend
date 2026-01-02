@@ -6,12 +6,13 @@ import { CreateProjectModalComponent } from './modals/create-project-modal/creat
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
 import { Project } from '@app/features/projects/models/project.model';
-import { catchError, finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { ProjectService } from '../../services/project.service';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-project-list',
@@ -24,6 +25,7 @@ export class ProjectListComponent implements OnDestroy {
   private readonly notificationService = inject(NzNotificationService);
   private readonly projectService = inject(ProjectService);
   private readonly genericUtilityService = inject(GenericUtilityService);
+  private readonly route = inject(ActivatedRoute);
 
   private readonly _destroying$ = new Subject<void>();
 
@@ -51,6 +53,7 @@ export class ProjectListComponent implements OnDestroy {
   };
   isLoading = false;
   catchError!: any;
+  isDeleted: 'Y' | 'N' = 'N';
 
   addNewProject() {
     const modal = this.modalService.create({
@@ -82,7 +85,13 @@ export class ProjectListComponent implements OnDestroy {
 
   loadProjects(params?: NzTableQueryParams) {
     this.isLoading = true;
-    let filters;
+    this.route.queryParams.subscribe((params) => {
+      if (params['isDeleted'] === 'Y') {
+        this.isDeleted = params['isDeleted'];
+      }
+    });
+    let filters: Record<string, any> = { isDeleted: this.isDeleted };
+
     if (params) {
       this.tableParams.page = params.pageIndex;
       this.tableParams.pageSize = params.pageSize;
