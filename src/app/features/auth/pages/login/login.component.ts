@@ -36,12 +36,12 @@ import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-al
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  private authService = inject(AuthService);
-  private formBuilder = inject(FormBuilder);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  private readonly authService = inject(AuthService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
-  private _destroying$ = new Subject<void>();
+  private readonly _destroying$ = new Subject<void>();
 
   loginForm!: FormGroup;
   catchError!: any;
