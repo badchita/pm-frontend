@@ -2,8 +2,12 @@
   <app-error-alert [error]="catchError"></app-error-alert>
 
   <nz-card>
+    <h1 class="register-heading">Create Your Account</h1>
+
     <form nz-form [formGroup]="registerForm" class="register-form">
-      <h1 class="register-heading">Create Your Account</h1>
+      <div class="user-role-segment-container">
+        <nz-segmented class="user-role-segment" [nzOptions]="userRoleOptions" formControlName="role" />
+      </div>
       <nz-form-label nzNoColon="true"> Name </nz-form-label>
       <nz-form-control>
         <nz-input-wrapper>
@@ -22,6 +26,14 @@
           <input nz-input formControlName="password" type="password" nzSize="large" appPopoverFormValidator />
         </nz-input-wrapper>
       </nz-form-control>
+      @if (role?.value === 1) {
+      <nz-form-label nzNoColon="true"> Company Name </nz-form-label>
+      <nz-form-control>
+        <nz-input-wrapper>
+          <input type="text" nz-input formControlName="companyName" nzSize="large" appPopoverFormValidator />
+        </nz-input-wrapper>
+      </nz-form-control>
+      }
       <button nz-button class="register-form-button" [nzType]="'primary'" nzSize="large" nzShape="round"
         (click)="register()" [disabled]="registerForm.invalid">
         Register
