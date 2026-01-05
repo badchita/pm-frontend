@@ -9,6 +9,11 @@ export const routes: Routes = [
     canActivate: [AuthorizedGuard],
   },
   {
+    path: 'admin',
+    loadChildren: () => import('@app/features/admin/admin.routes').then((m) => m.routes),
+    canActivate: [AuthorizedGuard],
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('@app/features/auth/pages/login/login.component').then((m) => m.LoginComponent),

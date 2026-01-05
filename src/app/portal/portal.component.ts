@@ -60,7 +60,6 @@ export class PortalComponent implements OnInit, OnDestroy {
       route: '/portal/application',
     },
   ];
-
   currentRoute!: string;
 
   isCollapsed = false;
