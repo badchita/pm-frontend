@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzColDirective } from 'ng-zorro-antd/grid';
@@ -37,7 +37,6 @@ import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
     PopoverFormValidatorDirective,
     ErrorAlertComponent,
     NzSegmentedModule,
-    FormsModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -52,7 +51,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   registerForm!: FormGroup;
   catchError!: any;
-  role: number = 0;
 
   SPINNER_TIP = SPINNER_TIP;
   MODAL_TITLE = MODAL_TITLE;
@@ -67,6 +65,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       name: [null, [...RequiredValidator]],
       email: [null, [...RequiredValidator, EmailValidator]],
       password: [null, PasswordValidators],
+      role: [0, RequiredValidator],
     });
   }
 
