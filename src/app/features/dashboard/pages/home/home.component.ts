@@ -7,7 +7,7 @@ import { DashboardQuickAccessComponent } from '../../components/dashboard-quick-
 import { DashboardService } from '../../services/dashboard.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { ActiveProjectProgress } from '../../models/dashboard.model';
+import { ActiveProjectProgress, UpcomingProject } from '../../models/dashboard.model';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   activeProjects: ActiveProjectProgress[] = [];
   activeProjectsCount!: number;
+  upcomingProjects: UpcomingProject[] = [];
 
   isLoading = false;
 
@@ -52,6 +53,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.activeProjects = dashboard.activeProjects;
           this.activeProjectsCount = dashboard.activeProjectsCount;
+          this.upcomingProjects = dashboard.upcomingDeadlines;
         },
         error: () => {
           this.isLoading = false;

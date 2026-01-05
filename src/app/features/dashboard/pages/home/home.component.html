@@ -7,11 +7,10 @@
 
     <div class="content">
       <div class="data-contents">
-        @if (activeProjects.length > 0) {
         <app-dashboard-active-projects [totalActiveProjects]="activeProjectsCount"
           [projectsInProgress]="activeProjects"></app-dashboard-active-projects>
-        }
-        <app-dashboard-upcoming-deadlines></app-dashboard-upcoming-deadlines>
+        <app-dashboard-upcoming-deadlines
+          [upcomingProjectsDeadline]="upcomingProjects"></app-dashboard-upcoming-deadlines>
         <app-dashboard-task-completed></app-dashboard-task-completed>
       </div>
 

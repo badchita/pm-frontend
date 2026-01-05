@@ -1,4 +1,4 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, effect, input } from '@angular/core';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { BaseChartDirective } from 'ng2-charts';
 import { ActiveProjectProgress } from '../../models/dashboard.model';
@@ -10,7 +10,7 @@ import { ChartOptions } from 'chart.js';
   templateUrl: './dashboard-active-projects.component.html',
   styleUrl: './dashboard-active-projects.component.scss',
 })
-export class DashboardActiveProjectsComponent implements OnInit {
+export class DashboardActiveProjectsComponent {
   totalActiveProjects = input.required<number>();
   projectsInProgress = input.required<ActiveProjectProgress[]>();
 
@@ -42,10 +42,36 @@ export class DashboardActiveProjectsComponent implements OnInit {
     },
   };
 
-  ngOnInit() {
-    this.projectsInProgress().forEach((project) => {
-      this.chartData.labels.push(project.projectName);
-      this.chartData.datasets[0].data.push(project.progressPercentage);
+  constructor() {
+    effect(() => {
+      const projects = this.projectsInProgress();
+
+      if (!projects || projects.length === 0) {
+        this.chartData = {
+          labels: [],
+          datasets: [
+            {
+              axis: 'y',
+              data: [],
+              fill: false,
+              backgroundColor: ['rgba(132, 11, 220, 1)'],
+            },
+          ],
+        };
+        return;
+      }
+
+      this.chartData = {
+        labels: projects.map((p) => p.projectName),
+        datasets: [
+          {
+            axis: 'y',
+            data: projects.map((p) => p.progressPercentage),
+            fill: false,
+            backgroundColor: ['rgba(132, 11, 220, 1)'],
+          },
+        ],
+      };
     });
   }
 }

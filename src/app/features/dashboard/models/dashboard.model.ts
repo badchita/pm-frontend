@@ -17,7 +17,7 @@ export interface ActiveProjectProgress {
 export interface UpcomingProject {
   projectId: number;
   projectName: string;
-  dueDate: Date;
+  dueDate: Date | string;
   remainingDays: number;
 }
 

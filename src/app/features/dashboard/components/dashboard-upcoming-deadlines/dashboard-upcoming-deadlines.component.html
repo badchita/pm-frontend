@@ -2,9 +2,9 @@
   <nz-card>
     <div class="card-title">Upcoming Deadlines</div>
     <div class="upcoming-deadlines-content">
-      <span> Angular - Oct 15, 2025 </span>
-      <span> ReactJs - Oct 15, 2025 </span>
-      <span> Vue - Oct 20, 2025 </span>
+      @for (project of upcomingProjectsDeadline(); track project) {
+      <span>{{ project.projectName }} - {{ project.dueDate | date:'MMM dd, yyyy'}}</span>
+      }
     </div>
   </nz-card>
 </div>
