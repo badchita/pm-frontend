@@ -40,12 +40,12 @@ import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-al
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  private authService = inject(AuthService);
-  private modalService = inject(NzModalService);
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly modalService = inject(NzModalService);
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
-  private _destroying$ = new Subject<void>();
+  private readonly _destroying$ = new Subject<void>();
 
   registerForm!: FormGroup;
   catchError!: any;
