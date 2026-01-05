@@ -11,7 +11,7 @@
           [projectsInProgress]="activeProjects"></app-dashboard-active-projects>
         <app-dashboard-upcoming-deadlines
           [upcomingProjectsDeadline]="upcomingProjects"></app-dashboard-upcoming-deadlines>
-        <app-dashboard-task-completed></app-dashboard-task-completed>
+        <app-dashboard-task-completed [projectTasksCompleted]="tasksCompletedByProject"></app-dashboard-task-completed>
       </div>
 
       <app-dashboard-quick-access></app-dashboard-quick-access>
