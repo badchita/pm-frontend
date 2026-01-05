@@ -2,8 +2,13 @@
   <app-error-alert [error]="catchError"></app-error-alert>
 
   <nz-card>
+    <h1 class="register-heading">Create Your Account</h1>
+
+    <div class="user-role-segment-container">
+      <nz-segmented class="user-role-segment" [nzOptions]="userRoleOptions" [(ngModel)]="role" />
+    </div>
+
     <form nz-form [formGroup]="registerForm" class="register-form">
-      <h1 class="register-heading">Create Your Account</h1>
       <nz-form-label nzNoColon="true"> Name </nz-form-label>
       <nz-form-control>
         <nz-input-wrapper>

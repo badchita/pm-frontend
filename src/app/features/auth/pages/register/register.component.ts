@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzColDirective } from 'ng-zorro-antd/grid';
@@ -19,6 +19,7 @@ import {
   RequiredValidator,
 } from '@app/shared/constants/validators';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
+import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
 
 @Component({
   selector: 'app-register',
@@ -35,6 +36,8 @@ import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-al
     NzModalModule,
     PopoverFormValidatorDirective,
     ErrorAlertComponent,
+    NzSegmentedModule,
+    FormsModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -49,10 +52,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   registerForm!: FormGroup;
   catchError!: any;
+  role: number = 0;
 
   SPINNER_TIP = SPINNER_TIP;
   MODAL_TITLE = MODAL_TITLE;
   isLoading = false;
+  userRoleOptions = [
+    { value: 0, label: 'Member' },
+    { value: 1, label: 'Manager' },
+  ];
 
   ngOnInit() {
     this.registerForm = this.fb.group({
