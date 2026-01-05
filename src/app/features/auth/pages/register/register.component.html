@@ -26,6 +26,14 @@
           <input nz-input formControlName="password" type="password" nzSize="large" appPopoverFormValidator />
         </nz-input-wrapper>
       </nz-form-control>
+      @if (role?.value === 1) {
+      <nz-form-label nzNoColon="true"> Company Name </nz-form-label>
+      <nz-form-control>
+        <nz-input-wrapper>
+          <input type="text" nz-input formControlName="companyName" nzSize="large" appPopoverFormValidator />
+        </nz-input-wrapper>
+      </nz-form-control>
+      }
       <button nz-button class="register-form-button" [nzType]="'primary'" nzSize="large" nzShape="round"
         (click)="register()" [disabled]="registerForm.invalid">
         Register

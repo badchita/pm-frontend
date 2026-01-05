@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NzCardComponent } from 'ng-zorro-antd/card';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzColDirective } from 'ng-zorro-antd/grid';
@@ -20,6 +20,7 @@ import {
 } from '@app/shared/constants/validators';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
+import { UserRole } from '@app/shared/enums/user-role.enum';
 
 @Component({
   selector: 'app-register',
@@ -56,8 +57,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
   MODAL_TITLE = MODAL_TITLE;
   isLoading = false;
   userRoleOptions = [
-    { value: 0, label: 'Member' },
-    { value: 1, label: 'Manager' },
+    { value: UserRole.Member, label: 'Member' },
+    { value: UserRole.Manager, label: 'Manager' },
   ];
 
   ngOnInit() {
@@ -66,6 +67,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
       email: [null, [...RequiredValidator, EmailValidator]],
       password: [null, PasswordValidators],
       role: [0, RequiredValidator],
+    });
+
+    this.role?.valueChanges.subscribe((value) => {
+      if (value === UserRole.Manager) {
+        this.registerForm.addControl('companyName', this.fb.control(null, [...RequiredValidator]));
+      } else {
+        this.registerForm.removeControl('companyName');
+      }
+
+      this.registerForm.updateValueAndValidity();
     });
   }
 
@@ -108,5 +119,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._destroying$.next(undefined);
     this._destroying$.complete();
+  }
+
+  get role(): AbstractControl | null | undefined {
+    return this.registerForm?.get('role');
   }
 }
