@@ -12,6 +12,11 @@ import {
   TasksCompletedByProject,
   UpcomingProject,
 } from '../../models/dashboard.model';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { CreateProjectModalComponent } from '@app/features/projects/pages/project-list/modals/create-project-modal/create-project-modal.component';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
+import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 
 @Component({
   selector: 'app-home',
@@ -22,12 +27,16 @@ import {
     NzButtonComponent,
     DashboardQuickAccessComponent,
     NzSpinModule,
+    NzModalModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private readonly dashboardService = inject(DashboardService);
+  private readonly modalService = inject(NzModalService);
+  private readonly notificationService = inject(NzNotificationService);
+  private readonly genericUtilityService = inject(GenericUtilityService);
 
   private readonly _destroying$ = new Subject<void>();
 
@@ -72,6 +81,34 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
       });
+  }
+
+  addNewProject() {
+    const modal = this.modalService.create({
+      nzContent: CreateProjectModalComponent,
+      nzTitle: 'Create new project',
+      nzClassName: 'create-modal',
+      nzFooter: null,
+    });
+
+    modal.afterClose.subscribe((projectIdNumber: string) => {
+      if (projectIdNumber) {
+        this.loadDashboard();
+        this.notificationService.create(
+          'success',
+          NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Project Created'),
+          this.genericUtilityService.formatMessage(NOTIFICATION_MESSAGE.FormCreatedSuccess, [
+            'project',
+            'project',
+            projectIdNumber,
+          ]),
+          {
+            nzClass: 'form-notification',
+            nzDuration: 5000,
+          }
+        );
+      }
+    });
   }
 
   ngOnDestroy() {
