@@ -12,7 +12,7 @@ import { Location } from '@angular/common';
   styleUrl: './edit-task.component.scss',
 })
 export class EditTaskComponent implements OnInit {
-  private route = inject(ActivatedRoute);
+  private readonly route = inject(ActivatedRoute);
   localtion = inject(Location);
 
   projectId!: number;

@@ -8,7 +8,7 @@ export interface Dashboard {
 export interface ActiveProjectProgress {
   projectId: number;
   projectName: string;
-  dueDate: Date; // ISO string from API
+  dueDate: Date;
   totalTasks: number;
   closedTasks: number;
   progressPercentage: number;
