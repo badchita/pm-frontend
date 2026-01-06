@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { PortalComponent } from './portal.component';
 
-export const routes: Routes = [
+export const PORTAL_ROUTES: Routes = [
   {
     path: '',
     component: PortalComponent,
@@ -39,6 +39,11 @@ export const routes: Routes = [
           import('@app/features/task-board/pages/task-board-page/task-board-page.component').then(
             (m) => m.TaskBoardPageComponent
           ),
+      },
+
+      {
+        path: 'admin',
+        loadChildren: () => import('@app/features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
       },
     ],
   },

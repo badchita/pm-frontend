@@ -3,6 +3,7 @@ import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@an
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@app/core/layout/header/header.component';
 import { ProjectService } from '@app/features/projects/services/project.service';
+import { UserRole } from '@app/shared/enums/user-role.enum';
 import { NavItem } from '@app/shared/models/nav-item.model';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -32,7 +33,7 @@ export class PortalComponent implements OnInit, OnDestroy {
 
   @ViewChild('collapseButtonContainer') collapseButtonContainerRef!: ElementRef;
 
-  navItem: NavItem[] = [
+  navItems: NavItem[] = [
     {
       title: 'Dashboard',
       icon: 'dashboard',
@@ -60,9 +61,15 @@ export class PortalComponent implements OnInit, OnDestroy {
       route: '/portal/application',
     },
   ];
-
+  adminNavItem: NavItem = {
+    title: 'Admin',
+    icon: 'user',
+    route: '/portal/admin',
+  };
   currentRoute!: string;
+  userRole!: UserRole;
 
+  USER_ROLE = UserRole;
   isCollapsed = false;
   isWhiteBackground = false;
 
@@ -76,6 +83,8 @@ export class PortalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const userRoleSession = sessionStorage.getItem('user_role');
+    this.userRole = userRoleSession ? JSON.parse(userRoleSession) : null;
     this.loadProjects();
 
     this.projectService.projectPublished$.pipe(takeUntil(this._destroying$)).subscribe(() => {
@@ -91,11 +100,11 @@ export class PortalComponent implements OnInit, OnDestroy {
         const { data } = dataTable;
         const publishedProjects = data.filter((project) => project.isPublished === 'Y');
 
-        let taskBoardIndex = this.navItem.findIndex((item) => item.title === 'Task Board');
+        let taskBoardIndex = this.navItems.findIndex((item) => item.title === 'Task Board');
 
         if (publishedProjects.length === 0) {
           if (taskBoardIndex !== -1) {
-            this.navItem.splice(taskBoardIndex, 1);
+            this.navItems.splice(taskBoardIndex, 1);
           }
         } else {
           const taskBoardItem = {
@@ -110,9 +119,9 @@ export class PortalComponent implements OnInit, OnDestroy {
           };
 
           if (taskBoardIndex === -1) {
-            this.navItem.splice(2, 0, taskBoardItem);
+            this.navItems.splice(2, 0, taskBoardItem);
           } else {
-            this.navItem[taskBoardIndex] = taskBoardItem;
+            this.navItems[taskBoardIndex] = taskBoardItem;
           }
         }
       });

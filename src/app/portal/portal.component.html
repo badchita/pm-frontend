@@ -6,8 +6,8 @@
   <nz-layout>
     <nz-sider nzWidth="256px" nzTheme="light" class="side-bar" [(nzCollapsed)]="isCollapsed">
       <div class="sidebar-items">
-        <ul nz-menu class="sider-menu" nzMode="inline">
-          @for (nav of navItem; track nav.route) {
+        <ul nz-menu class="sidebar-menu" nzMode="inline">
+          @for (nav of navItems; track nav.route) {
           @if (nav.child?.length) {
           <li nz-submenu [nzTitle]="nav.title" [nzIcon]="nav.icon" [nzOpen]="currentRoute.includes(nav.route)">
             <ul>
@@ -26,7 +26,16 @@
           </li>
           }
           }
+
+          @if (userRole === USER_ROLE.Admin) {
+          <li class="admin-menu-item" nz-menu-item (click)="navigate(adminNavItem.route)"
+            [nzSelected]="currentRoute.includes(adminNavItem.route)">
+            <nz-icon [nzType]="adminNavItem.icon" />
+            <span>{{ adminNavItem.title }}</span>
+          </li>
+          }
         </ul>
+
 
         <div class="border-line" [ngClass]="isCollapsed ? 'border-line-collapse-close' : ''"></div>
         <div class="collapse-button-container" [ngClass]="isCollapsed ? 'collapse-close' : ''">

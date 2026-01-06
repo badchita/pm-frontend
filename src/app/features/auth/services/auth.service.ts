@@ -3,14 +3,15 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@app/environments/environment';
 import { LoginForm, LoginResponse } from '@app/features/auth/models/auth.model';
 import { User } from '@app/features/auth/models/user.model';
+import { UserRole } from '@app/shared/enums/user-role.enum';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private http = inject(HttpClient);
-  private api = `${environment.url}/auth`;
+  private readonly http = inject(HttpClient);
+  private readonly api = `${environment.url}/auth`;
 
   register(user: User): Observable<User> {
     return this.http.post<User>(`${this.api}/register`, user);
@@ -26,6 +27,10 @@ export class AuthService {
 
   setUserDetails(user: User) {
     sessionStorage.setItem('user_details', JSON.stringify(user));
+  }
+
+  setUserRole(role: UserRole) {
+    sessionStorage.setItem('user_role', JSON.stringify(role));
   }
 
   isLoggedIn(): boolean {

@@ -5,7 +5,7 @@ import { NotAuthorizedGuard } from '@app/features/auth/guards/not-authorized.gua
 export const routes: Routes = [
   {
     path: 'portal',
-    loadChildren: () => import('@app/portal/portal.routes').then((m) => m.routes),
+    loadChildren: () => import('@app/portal/portal.routes').then((m) => m.PORTAL_ROUTES),
     canActivate: [AuthorizedGuard],
   },
   {
