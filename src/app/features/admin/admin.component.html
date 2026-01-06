@@ -1,7 +1,9 @@
 <nz-layout>
-  <nz-tabs>
+  <nz-tabs [nzSelectedIndex]="activeIndex" (nzSelectedIndexChange)="onTabChange($event)">
     @for (tab of tabItems; track tab) {
-    <nz-tab [nzTitle]="tab.title">{{ tab.title }}</nz-tab>
+    <nz-tab [nzTitle]="tab.title">
+    </nz-tab>
     }
   </nz-tabs>
+  <router-outlet></router-outlet>
 </nz-layout>
