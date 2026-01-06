@@ -1,1 +1,7 @@
-admin
+<nz-layout>
+  <nz-tabs>
+    @for (tab of tabItems; track tab) {
+    <nz-tab [nzTitle]="tab.title">{{ tab.title }}</nz-tab>
+    }
+  </nz-tabs>
+</nz-layout>
