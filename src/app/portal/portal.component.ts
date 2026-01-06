@@ -85,7 +85,6 @@ export class PortalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const userRoleSession = sessionStorage.getItem('user_role');
     this.userRole = userRoleSession ? JSON.parse(userRoleSession) : null;
-    console.log(this.userRole);
     this.loadProjects();
 
     this.projectService.projectPublished$.pipe(takeUntil(this._destroying$)).subscribe(() => {
