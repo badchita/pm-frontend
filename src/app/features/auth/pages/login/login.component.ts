@@ -17,7 +17,6 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
-import { UserRole } from '@app/shared/enums/user-role.enum';
 
 @Component({
   selector: 'app-login',
@@ -82,11 +81,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           const { token, user } = response;
           this.authService.setAccessToken(token);
           this.authService.setUserDetails(user);
-
-          if (user.role === UserRole.Admin) {
-            this.router.navigate(['/admin']);
-            return;
-          }
+          this.authService.setUserRole(user.role);
 
           this.router.navigate(['/portal']);
         },

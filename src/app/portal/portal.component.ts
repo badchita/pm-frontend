@@ -3,6 +3,7 @@ import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@an
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@app/core/layout/header/header.component';
 import { ProjectService } from '@app/features/projects/services/project.service';
+import { UserRole } from '@app/shared/enums/user-role.enum';
 import { NavItem } from '@app/shared/models/nav-item.model';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -63,10 +64,12 @@ export class PortalComponent implements OnInit, OnDestroy {
   adminNavItem: NavItem = {
     title: 'Admin',
     icon: 'user',
-    route: '/admin',
+    route: '/portal/admin',
   };
   currentRoute!: string;
+  userRole!: UserRole;
 
+  USER_ROLE = UserRole;
   isCollapsed = false;
   isWhiteBackground = false;
 
@@ -80,6 +83,9 @@ export class PortalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const userRoleSession = sessionStorage.getItem('user_role');
+    this.userRole = userRoleSession ? JSON.parse(userRoleSession) : null;
+    console.log(this.userRole);
     this.loadProjects();
 
     this.projectService.projectPublished$.pipe(takeUntil(this._destroying$)).subscribe(() => {

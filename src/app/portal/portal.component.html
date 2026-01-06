@@ -27,11 +27,13 @@
           }
           }
 
+          @if (userRole === USER_ROLE.Admin) {
           <li class="admin-menu-item" nz-menu-item (click)="navigate(adminNavItem.route)"
             [nzSelected]="currentRoute.includes(adminNavItem.route)">
             <nz-icon [nzType]="adminNavItem.icon" />
             <span>{{ adminNavItem.title }}</span>
           </li>
+          }
         </ul>
 
 
