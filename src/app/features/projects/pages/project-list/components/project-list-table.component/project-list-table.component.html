@@ -38,12 +38,12 @@
     [nzLoading]="loading()" (nzQueryParams)="updateTable($event)">
     <thead>
       <tr>
-        <th nzWidth="15%" [nzSortFn]="true" nzColumnKey="projectIdNumber">Project ID Number</th>
-        <th nzWidth="15%" [nzSortFn]="true" nzColumnKey="projectName">Project Name</th>
-        <th nzWidth="35%">Description</th>
-        <th nzWidth="15%" nzAlign="center">Status</th>
-        <th nzWidth="15%" nzAlign="center" [nzSortFn]="true" nzColumnKey="dueDate">Due Date</th>
-        <th nzWidth="10%" nzAlign="center">Actions</th>
+        <th nzWidth="15%" [nzSortFn]="true" id="projectIdNumber" nzColumnKey="projectIdNumber">Project ID Number</th>
+        <th nzWidth="15%" [nzSortFn]="true" id="projectName" nzColumnKey="projectName">Project Name</th>
+        <th nzWidth="35%" id="description">Description</th>
+        <th nzWidth="15%" id="isPublished" nzAlign="center">Status</th>
+        <th nzWidth="15%" id="dueDate" nzAlign="center" [nzSortFn]="true" nzColumnKey="dueDate">Due Date</th>
+        <th nzWidth="10%" id="actions" nzAlign="center">Actions</th>
       </tr>
     </thead>
     <tbody>
