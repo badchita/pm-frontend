@@ -4,19 +4,26 @@ import { environment } from '@app/environments/environment';
 import { User } from '@app/features/auth/models/user.model';
 import { Observable } from 'rxjs';
 import { TableUtilityService } from '../table-utility.service';
+import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private http = inject(HttpClient);
-  private tableUtilityService = inject(TableUtilityService);
+  private readonly http = inject(HttpClient);
+  private readonly tableUtilityService = inject(TableUtilityService);
 
-  private api = `${environment.url}/users`;
+  private readonly api = `${environment.url}/users`;
 
   getSearchUsers(filters: any): Observable<User[]> {
     const params = this.tableUtilityService.buildParams(null, filters);
 
     return this.http.get<User[]>(`${this.api}/search`, { params });
+  }
+
+  getList(tableParams?: TableParams, filters?: any): Observable<DataTable<User>> {
+    const params = this.tableUtilityService.buildParams(tableParams, filters);
+
+    return this.http.get<DataTable<User>>(`${this.api}`, { params });
   }
 }
