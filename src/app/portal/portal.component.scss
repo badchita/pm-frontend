@@ -21,9 +21,16 @@
       flex-direction: column;
       height: 100%;
 
-      .sider-menu {
+      .sidebar-menu {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
         margin-bottom: auto;
         background-color: var(--pm-grey);
+
+        .admin-menu-item {
+          margin-top: auto;
+        }
 
         nz-icon {
           padding-right: 10px;
