@@ -3,6 +3,9 @@ import { NzTableSortOrder } from 'ng-zorro-antd/table';
 export class TableParams {
   search?: string;
   isPublished?: string;
+  isApproved?: string;
+  companyId?: number;
+  role?: string;
   state?: number | null;
   sort?: {
     key: string;
