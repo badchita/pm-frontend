@@ -1,0 +1,15 @@
+:host {
+  .table-container {
+    padding-top: 14px;
+
+    .description {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    nz-tag {
+      font-weight: 500;
+    }
+  }
+}
