@@ -123,6 +123,10 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
     this.updateTable();
   }
 
+  edit(id: number) {
+    this.router.navigate([`/portal/admin/users/${id}`]);
+  }
+
   deleteRestoreProject(id: number, isDeleted: string) {
     const modalTitle =
       isDeleted === 'Y'
