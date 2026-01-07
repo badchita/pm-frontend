@@ -26,4 +26,10 @@ export class UserService {
 
     return this.http.get<DataTable<User>>(`${this.api}`, { params });
   }
+
+  softDelete(id: number, isDeleted: string): Observable<void> {
+    const payload = { isDeleted: isDeleted };
+
+    return this.http.put<void>(`${this.api}/${id}/isDeleted`, payload);
+  }
 }
