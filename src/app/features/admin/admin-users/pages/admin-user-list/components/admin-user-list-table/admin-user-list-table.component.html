@@ -57,7 +57,7 @@
         <td nzAlign="center">{{ data.createdAt | date : 'MMM dd, yyyy' }}</td>
         <td class="table-action-buttons" nzAlign="center">
           @if (isDeleted === 'N') {
-          <button class="edit-button" nz-button nzType="link">
+          <button class="edit-button" nz-button nzType="link" (click)="edit(data.id)">
             <nz-icon nzType="edit" nzTheme="outline" />
           </button>
           } @else {
