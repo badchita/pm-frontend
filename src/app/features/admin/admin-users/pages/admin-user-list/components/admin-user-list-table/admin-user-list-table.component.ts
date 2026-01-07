@@ -15,6 +15,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { UserStatusOptions } from '@app/shared/enums/search.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-user-list-table',
@@ -41,14 +42,16 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
   readonly loading = input.required<boolean>();
   readonly onUpdateTable = output<NzTableQueryParams>();
 
-  private readonly formBuilder = inject(FormBuilder);
   private readonly genericUtilityService = inject(GenericUtilityService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   private readonly _destroying$ = new Subject<void>();
 
   searchUserForm!: FormGroup;
 
   userStatusOptions = this.genericUtilityService.objectToArray(UserStatusOptions);
+  isDeleted = 'N';
 
   ngOnInit() {
     this.buildForm();
@@ -81,7 +84,9 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
     const searchFormValues = this.searchUserForm.getRawValue();
     const isFiltering =
       searchFormValues.search || searchFormValues.description || searchFormValues.dueDate;
-    const filter: NzTableQueryParams['filter'] = [{ ...searchFormValues }];
+    const filter: NzTableQueryParams['filter'] = [
+      { ...searchFormValues, isDeleted: this.isDeleted },
+    ];
 
     const tableParams: NzTableQueryParams = {
       pageIndex: isFiltering ? 1 : params?.pageIndex ?? this.dataTable().page,
@@ -91,6 +96,18 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
     };
 
     this.onUpdateTable.emit(tableParams);
+  }
+
+  recycleBin(event: MouseEvent, isOpen = 'N') {
+    event.stopPropagation();
+    this.isDeleted = isOpen;
+    if (isOpen === 'Y') {
+      this.router.navigate([`/portal/admin/users`], { queryParams: { isDeleted: 'Y' } });
+    } else {
+      this.router.navigate([`/portal/admin/users`]);
+    }
+
+    this.updateTable();
   }
 
   reset() {

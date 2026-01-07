@@ -7,6 +7,14 @@
     .select-search {
       width: 170px;
     }
+
+    .recycle-bin-button {
+      width: 50px;
+
+      nz-icon {
+        color: var(--pm-primary);
+      }
+    }
   }
 
   .table-container {

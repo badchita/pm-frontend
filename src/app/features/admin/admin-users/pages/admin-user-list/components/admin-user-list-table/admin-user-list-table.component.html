@@ -13,6 +13,15 @@
       </nz-form-control>
     </nz-form-item>
     <button class="reset-search-button" nz-button (click)="reset()">Reset</button>
+    @if (isDeleted === 'N') {
+    <button class="recycle-bin-button" nz-button nzType="link" (click)="recycleBin($event, 'Y')">
+      <img alt="recycle-bin" src="/assets/icons/recycle-bin.svg" width="20" />
+    </button>
+    } @else {
+    <button class="recycle-bin-button" nz-button nzType="link" (click)="recycleBin($event)">
+      <nz-icon nzType="unordered-list" nzTheme="outline" />
+    </button>
+    }
   </form>
 </div>
 
@@ -47,13 +56,25 @@
         </td>
         <td nzAlign="center">{{ data.createdAt | date : 'MMM dd, yyyy' }}</td>
         <td class="table-action-buttons" nzAlign="center">
+          @if (isDeleted === 'N') {
           <button class="edit-button" nz-button nzType="link">
             <nz-icon nzType="edit" nzTheme="outline" />
           </button>
+          } @else {
+          <button class="restore-button" nz-button nzType="link">
+            <nz-icon nzType="undo" nzTheme="outline" />
+          </button>
+          }
           <nz-divider nzType="vertical"></nz-divider>
+          @if (isDeleted === 'N') {
           <button class="delete-button" nz-button nzType="link" nzDanger>
             <nz-icon nzType="delete" nzTheme="outline" />
           </button>
+          } @else {
+          <button class="delete-button" nz-button nzType="link" nzDanger>
+            <nz-icon nzType="delete" nzTheme="outline" />
+          </button>
+          }
         </td>
       </tr>
       }

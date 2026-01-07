@@ -51,8 +51,9 @@ export class ProjectListComponent implements OnDestroy {
     page: 1,
     pageSize: 10,
   };
-  isLoading = false;
   catchError!: any;
+
+  isLoading = false;
   isDeleted: 'Y' | 'N' = 'N';
 
   addNewProject() {

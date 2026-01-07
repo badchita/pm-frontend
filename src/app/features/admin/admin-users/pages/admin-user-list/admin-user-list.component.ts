@@ -6,6 +6,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { User } from '@app/features/auth/models/user.model';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-admin-user-list',
@@ -15,6 +16,7 @@ import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-al
 })
 export class AdminUserListComponent implements OnDestroy {
   private readonly userSerivce = inject(UserService);
+  private readonly route = inject(ActivatedRoute);
 
   private readonly _destroying$ = new Subject<void>();
 
@@ -42,11 +44,17 @@ export class AdminUserListComponent implements OnDestroy {
   catchError!: any;
 
   isLoading = false;
+  isDeleted: 'Y' | 'N' = 'N';
 
   loadUsers(params?: NzTableQueryParams) {
     this.isLoading = true;
+    this.route.queryParams.subscribe((params) => {
+      if (params['isDeleted'] === 'Y') {
+        this.isDeleted = params['isDeleted'];
+      }
+    });
+    let filters: Record<string, any> = { isDeleted: this.isDeleted };
 
-    let filters;
     if (params) {
       this.tableParams.page = params.pageIndex;
       this.tableParams.pageSize = params.pageSize;
