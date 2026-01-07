@@ -18,10 +18,10 @@ import { PopoverFormValidatorContainerComponent } from '../components/popover-fo
   standalone: true,
 })
 export class PopoverFormValidatorDirective implements OnDestroy {
-  private el = inject(ElementRef);
-  private control = inject(NgControl, { optional: true });
-  private injector = inject(Injector);
-  private appRef = inject(ApplicationRef);
+  private readonly el = inject(ElementRef);
+  private readonly control = inject(NgControl, { optional: true });
+  private readonly injector = inject(Injector);
+  private readonly appRef = inject(ApplicationRef);
 
   private componentRef?: ComponentRef<PopoverFormValidatorContainerComponent>;
   private positionSub?: Subscription;
@@ -80,14 +80,14 @@ export class PopoverFormValidatorDirective implements OnDestroy {
       let left = inputRect.right + spacing;
 
       if (left + popoverRect.width > viewportWidth) {
-        left = inputRect.left - popoverRect.width - spacing;
+        // TODO:: Observe behavior
+        // left = inputRect.left - popoverRect.width - spacing;
         popover.classList.add('left');
         popover.classList.remove('right');
       } else {
         popover.classList.add('right');
         popover.classList.remove('left');
       }
-
       popover.style.position = 'fixed';
       popover.style.top = `${top}px`;
       popover.style.left = `${left}px`;

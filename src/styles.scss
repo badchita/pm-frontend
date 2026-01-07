@@ -103,6 +103,30 @@
     border-radius: 10px;
   }
 
+  .portal-select-form {
+    .ant-select-selector {
+      height: 52px !important;
+      border-color: var(--pm-primary);
+      border-radius: 8px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .ant-select-selection-item,
+    .ant-select-selection-placeholder {
+      line-height: 52px;
+    }
+
+    &.ant-select-focused .ant-select-selector {
+      height: 52px;
+    }
+
+    .ant-select-arrow {
+      height: 30px;
+    }
+  }
+
   .portal-input-form {
     height: 52px;
   }
