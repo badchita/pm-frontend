@@ -21,6 +21,13 @@ export const ADMIN_ROUTES: Routes = [
             '@app/features/admin/admin-users/pages/admin-edit-user/admin-edit-user.component'
           ).then((m) => m.AdminEditUserComponent),
       },
+      {
+        path: 'companies',
+        loadComponent: () =>
+          import(
+            '@app/features/admin/admin-companies/pages/admin-company-list/admin-company-list.component'
+          ).then((m) => m.AdminCompanyListComponent),
+      },
     ],
   },
 ];
