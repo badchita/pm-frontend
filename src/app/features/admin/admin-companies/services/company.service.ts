@@ -19,6 +19,10 @@ export class CompanyService {
     return this.http.get<Company>(`${this.api}/${id}`);
   }
 
+  update(company: Company): Observable<Company> {
+    return this.http.put<Company>(`${this.api}/${company.id}`, company);
+  }
+
   getList(tableParams?: TableParams, filters?: any): Observable<DataTable<Company>> {
     const params = this.tableUtilityService.buildParams(tableParams, filters);
 
