@@ -141,21 +141,28 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
         this.userService
           .softDelete(id, isDeleted)
           .pipe(takeUntil(this._destroying$))
-          .subscribe(() => {
-            const notificationTitle =
-              isDeleted === 'Y'
-                ? NOTIFICATION_TITLE.SoftDeleteSuccess.replace('{{1}}', 'Project')
-                : NOTIFICATION_TITLE.RestoreSuccess.replace('{{1}}', 'Project');
-            const notificationDescription =
-              isDeleted === 'Y'
-                ? NOTIFICATION_MESSAGE.SoftDeleteMessageSuccess.replace('{{1}}', 'project')
-                : NOTIFICATION_MESSAGE.RestoreMessageSuccess.replace('{{1}}', 'project');
+          .subscribe({
+            next: () => {
+              const notificationTitle =
+                isDeleted === 'Y'
+                  ? NOTIFICATION_TITLE.SoftDeleteSuccess.replace('{{1}}', 'Project')
+                  : NOTIFICATION_TITLE.RestoreSuccess.replace('{{1}}', 'Project');
+              const notificationDescription =
+                isDeleted === 'Y'
+                  ? NOTIFICATION_MESSAGE.SoftDeleteMessageSuccess.replace('{{1}}', 'project')
+                  : NOTIFICATION_MESSAGE.RestoreMessageSuccess.replace('{{1}}', 'project');
 
-            this.notificationService.create('success', notificationTitle, notificationDescription, {
-              nzClass: 'form-notification',
-              nzDuration: 5000,
-            });
-            this.updateTable();
+              this.notificationService.create(
+                'success',
+                notificationTitle,
+                notificationDescription,
+                {
+                  nzClass: 'form-notification',
+                  nzDuration: 5000,
+                }
+              );
+              this.updateTable();
+            },
           });
       },
       nzCancelText: 'No',
