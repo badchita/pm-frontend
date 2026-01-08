@@ -3,7 +3,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
-import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
+import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
 import { EmailValidator, RequiredValidator } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { UserStatusOptions } from '@app/shared/enums/search.enum';
@@ -17,6 +17,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { CompanyService } from '../../services/company.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-admin-edit-company',
@@ -39,6 +40,7 @@ import { CompanyService } from '../../services/company.service';
 export class AdminEditCompanyComponent implements OnInit, OnDestroy {
   private readonly companyService = inject(CompanyService);
   private readonly genericUtilityService = inject(GenericUtilityService);
+  private readonly notificationService = inject(NzNotificationService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -111,6 +113,42 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
 
   close() {
     this.router.navigate([`/portal/admin/companies`]);
+  }
+
+  save() {
+    this.isLoading = true;
+    this.spinnerTip = SPINNER_TIP.Updating.replace('{{1}}', 'company');
+    const payload = this.editCompanyForm.getRawValue();
+
+    this.companyService
+      .update(payload)
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (company) => {
+          this.notificationService.create(
+            'success',
+            NOTIFICATION_TITLE.FormSuccess.replace('{{1}}', 'Company Updated'),
+            NOTIFICATION_MESSAGE.FormUpdatedSuccess.replace('{{1}}', 'Company'),
+            {
+              nzClass: 'form-notification',
+              nzDuration: 5000,
+            }
+          );
+          this.companyStatus = company.isApproved;
+
+          this.editCompanyForm.patchValue(company, { emitEvent: false });
+          this.editCompanyForm.markAsPristine();
+          this.editCompanyForm.markAsUntouched();
+        },
+        error: (error) => {
+          this.catchError = error;
+        },
+      });
   }
 
   ngOnDestroy() {
