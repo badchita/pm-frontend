@@ -74,7 +74,6 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
     this.searchUserForm = this.formBuilder.group({
       search: [null],
       isApproved: [null],
-      isPublished: [null],
     });
 
     this.searchUserForm
@@ -84,11 +83,6 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
 
     this.searchUserForm
       .get('isApproved')
-      ?.valueChanges.pipe(debounceTime(500))
-      .subscribe(() => this.updateTable());
-
-    this.searchUserForm
-      .get('isPublished')
       ?.valueChanges.pipe(debounceTime(500))
       .subscribe(() => this.updateTable());
   }
