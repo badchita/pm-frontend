@@ -1,7 +1,12 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="spinnerTip">
   <div class="container">
     <div class="header">
+      <span>Date Joined: {{ companyCreated | date : 'MMM dd, yyyy' }}</span>
+      @if (companyStatus === 'Y') {
       <nz-tag nzColor="success">Approved</nz-tag>
+      } @else {
+      <nz-tag nzColor="warning">Pending</nz-tag>
+      }
     </div>
 
     <div class="content">
