@@ -22,6 +22,8 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { CompanyService } from '../../services/company.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 
 @Component({
   selector: 'app-admin-edit-company',
@@ -37,6 +39,8 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     NzButtonModule,
     ErrorAlertComponent,
     DatePipe,
+    NzIconModule,
+    NzTooltipModule,
   ],
   templateUrl: './admin-edit-company.component.html',
   styleUrl: './admin-edit-company.component.scss',
