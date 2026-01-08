@@ -1,0 +1,58 @@
+:host {
+  .container {
+    .header {
+      display: flex;
+      align-items: center;
+
+      span {
+        padding-right: 20px;
+        font-size: 24px;
+        line-height: 32px;
+      }
+
+      nz-tag {
+        width: 75px;
+        height: 35px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 10px;
+        text-align: center;
+        padding-top: 0.5%;
+      }
+    }
+
+    .content {
+      padding-top: 34px;
+
+      form {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      nz-col {
+        nz-form-item {
+          width: 80%;
+        }
+
+        .due-date-control {
+          nz-date-picker {
+            width: 100%;
+            color: var(--pm-primary);
+          }
+        }
+      }
+
+      .buttons-form-container {
+        padding-top: 20px;
+        padding-right: 20px;
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}

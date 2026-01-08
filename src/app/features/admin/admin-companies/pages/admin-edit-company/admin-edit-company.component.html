@@ -1,1 +1,61 @@
-<p>admin-edit-company.component works!</p>
+<nz-spin [nzSpinning]="isLoading" [nzTip]="spinnerTip">
+  <div class="container">
+    <div class="header">
+      <nz-tag nzColor="success">Approved</nz-tag>
+    </div>
+
+    <div class="content">
+      <app-error-alert [error]="catchError"></app-error-alert>
+
+      <form nz-form nzLayout="vertical" [formGroup]="editCompanyForm">
+        <nz-row>
+          <nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="portal-input-label" nzRequired>Name</nz-form-label>
+              <nz-form-control>
+                <nz-input-wrapper>
+                  <input class="portal-input-form" type="text" nz-input formControlName="name" nzSize="large"
+                    appPopoverFormValidator />
+                </nz-input-wrapper>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="portal-input-label" nzRequired>Email</nz-form-label>
+              <nz-form-control>
+                <nz-input-wrapper>
+                  <input class="portal-input-form" type="text" nz-input formControlName="companyEmail" nzSize="large"
+                    appPopoverFormValidator />
+                </nz-input-wrapper>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
+
+        <nz-row>
+          <nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="portal-input-label" nzRequired>Status</nz-form-label>
+              <nz-form-control>
+                <nz-select class="portal-select-form" formControlName="isApproved" nzPlaceHolder="Select Status"
+                  [nzAllowClear]="true" [nzOptions]="statusOptions" appPopoverFormValidator>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
+
+        <div class="buttons-form-container">
+          <button nz-button class="create-button" nzSize="large" nzShape="round" [nzType]="'primary'"
+            [disabled]="editCompanyForm.invalid && !hasChanges">
+            Save
+          </button>
+          <button nz-button class="close-button" nzSize="large" nzShape="round" (click)="close()">
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</nz-spin>

@@ -57,6 +57,7 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
   catchError!: any;
   userStatus!: string;
   userCreated!: Date | string;
+  originalUser: any;
 
   isLoading = false;
   roleOptions = this.genericUtilityService.objectToArray(UserRoleOptions, false, true);
@@ -64,6 +65,7 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
   hasChanges = false;
 
   ngOnInit() {
+    this.spinnerTip = SPINNER_TIP.loadingData;
     this.buildForm();
 
     this.route.paramMap.subscribe((params) => {
@@ -98,7 +100,16 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
         next: (user) => {
           this.userStatus = user.isApproved;
           this.userCreated = user.createdAt;
+          this.originalUser = { ...user };
           this.editUserForm.patchValue(user, { emitEvent: false });
+          this.editUserForm.markAsPristine();
+          this.editUserForm.markAsUntouched();
+
+          this.editUserForm.valueChanges.pipe(takeUntil(this._destroying$)).subscribe((value) => {
+            this.hasChanges = Object.keys(value).some(
+              (key) => value[key] !== this.originalUser[key]
+            );
+          });
         },
         error: (error) => {
           this.catchError = error;
