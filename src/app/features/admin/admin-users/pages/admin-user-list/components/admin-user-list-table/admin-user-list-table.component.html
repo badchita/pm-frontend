@@ -2,8 +2,16 @@
   <form nz-form nzLayout="inline" [formGroup]="searchUserForm" (submit)="updateTable()">
     <nz-form-item>
       <nz-form-control>
-        <nz-select class="select-search" formControlName="isApproved" nzPlaceHolder="Select Company"
-          [nzAllowClear]="true" [nzOptions]="userStatusOptions">
+        <nz-select class="select-search" nzSuffixIcon="company" formControlName="companyId" nzPlaceHolder="Select Company"
+          [nzAllowClear]="true" nzShowSearch (nzOnSearch)="loadCompanies($event)" [nzFilterOption]="disableFilter">
+          @for (company of companies; track company.value) {
+          <nz-option nzCustomContent [nzLabel]="company.label" [nzValue]="company.value">
+            <div class="assigned-to-options">
+              <span class="user-name">{{ company.label }}</span>
+              <!-- <span class="user-email"><i>{{ company.value }}</i></span> -->
+            </div>
+          </nz-option>
+          }
         </nz-select>
       </nz-form-control>
     </nz-form-item>
