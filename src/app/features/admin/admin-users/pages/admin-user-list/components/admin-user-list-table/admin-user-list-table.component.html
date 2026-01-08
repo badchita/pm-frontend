@@ -2,6 +2,13 @@
   <form nz-form nzLayout="inline" [formGroup]="searchUserForm" (submit)="updateTable()">
     <nz-form-item>
       <nz-form-control>
+        <nz-select class="select-search" formControlName="isApproved" nzPlaceHolder="Select Company"
+          [nzAllowClear]="true" [nzOptions]="userStatusOptions">
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
         <nz-select class="select-search" formControlName="isApproved" nzPlaceHolder="Select Status"
           [nzAllowClear]="true" [nzOptions]="userStatusOptions">
         </nz-select>
