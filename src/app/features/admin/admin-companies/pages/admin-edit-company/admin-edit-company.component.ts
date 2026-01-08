@@ -3,8 +3,12 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
-import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
-import { EmailValidator, RequiredValidator } from '@app/shared/constants/validators';
+import {
+  NOTIFICATION_MESSAGE,
+  NOTIFICATION_TITLE,
+  SPINNER_TIP,
+} from '@app/shared/constants/ui.constants';
+import { CompanyEmailValidators, RequiredValidator } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { UserStatusOptions } from '@app/shared/enums/search.enum';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
@@ -18,6 +22,8 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { CompanyService } from '../../services/company.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 
 @Component({
   selector: 'app-admin-edit-company',
@@ -33,6 +39,8 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     NzButtonModule,
     ErrorAlertComponent,
     DatePipe,
+    NzIconModule,
+    NzTooltipModule,
   ],
   templateUrl: './admin-edit-company.component.html',
   styleUrl: './admin-edit-company.component.scss',
@@ -72,7 +80,7 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
     this.editCompanyForm = this.formBuilder.group({
       id: [null],
       name: [null, RequiredValidator],
-      companyEmail: [null, [...RequiredValidator, EmailValidator]],
+      companyEmail: [null, [...RequiredValidator, CompanyEmailValidators]],
       isApproved: [null],
     });
   }

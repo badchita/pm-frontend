@@ -14,6 +14,8 @@ export const PasswordValidators = [
   ),
 ];
 
+export const CompanyEmailValidators = namedPattern(/^@[a-zA-Z0-9-]+\.com$/, 'companyEmailDomain');
+
 export function namedPattern(pattern: RegExp | string, errorKey: string): ValidatorFn {
   const regex = typeof pattern === 'string' ? new RegExp(pattern) : pattern;
 

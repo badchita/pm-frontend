@@ -116,6 +116,7 @@ export const FIELD_ERROR = {
   compare: '',
   different: '',
   email: 'Enter a valid email address.',
+  companyEmailDomain: 'Enter a valid domain.',
   emailExisting: MESSAGE.USER_REGISTRATION_EMAIL_EXISTING,
   emailsMismatch: 'Email address do not match.',
   greaterThan: 'Enter value greater than {{1}}.',
