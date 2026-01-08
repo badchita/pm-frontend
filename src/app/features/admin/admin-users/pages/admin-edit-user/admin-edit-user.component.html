@@ -1,10 +1,17 @@
 <nz-spin [nzSpinning]="isLoading" [nzTip]="spinnerTip">
   <div class="container">
     <div class="header">
+      <span>Date Joined: {{ userCreated | date : 'MMM dd, yyyy' }}</span>
+      @if (userStatus === 'Y') {
       <nz-tag nzColor="success">Approved</nz-tag>
+      } @else {
+      <nz-tag nzColor="warning">Pending</nz-tag>
+      }
     </div>
 
     <div class="content">
+      <app-error-alert [error]="catchError"></app-error-alert>
+
       <form nz-form nzLayout="vertical" [formGroup]="editUserForm">
         <nz-row>
           <nz-col nzSpan="12">
@@ -56,10 +63,10 @@
 
         <div class="buttons-form-container">
           <button nz-button class="create-button" nzSize="large" nzShape="round" [nzType]="'primary'"
-            [disabled]="editUserForm.invalid && !hasChanges">
+            [disabled]="editUserForm.invalid && !hasChanges" (click)="save()">
             Save
           </button>
-          <button nz-button class="close-button" nzSize="large" nzShape="round">
+          <button nz-button class="close-button" nzSize="large" nzShape="round" (click)="close()">
             Close
           </button>
         </div>

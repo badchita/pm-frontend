@@ -21,6 +21,14 @@ export class UserService {
     return this.http.get<User[]>(`${this.api}/search`, { params });
   }
 
+  getById(id: number): Observable<User> {
+    return this.http.get<User>(`${this.api}/${id}`);
+  }
+
+  update(user: User): Observable<User> {
+    return this.http.put<User>(`${this.api}/${user.id}`, user);
+  }
+
   getList(tableParams?: TableParams, filters?: any): Observable<DataTable<User>> {
     const params = this.tableUtilityService.buildParams(tableParams, filters);
 
