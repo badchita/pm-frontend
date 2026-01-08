@@ -34,6 +34,7 @@
       <tr>
         <th nzWidth="15%" [nzSortFn]="true" id="name" nzColumnKey="name">Name</th>
         <th nzWidth="15%" [nzSortFn]="true" id="email" nzColumnKey="email">Email</th>
+        <th nzWidth="15%" id="company">Company</th>
         <th nzWidth="15%" id="role" nzAlign="center">Role</th>
         <th nzWidth="10%" id="isPublished" nzAlign="center">Status</th>
         <th nzWidth="15%" id="createdAt" nzAlign="center" [nzSortFn]="true" nzColumnKey="createdAt">Date Joined</th>
@@ -45,6 +46,7 @@
       <tr>
         <td>{{ data.name }}</td>
         <td>{{ data.email }}</td>
+        <td>{{ data.company?.name }}</td>
         <td nzAlign="center">{{ data.role | userRole }}</td>
         <td nzAlign="center">
           @if (data.isApproved == "Y") {
