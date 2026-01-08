@@ -70,14 +70,14 @@ export class AdminUserListComponent implements OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (dataTable) => {
+      .subscribe({
+        next: (dataTable) => {
           this.userDataTable = dataTable;
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   tableUpdate(tableParams: NzTableQueryParams) {

@@ -6,6 +6,8 @@
   </div>
 
   <div class="content">
-    <app-admin-company-list-table></app-admin-company-list-table>
+    <app-admin-company-list-table [dataTable]="companyDataTable"
+      [dataList]="companyDataTable.data.length > 0 ? companyDataTable.data : []" [loading]="isLoading"
+      (onUpdateTable)="tableUpdate($event)"></app-admin-company-list-table>
   </div>
 </div>
