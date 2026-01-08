@@ -15,6 +15,10 @@ export class CompanyService {
 
   private readonly api = `${environment.url}/companies`;
 
+  getById(id: number): Observable<Company> {
+    return this.http.get<Company>(`${this.api}/${id}`);
+  }
+
   getList(tableParams?: TableParams, filters?: any): Observable<DataTable<Company>> {
     const params = this.tableUtilityService.buildParams(tableParams, filters);
 
