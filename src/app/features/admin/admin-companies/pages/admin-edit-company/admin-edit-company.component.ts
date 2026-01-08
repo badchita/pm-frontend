@@ -3,8 +3,12 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
-import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE, SPINNER_TIP } from '@app/shared/constants/ui.constants';
-import { EmailValidator, RequiredValidator } from '@app/shared/constants/validators';
+import {
+  NOTIFICATION_MESSAGE,
+  NOTIFICATION_TITLE,
+  SPINNER_TIP,
+} from '@app/shared/constants/ui.constants';
+import { CompanyEmailValidators, RequiredValidator } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { UserStatusOptions } from '@app/shared/enums/search.enum';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
@@ -72,7 +76,7 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
     this.editCompanyForm = this.formBuilder.group({
       id: [null],
       name: [null, RequiredValidator],
-      companyEmail: [null, [...RequiredValidator, EmailValidator]],
+      companyEmail: [null, [...RequiredValidator, CompanyEmailValidators]],
       isApproved: [null],
     });
   }
