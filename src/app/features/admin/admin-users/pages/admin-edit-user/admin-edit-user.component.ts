@@ -1,6 +1,8 @@
+import { DatePipe } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import { EmailValidator, RequiredValidator } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { UserStatusOptions } from '@app/shared/enums/search.enum';
@@ -28,6 +30,8 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     PopoverFormValidatorDirective,
     NzSelectModule,
     NzButtonModule,
+    ErrorAlertComponent,
+    DatePipe,
   ],
   templateUrl: './admin-edit-user.component.html',
   styleUrl: './admin-edit-user.component.scss',
@@ -42,6 +46,9 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
 
   editUserForm!: FormGroup;
   spinnerTip!: string;
+  catchError!: any;
+  userStatus!: string;
+  userCreated!: Date | string;
 
   isLoading = false;
   roleOptions = this.genericUtilityService.objectToArray(UserRoleOptions, false, true);
@@ -79,8 +86,15 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe((user) => {
-        this.editUserForm.patchValue(user, { emitEvent: false });
+      .subscribe({
+        next: (user) => {
+          this.userStatus = user.isApproved;
+          this.userCreated = user.createdAt;
+          this.editUserForm.patchValue(user, { emitEvent: false });
+        },
+        error: (error) => {
+          this.catchError = error;
+        },
       });
   }
 
