@@ -2,6 +2,21 @@
   <form nz-form nzLayout="inline" [formGroup]="searchUserForm" (submit)="updateTable()">
     <nz-form-item>
       <nz-form-control>
+        <nz-select class="select-search" nzSuffixIcon="company" formControlName="companyId" nzPlaceHolder="Select Company"
+          [nzAllowClear]="true" nzShowSearch (nzOnSearch)="loadCompanies($event)" [nzFilterOption]="disableFilter">
+          @for (company of companies; track company.value) {
+          <nz-option nzCustomContent [nzLabel]="company.label" [nzValue]="company.value">
+            <div class="assigned-to-options">
+              <span class="user-name">{{ company.label }}</span>
+              <!-- <span class="user-email"><i>{{ company.value }}</i></span> -->
+            </div>
+          </nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
         <nz-select class="select-search" formControlName="isApproved" nzPlaceHolder="Select Status"
           [nzAllowClear]="true" [nzOptions]="userStatusOptions">
         </nz-select>
@@ -34,6 +49,7 @@
       <tr>
         <th nzWidth="15%" [nzSortFn]="true" id="name" nzColumnKey="name">Name</th>
         <th nzWidth="15%" [nzSortFn]="true" id="email" nzColumnKey="email">Email</th>
+        <th nzWidth="15%" id="company">Company</th>
         <th nzWidth="15%" id="role" nzAlign="center">Role</th>
         <th nzWidth="10%" id="isPublished" nzAlign="center">Status</th>
         <th nzWidth="15%" id="createdAt" nzAlign="center" [nzSortFn]="true" nzColumnKey="createdAt">Date Joined</th>
@@ -45,6 +61,7 @@
       <tr>
         <td>{{ data.name }}</td>
         <td>{{ data.email }}</td>
+        <td>{{ data.company?.name }}</td>
         <td nzAlign="center">{{ data.role | userRole }}</td>
         <td nzAlign="center">
           @if (data.isApproved == "Y") {

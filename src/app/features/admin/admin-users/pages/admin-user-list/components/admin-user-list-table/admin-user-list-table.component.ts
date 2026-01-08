@@ -12,7 +12,7 @@ import { UserRolePipe } from '../../pipes/user-role.pipe';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSelectItemInterface, NzSelectModule } from 'ng-zorro-antd/select';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { UserStatusOptions } from '@app/shared/enums/search.enum';
 import { Router } from '@angular/router';
@@ -25,6 +25,7 @@ import {
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { UserService } from '@app/shared/services/api/user.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { CompanyService } from '@app/features/admin/admin-companies/services/company.service';
 
 @Component({
   selector: 'app-admin-user-list-table',
@@ -53,6 +54,7 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
   readonly onUpdateTable = output<NzTableQueryParams>();
 
   private readonly userService = inject(UserService);
+  private readonly companyService = inject(CompanyService);
   private readonly genericUtilityService = inject(GenericUtilityService);
   private readonly modalService = inject(NzModalService);
   private readonly notificationService = inject(NzNotificationService);
@@ -62,6 +64,8 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();
 
   searchUserForm!: FormGroup;
+  companies!: { label: string; value: number }[];
+  disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
 
   userStatusOptions = this.genericUtilityService.objectToArray(UserStatusOptions);
   isDeleted = 'N';
@@ -74,6 +78,7 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
     this.searchUserForm = this.formBuilder.group({
       search: [null],
       isApproved: [null],
+      companyId: [null],
     });
 
     this.searchUserForm
@@ -83,6 +88,11 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
 
     this.searchUserForm
       .get('isApproved')
+      ?.valueChanges.pipe(debounceTime(500))
+      .subscribe(() => this.updateTable());
+
+    this.searchUserForm
+      .get('companyId')
       ?.valueChanges.pipe(debounceTime(500))
       .subscribe(() => this.updateTable());
   }
@@ -167,6 +177,20 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
       },
       nzCancelText: 'No',
     });
+  }
+
+  loadCompanies(searchValue: string) {
+    this.companyService
+      .getSearchCompanies({ search: searchValue })
+      .pipe(takeUntil(this._destroying$))
+      .subscribe({
+        next: (companies) => {
+          this.companies = companies.map((company) => ({
+            label: company.name,
+            value: company.id,
+          }));
+        },
+      });
   }
 
   reset() {

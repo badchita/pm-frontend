@@ -34,4 +34,10 @@ export class CompanyService {
 
     return this.http.put<void>(`${this.api}/${id}/isDeleted`, payload);
   }
+
+  getSearchCompanies(filters: any): Observable<Company[]> {
+    const params = this.tableUtilityService.buildParams(null, filters);
+
+    return this.http.get<Company[]>(`${this.api}/search`, { params });
+  }
 }
