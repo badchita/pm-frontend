@@ -1,8 +1,11 @@
 import { DatePipe, I18nPluralPipe } from '@angular/common';
 import { Component, inject, input, OnDestroy, OnInit, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Company } from '@app/features/admin/admin-companies/models/company.model';
+import { UserStatusOptions } from '@app/shared/enums/search.enum';
 import { DataTable } from '@app/shared/models/data-table.model';
+import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -41,9 +44,13 @@ export class AdminCompanyListTableComponent implements OnInit, OnDestroy {
 
   private readonly _destroying$ = new Subject<void>();
 
+  private readonly genericUtilityService = inject(GenericUtilityService);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   searchCompanyForm!: FormGroup;
+
+  companyStatusOptions = this.genericUtilityService.objectToArray(UserStatusOptions);
   isDeleted = 'N';
 
   ngOnInit() {
@@ -84,6 +91,22 @@ export class AdminCompanyListTableComponent implements OnInit, OnDestroy {
     };
 
     this.onUpdateTable.emit(tableParams);
+  }
+
+  recycleBin(event: MouseEvent, isOpen = 'N') {
+    event.stopPropagation();
+    this.isDeleted = isOpen;
+    if (isOpen === 'Y') {
+      this.router.navigate([`/portal/admin/companies`], { queryParams: { isDeleted: 'Y' } });
+    } else {
+      this.router.navigate([`/portal/admin/companies`]);
+    }
+
+    this.updateTable();
+  }
+
+  reset() {
+    this.searchCompanyForm.reset();
   }
 
   ngOnDestroy() {

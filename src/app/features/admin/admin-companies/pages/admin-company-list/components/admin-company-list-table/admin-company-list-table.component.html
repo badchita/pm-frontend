@@ -1,3 +1,30 @@
+<div class="filter-container">
+  <form nz-form nzLayout="inline" [formGroup]="searchCompanyForm" (submit)="updateTable()">
+    <nz-form-item>
+      <nz-form-control>
+        <nz-select class="select-search" formControlName="isApproved" nzPlaceHolder="Select Status"
+          [nzAllowClear]="true" [nzOptions]="companyStatusOptions">
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <input class="input-search" nz-input formControlName="search" placeholder="Search" />
+      </nz-form-control>
+    </nz-form-item>
+    <button class="reset-search-button" nz-button (click)="reset()">Reset</button>
+    @if (isDeleted === 'N') {
+    <button class="recycle-bin-button" nz-button nzType="link" (click)="recycleBin($event, 'Y')">
+      <img alt="recycle-bin" src="/assets/icons/recycle-bin.svg" width="20" />
+    </button>
+    } @else {
+    <button class="recycle-bin-button" nz-button nzType="link" (click)="recycleBin($event)">
+      <nz-icon nzType="unordered-list" nzTheme="outline" />
+    </button>
+    }
+  </form>
+</div>
+
 <div class="table-container">
   <nz-table #table class="table" nzTableLayout="fixed" [nzData]="dataList() || []" [nzShowPagination]="true"
     [nzFrontPagination]="false" [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate"
