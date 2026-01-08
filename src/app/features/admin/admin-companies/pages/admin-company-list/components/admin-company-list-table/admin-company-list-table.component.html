@@ -1,1 +1,20 @@
-<p>admin-company-list-table.component works!</p>
+<div class="table-container">
+  <nz-table #table class="table" nzTableLayout="fixed" [nzFrontPagination]="false" [nzShowSizeChanger]="true"
+    [nzPageSizeOptions]="[10, 20, 30, 40, 50]">
+    <thead>
+      <tr>
+        <th nzWidth="15%" [nzSortFn]="true" id="name" nzColumnKey="name">Name</th>
+        <th nzWidth="15%" [nzSortFn]="true" id="email" nzColumnKey="email">Company Email</th>
+        <th nzWidth="10%" id="isPublished" nzAlign="center">Status</th>
+        <th nzWidth="15%" id="createdAt" nzAlign="center" [nzSortFn]="true" nzColumnKey="createdAt">Date Joined</th>
+        <th nzWidth="10%" id="actions" nzAlign="center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of table.data; track data.id) {
+      <tr>
+      </tr>
+      }
+    </tbody>
+  </nz-table>
+</div>
