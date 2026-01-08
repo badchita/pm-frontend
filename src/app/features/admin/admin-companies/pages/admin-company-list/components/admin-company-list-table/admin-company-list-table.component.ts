@@ -117,8 +117,7 @@ export class AdminCompanyListTableComponent implements OnInit, OnDestroy {
   }
 
   edit(id: number) {
-    // TODO: ready for edit company implementation
-    // this.router.navigate([`/portal/admin/users/${id}`]);
+    this.router.navigate([`/portal/admin/companies/${id}`]);
   }
 
   deleteRestoreProject(id: number, isDeleted: string) {
