@@ -5,6 +5,7 @@ import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { TableUtilityService } from '@app/shared/services/table-utility.service';
 import { Observable } from 'rxjs';
 import { Company } from '../models/company.model';
+import { User } from '@app/features/auth/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -39,5 +40,11 @@ export class CompanyService {
     const params = this.tableUtilityService.buildParams(null, filters);
 
     return this.http.get<Company[]>(`${this.api}/search`, { params });
+  }
+
+  getUserList(tableParams: TableParams, filters: any, companyId: number): Observable<DataTable<User>> {
+    const params = this.tableUtilityService.buildParams(tableParams, filters);
+
+    return this.http.get<DataTable<User>>(`${this.api}/${companyId}/users`, { params });
   }
 }
