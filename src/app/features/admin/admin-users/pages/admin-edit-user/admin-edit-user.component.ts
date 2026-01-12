@@ -84,7 +84,7 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
       id: [null],
       name: [null, RequiredValidator],
       email: [null, [...RequiredValidator, EmailValidator]],
-      isApproved: [null],
+      isApproved: [null, RequiredValidator],
       role: [null, RequiredValidator],
       companyId: [null, RequiredValidator],
     });
