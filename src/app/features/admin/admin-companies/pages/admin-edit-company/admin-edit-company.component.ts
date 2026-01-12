@@ -24,6 +24,7 @@ import { CompanyService } from '../../services/company.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
+import { AdminCompanyUserListTableComponent } from './components/admin-company-user-list-table/admin-company-user-list-table.component';
 
 @Component({
   selector: 'app-admin-edit-company',
@@ -41,6 +42,7 @@ import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
     DatePipe,
     NzIconModule,
     NzTooltipModule,
+    AdminCompanyUserListTableComponent,
   ],
   templateUrl: './admin-edit-company.component.html',
   styleUrl: './admin-edit-company.component.scss',

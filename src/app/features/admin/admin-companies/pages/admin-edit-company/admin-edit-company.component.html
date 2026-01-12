@@ -29,14 +29,15 @@
             <nz-form-item>
               <nz-form-label class="portal-input-label" nzRequired>
                 Email Domain
-                <button class="email-domain-info-button" nz-button nzType="link" nz-tooltip [nzTooltipTitle]="emailDomainTip">
+                <button class="email-domain-info-button" nz-button nzType="link" nz-tooltip
+                  [nzTooltipTitle]="emailDomainTip">
                   <nz-icon nzType="info-circle" nzTheme="outline" />
                 </button>
               </nz-form-label>
               <nz-form-control>
                 <nz-input-wrapper>
-                  <input class="portal-input-form" type="text" nz-input formControlName="companyEmail" nzSize="large" placeholder="@example.com"
-                    appPopoverFormValidator />
+                  <input class="portal-input-form" type="text" nz-input formControlName="companyEmail" nzSize="large"
+                    placeholder="@example.com" appPopoverFormValidator />
                 </nz-input-wrapper>
               </nz-form-control>
             </nz-form-item>
@@ -55,6 +56,14 @@
             </nz-form-item>
           </nz-col>
         </nz-row>
+
+        @if (companyStatus === 'Y') {
+        <div class="header user-header">
+          <span>Users</span>
+        </div>
+
+        <app-admin-company-user-list-table></app-admin-company-user-list-table>
+        }
 
         <div class="buttons-form-container">
           <button nz-button class="create-button" nzSize="large" nzShape="round" [nzType]="'primary'"

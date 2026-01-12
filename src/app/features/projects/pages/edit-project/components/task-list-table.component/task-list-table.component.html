@@ -38,11 +38,11 @@
     [nzLoading]="loading()" (nzQueryParams)="updateTable($event)">
     <thead>
       <tr>
-        <th nzWidth="15%" [nzSortFn]="true" nzColumnKey="taskIdNumber">Task ID Number</th>
-        <th nzWidth="15%" [nzSortFn]="true" nzColumnKey="taskName">Task Name</th>
-        <th nzWidth="15%" nzAlign="center">State</th>
-        <th nzWidth="15%" nzAlign="center">Assigned To</th>
-        <th nzWidth="10%" nzAlign="center">Actions</th>
+        <th nzWidth="15%" id="taskIdNumber" [nzSortFn]="true" nzColumnKey="taskIdNumber">Task ID Number</th>
+        <th nzWidth="15%" id="taskName" [nzSortFn]="true" nzColumnKey="taskName">Task Name</th>
+        <th nzWidth="15%" id="state" nzAlign="center">State</th>
+        <th nzWidth="15%" id="assignedTo" nzAlign="center">Assigned To</th>
+        <th nzWidth="10%" id="actions" nzAlign="center">Actions</th>
       </tr>
     </thead>
     <tbody>
