@@ -84,9 +84,9 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
       id: [null],
       name: [null, RequiredValidator],
       email: [null, [...RequiredValidator, EmailValidator]],
-      isApproved: [null],
+      isApproved: [null, RequiredValidator],
       role: [null, RequiredValidator],
-      companyId: [null],
+      companyId: [null, RequiredValidator],
     });
   }
 
@@ -113,12 +113,13 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
           this.editUserForm.markAsUntouched();
 
           this.editUserForm.valueChanges.pipe(takeUntil(this._destroying$)).subscribe((value) => {
-            this.hasChanges = Object.keys(value).some(
-              (key) => value[key] !== this.originalUser[key]
-            );
+            this.hasChanges = Object.keys(value).some((key) => {
+              return value[key] !== this.originalUser?.[key];
+            });
           });
 
-          this.setCompanies(companies);        },
+          this.setCompanies(companies);
+        },
         error: (error) => {
           this.catchError = error;
         },

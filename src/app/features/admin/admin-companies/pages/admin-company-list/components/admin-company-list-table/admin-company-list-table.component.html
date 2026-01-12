@@ -86,6 +86,6 @@
   to
   {{ (dataTable().page - 1) * dataTable().pageSize + dataList().length }}
   of {{ total }}
-  {{ total | i18nPlural : { '=1': 'project', other: 'projects' } }}
-  } @else { Showing 0 of 0 projects }
+  {{ total | i18nPlural : { '=1': 'company', other: 'companies' } }}
+  } @else { Showing 0 of 0 companies }
 </ng-template>

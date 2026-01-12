@@ -1,0 +1,19 @@
+:host {
+  .filter-container {
+    padding-top: 34px;
+    display: flex;
+    justify-content: end;
+
+    .select-search {
+      width: 170px;
+    }
+  }
+
+  .table-container {
+    padding-top: 14px;
+
+    nz-tag {
+      font-weight: 500;
+    }
+  }
+}

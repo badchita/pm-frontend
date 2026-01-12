@@ -1,10 +1,29 @@
+<div class="filter-container">
+  <form nz-form nzLayout="inline" [formGroup]="searchCompanyUsersForm" (submit)="updateTable()">
+    <nz-form-item>
+      <nz-form-control>
+        <nz-select class="select-search" formControlName="isApproved" nzPlaceHolder="Select Status"
+          [nzAllowClear]="true" [nzOptions]="userStatusOptions">
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <input class="input-search" nz-input formControlName="search" placeholder="Search" />
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>
+
 <div class="table-container">
-  <nz-table #table class="table" [nzShowSizeChanger]="true" [nzPageSizeOptions]="[10, 20, 30, 40, 50]">
+  <nz-table #table class="table" nzTableLayout="fixed" [nzData]="dataList() || []" [nzShowPagination]="true"
+    [nzFrontPagination]="false" [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate"
+    [nzPageSizeOptions]="[10, 20, 30, 40, 50]" [nzTotal]="dataTable().totalCount" [nzPageSize]="dataTable().pageSize"
+    [nzLoading]="loading()" (nzQueryParams)="updateTable($event)">
     <thead>
       <tr>
         <th nzWidth="15%" [nzSortFn]="true" id="name" nzColumnKey="name">Name</th>
         <th nzWidth="15%" [nzSortFn]="true" id="email" nzColumnKey="email">Email</th>
-        <th nzWidth="15%" id="company">Company</th>
         <th nzWidth="15%" id="role" nzAlign="center">Role</th>
         <th nzWidth="10%" id="isPublished" nzAlign="center">Status</th>
         <th nzWidth="15%" id="createdAt" nzAlign="center" [nzSortFn]="true" nzColumnKey="createdAt">Date Joined</th>
@@ -13,9 +32,30 @@
     <tbody>
       @for (data of table.data; track data.id) {
       <tr>
-        <td></td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.email }}</td>
+        <td nzAlign="center">{{ data.role | userRole }}</td>
+        <td nzAlign="center">
+          @if (data.isApproved == "Y") {
+          <nz-tag nzColor="success">Appoved</nz-tag>
+          } @else
+          {
+          <nz-tag nzColor="warning">Pending</nz-tag>
+          }
+        </td>
+        <td nzAlign="center">{{ data.createdAt | date : 'MMM dd, yyyy' }}</td>
       </tr>
       }
     </tbody>
   </nz-table>
 </div>
+
+<ng-template #rangeTemplate let-range="range" let-total>
+  @if (total && dataList().length > 0) { Showing
+  {{ (dataTable().page - 1) * dataTable().pageSize + 1 }}
+  to
+  {{ (dataTable().page - 1) * dataTable().pageSize + dataList().length }}
+  of {{ total }}
+  {{ total | i18nPlural : { '=1': 'users', other: 'users' } }}
+  } @else { Showing 0 of 0 user }
+</ng-template>
