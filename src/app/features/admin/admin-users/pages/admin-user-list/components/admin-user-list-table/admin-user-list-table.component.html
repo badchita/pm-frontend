@@ -16,6 +16,13 @@
     </nz-form-item>
     <nz-form-item>
       <nz-form-control>
+        <nz-select class="select-search" formControlName="role" nzPlaceHolder="Select Role" [nzAllowClear]="true"
+          [nzOptions]="userRolesOptions">
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
         <nz-select class="select-search" formControlName="isApproved" nzPlaceHolder="Select Status"
           [nzAllowClear]="true" [nzOptions]="userStatusOptions">
         </nz-select>
