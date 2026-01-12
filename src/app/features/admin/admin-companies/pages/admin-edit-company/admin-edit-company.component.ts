@@ -24,10 +24,10 @@ import { CompanyService } from '../../services/company.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
-import { AdminCompanyUserListTableComponent } from './components/admin-company-user-list-table/admin-company-user-list-table.component';
 import { User } from '@app/features/auth/models/user.model';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { AdminAssignableUserTableComponent } from '@app/features/admin/shared/components/admin-assignable-user-table/admin-assignable-user-table.component';
 
 @Component({
   selector: 'app-admin-edit-company',
@@ -45,7 +45,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
     DatePipe,
     NzIconModule,
     NzTooltipModule,
-    AdminCompanyUserListTableComponent,
+    AdminAssignableUserTableComponent,
   ],
   templateUrl: './admin-edit-company.component.html',
   styleUrl: './admin-edit-company.component.scss',

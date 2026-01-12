@@ -14,7 +14,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { debounceTime } from 'rxjs';
 
 @Component({
-  selector: 'app-admin-company-user-list-table',
+  selector: 'app-admin-assignable-user-table',
   imports: [
     NzTableModule,
     NzTagModule,
@@ -26,10 +26,10 @@ import { debounceTime } from 'rxjs';
     NzInputModule,
     NzSelectModule,
   ],
-  templateUrl: './admin-company-user-list-table.component.html',
-  styleUrl: './admin-company-user-list-table.component.scss',
+  templateUrl: './admin-assignable-user-table.component.html',
+  styleUrl: './admin-assignable-user-table.component.scss',
 })
-export class AdminCompanyUserListTableComponent implements OnInit {
+export class AdminAssignableUserTableComponent implements OnInit {
   readonly dataTable = input.required<DataTable<any>>();
   readonly dataList = input.required<User[] | []>();
   readonly loading = input.required<boolean>();
