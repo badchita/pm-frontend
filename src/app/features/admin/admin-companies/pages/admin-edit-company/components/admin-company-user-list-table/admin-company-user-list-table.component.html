@@ -1,3 +1,20 @@
+<div class="filter-container">
+  <form nz-form nzLayout="inline" [formGroup]="searchCompanyUsersForm" (submit)="updateTable()">
+    <nz-form-item>
+      <nz-form-control>
+        <nz-select class="select-search" formControlName="isApproved" nzPlaceHolder="Select Status"
+          [nzAllowClear]="true" [nzOptions]="userStatusOptions">
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <input class="input-search" nz-input formControlName="search" placeholder="Search" />
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>
+
 <div class="table-container">
   <nz-table #table class="table" nzTableLayout="fixed" [nzData]="dataList() || []" [nzShowPagination]="true"
     [nzFrontPagination]="false" [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate"

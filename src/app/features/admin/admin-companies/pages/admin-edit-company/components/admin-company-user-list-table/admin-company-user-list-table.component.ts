@@ -1,16 +1,31 @@
 import { DatePipe, I18nPluralPipe } from '@angular/common';
 import { Component, inject, input, OnInit, output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserRolePipe } from '@app/features/admin/admin-users/pages/admin-user-list/pipes/user-role.pipe';
 import { User } from '@app/features/auth/models/user.model';
+import { UserStatusOptions } from '@app/shared/enums/search.enum';
 import { DataTable } from '@app/shared/models/data-table.model';
+import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-admin-company-user-list-table',
-  imports: [NzTableModule, NzTagModule, UserRolePipe, DatePipe, I18nPluralPipe],
+  imports: [
+    NzTableModule,
+    NzTagModule,
+    UserRolePipe,
+    DatePipe,
+    I18nPluralPipe,
+    NzFormModule,
+    ReactiveFormsModule,
+    NzInputModule,
+    NzSelectModule,
+  ],
   templateUrl: './admin-company-user-list-table.component.html',
   styleUrl: './admin-company-user-list-table.component.scss',
 })
@@ -20,9 +35,12 @@ export class AdminCompanyUserListTableComponent implements OnInit {
   readonly loading = input.required<boolean>();
   readonly onUpdateTable = output<NzTableQueryParams>();
 
+  private readonly genericUtilityService = inject(GenericUtilityService);
   private readonly formBuilder = inject(FormBuilder);
 
   searchCompanyUsersForm!: FormGroup;
+
+  userStatusOptions = this.genericUtilityService.objectToArray(UserStatusOptions);
 
   ngOnInit() {
     this.buildForm();
