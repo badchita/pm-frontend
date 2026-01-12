@@ -38,7 +38,7 @@
           </nz-col>
         </nz-row>
 
-        <nz-row>
+        <nz-row class="row-pb">
           <nz-col nzSpan="12">
             <nz-form-item>
               <nz-form-label class="portal-input-label" nzRequired>Role</nz-form-label>
@@ -55,6 +55,27 @@
               <nz-form-control>
                 <nz-select class="portal-select-form" formControlName="isApproved" nzPlaceHolder="Select Status"
                   [nzAllowClear]="true" [nzOptions]="statusOptions" appPopoverFormValidator>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
+
+        <nz-row>
+          <nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="portal-input-label" nzRequired>Assigned Company</nz-form-label>
+              <nz-form-control>
+                <nz-select class="portal-select-form" formControlName="companyId" nzPlaceHolder="Select Company"
+                  [nzAllowClear]="true" nzShowSearch (nzOnSearch)="searchCompanies($event)"
+                  [nzFilterOption]="disableFilter">
+                  @for (company of companies; track company.value) {
+                  <nz-option nzCustomContent [nzLabel]="company.label" [nzValue]="company.value">
+                    <div class="assigned-to-options">
+                      <span class="user-name">{{ company.label }}</span>
+                    </div>
+                  </nz-option>
+                  }
                 </nz-select>
               </nz-form-control>
             </nz-form-item>

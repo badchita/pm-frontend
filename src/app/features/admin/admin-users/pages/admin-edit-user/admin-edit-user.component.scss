@@ -34,13 +34,10 @@
         nz-form-item {
           width: 80%;
         }
+      }
 
-        .due-date-control {
-          nz-date-picker {
-            width: 100%;
-            color: var(--pm-primary);
-          }
-        }
+      .row-pb {
+        padding-bottom: 20px;
       }
 
       .buttons-form-container {

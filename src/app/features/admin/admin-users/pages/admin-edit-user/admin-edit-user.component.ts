@@ -2,6 +2,8 @@ import { DatePipe } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Company } from '@app/features/admin/admin-companies/models/company.model';
+import { CompanyService } from '@app/features/admin/admin-companies/services/company.service';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import {
   NOTIFICATION_MESSAGE,
@@ -19,10 +21,10 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSelectItemInterface, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, forkJoin, Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-admin-edit-user',
@@ -44,6 +46,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 })
 export class AdminEditUserComponent implements OnInit, OnDestroy {
   private readonly userService = inject(UserService);
+  private readonly companyService = inject(CompanyService);
   private readonly genericUtilityService = inject(GenericUtilityService);
   private readonly notificationService = inject(NzNotificationService);
   private readonly formBuilder = inject(FormBuilder);
@@ -58,6 +61,8 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
   userStatus!: string;
   userCreated!: Date | string;
   originalUser: any;
+  companies!: { label: string; value: number }[];
+  disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
 
   isLoading = false;
   roleOptions = this.genericUtilityService.objectToArray(UserRoleOptions, false, true);
@@ -70,7 +75,7 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id')!;
-      this.loadUser(id);
+      this.loadData(id);
     });
   }
 
@@ -85,11 +90,13 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadUser(id: string) {
+  loadData(id: string) {
     this.isLoading = true;
 
-    this.userService
-      .getById(+id)
+    forkJoin({
+      user: this.userService.getById(+id),
+      companies: this.loadCompanies({}),
+    })
       .pipe(
         takeUntil(this._destroying$),
         finalize(() => {
@@ -97,7 +104,7 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe({
-        next: (user) => {
+        next: ({ user, companies }) => {
           this.userStatus = user.isApproved;
           this.userCreated = user.createdAt;
           this.originalUser = { ...user };
@@ -110,11 +117,38 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
               (key) => value[key] !== this.originalUser[key]
             );
           });
-        },
+
+          this.setCompanies(companies);        },
         error: (error) => {
           this.catchError = error;
         },
       });
+  }
+
+  loadCompanies(filter?: any): Observable<Company[]> {
+    return this.companyService.getSearchCompanies(filter);
+  }
+
+  searchCompanies(searchValue: string) {
+    this.loadCompanies({ search: searchValue })
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (companies) => {
+          this.setCompanies(companies);
+        },
+      });
+  }
+
+  setCompanies(companies: Company[]) {
+    this.companies = companies.map((company) => ({
+      label: company.name,
+      value: company.id,
+    }));
   }
 
   close() {
