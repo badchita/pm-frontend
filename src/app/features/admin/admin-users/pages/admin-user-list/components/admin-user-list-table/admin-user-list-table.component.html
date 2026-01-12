@@ -2,7 +2,7 @@
   <form nz-form nzLayout="inline" [formGroup]="searchUserForm" (submit)="updateTable()">
     <nz-form-item>
       <nz-form-control>
-        <nz-select class="select-search" nzSuffixIcon="company" formControlName="companyId" nzPlaceHolder="Select Company"
+        <nz-select class="select-search" formControlName="companyId" nzPlaceHolder="Select Company"
           [nzAllowClear]="true" nzShowSearch (nzOnSearch)="loadCompanies($event)" [nzFilterOption]="disableFilter">
           @for (company of companies; track company.value) {
           <nz-option nzCustomContent [nzLabel]="company.label" [nzValue]="company.value">

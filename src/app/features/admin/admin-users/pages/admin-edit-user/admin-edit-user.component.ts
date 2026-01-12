@@ -21,7 +21,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSelectItemInterface, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { finalize, forkJoin, Observable, Subject, takeUntil } from 'rxjs';
@@ -62,6 +62,7 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
   userCreated!: Date | string;
   originalUser: any;
   companies!: { label: string; value: number }[];
+  disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
 
   isLoading = false;
   roleOptions = this.genericUtilityService.objectToArray(UserRoleOptions, false, true);
@@ -117,11 +118,7 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
             );
           });
 
-          this.companies = companies.map((company) => ({
-            label: company.name,
-            value: company.id,
-          }));
-        },
+          this.setCompanies(companies);        },
         error: (error) => {
           this.catchError = error;
         },
@@ -130,6 +127,28 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
 
   loadCompanies(filter?: any): Observable<Company[]> {
     return this.companyService.getSearchCompanies(filter);
+  }
+
+  searchCompanies(searchValue: string) {
+    this.loadCompanies({ search: searchValue })
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (companies) => {
+          this.setCompanies(companies);
+        },
+      });
+  }
+
+  setCompanies(companies: Company[]) {
+    this.companies = companies.map((company) => ({
+      label: company.name,
+      value: company.id,
+    }));
   }
 
   close() {

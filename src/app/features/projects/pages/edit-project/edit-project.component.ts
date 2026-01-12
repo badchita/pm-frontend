@@ -119,10 +119,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this._destroying$),
         switchMap(({ project, users }) => {
-          this.users = users.map((user) => ({
-            label: user.name,
-            value: user.email,
-          }));
+          this.setUsers(users);
 
           const { projectName, projectIdNumber, isPublished } = project;
           this.projectName = projectName;
@@ -179,11 +176,15 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((users) => {
-        this.users = users.map((user) => ({
-          label: user.name,
-          value: user.email,
-        }));
+        this.setUsers(users);
       });
+  }
+
+  setUsers(users: User[]) {
+    this.users = users.map((user) => ({
+      label: user.name,
+      value: user.email,
+    }));
   }
 
   buildForm() {
