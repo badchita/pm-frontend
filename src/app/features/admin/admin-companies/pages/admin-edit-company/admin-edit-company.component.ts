@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import {
@@ -19,12 +19,15 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, switchMap, takeUntil } from 'rxjs';
 import { CompanyService } from '../../services/company.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { AdminCompanyUserListTableComponent } from './components/admin-company-user-list-table/admin-company-user-list-table.component';
+import { User } from '@app/features/auth/models/user.model';
+import { DataTable, TableParams } from '@app/shared/models/data-table.model';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-admin-edit-company',
@@ -63,9 +66,30 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
   originalCompany!: any;
   companyStatus!: string;
   companyCreated!: Date | string;
+  userDataTable: DataTable<User> = {
+    data: [],
+    totalCount: 0,
+    page: 1,
+    pageSize: 10,
+  };
+  tableParams: TableParams = {
+    search: '',
+    state: null,
+    sort: [
+      {
+        key: '',
+        value: '',
+      },
+    ],
+    page: 1,
+    pageSize: 10,
+    sortDirection: 'desc',
+  };
 
   isLoading = false;
   hasChanges = false;
+  isTableError = false;
+  isTableLoading = false;
   statusOptions = this.genericUtilityService.objectToArray(UserStatusOptions);
 
   ngOnInit() {
@@ -74,7 +98,7 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
     this.buildForm();
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id')!;
-      this.loadUser(id);
+      this.loadData(id);
     });
   }
 
@@ -87,19 +111,14 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadUser(id: string) {
+  loadData(id: string) {
     this.isLoading = true;
 
     this.companyService
       .getById(+id)
       .pipe(
         takeUntil(this._destroying$),
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe({
-        next: (company) => {
+        switchMap((company) => {
           this.companyStatus = company.isApproved;
           this.companyCreated = company.createdAt;
           this.originalCompany = { ...company };
@@ -114,11 +133,52 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
                 (key) => value[key] !== this.originalCompany[key]
               );
             });
+
+          return this.companyService.getUserList(this.tableParams, {}, company.id);
+        }),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (userTable: DataTable<User>) => {
+          this.setTableData(userTable);
         },
         error: (error) => {
-          this.catchError = error;
+          console.error('Failed to load company or users', error);
         },
       });
+  }
+
+  setTableData(tableData: DataTable<User>) {
+    this.userDataTable = tableData;
+  }
+
+  tableUpdate(params: NzTableQueryParams) {
+    this.isTableError = false;
+    this.isTableLoading = true;
+    this.tableParams.page = params.pageIndex;
+    this.tableParams.pageSize = params.pageSize;
+    this.tableParams.sort = params.sort;
+    const filters = Object.assign({}, ...params.filter);
+
+    this.companyService
+      .getUserList(this.tableParams, filters, this.id?.value)
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isTableLoading = false;
+        })
+      )
+      .subscribe(
+        (tasks) => {
+          this.setTableData(tasks);
+        },
+        (error) => {
+          this.catchError = error;
+          this.isTableError = true;
+        }
+      );
   }
 
   close() {
@@ -164,5 +224,9 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._destroying$.next(undefined);
     this._destroying$.complete();
+  }
+
+  get id(): AbstractControl | null | undefined {
+    return this.editCompanyForm?.get('id');
   }
 }
