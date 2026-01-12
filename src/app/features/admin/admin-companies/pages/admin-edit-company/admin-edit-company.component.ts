@@ -154,13 +154,17 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
     this.userDataTable = tableData;
   }
 
-  tableUpdate(params: NzTableQueryParams) {
+  tableUpdate(params?: NzTableQueryParams) {
     this.isTableError = false;
     this.isTableLoading = true;
-    this.tableParams.page = params.pageIndex;
-    this.tableParams.pageSize = params.pageSize;
-    this.tableParams.sort = params.sort;
-    const filters = Object.assign({}, ...params.filter);
+    let filters;
+
+    if (params) {
+      this.tableParams.page = params.pageIndex;
+      this.tableParams.pageSize = params.pageSize;
+      this.tableParams.sort = params.sort;
+      filters = Object.assign({}, ...params.filter);
+    }
 
     this.companyService
       .getUserList(this.tableParams, filters, this.id?.value)
@@ -214,6 +218,7 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
           this.editCompanyForm.patchValue(company, { emitEvent: false });
           this.editCompanyForm.markAsPristine();
           this.editCompanyForm.markAsUntouched();
+          this.tableUpdate();
         },
         error: (error) => {
           this.catchError = error;
