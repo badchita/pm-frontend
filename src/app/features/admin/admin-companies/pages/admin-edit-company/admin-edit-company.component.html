@@ -68,7 +68,7 @@
 
         <div class="buttons-form-container">
           <button nz-button class="create-button" nzSize="large" nzShape="round" [nzType]="'primary'"
-            [disabled]="editCompanyForm.invalid && !hasChanges" (click)="save()">
+            [disabled]="editCompanyForm.invalid || !hasChanges" (click)="save()">
             Save
           </button>
           <button nz-button class="close-button" nzSize="large" nzShape="round" (click)="close()">

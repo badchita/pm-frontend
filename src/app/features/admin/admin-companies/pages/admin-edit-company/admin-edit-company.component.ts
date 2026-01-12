@@ -107,7 +107,7 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
       id: [null],
       name: [null, RequiredValidator],
       companyEmail: [null, [...RequiredValidator, CompanyEmailValidators]],
-      isApproved: [null],
+      isApproved: [null, RequiredValidator],
     });
   }
 
@@ -129,9 +129,9 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
           this.editCompanyForm.valueChanges
             .pipe(takeUntil(this._destroying$))
             .subscribe((value) => {
-              this.hasChanges = Object.keys(value).some(
-                (key) => value[key] !== this.originalCompany[key]
-              );
+              this.hasChanges = Object.keys(value).some((key) => {
+                return value[key] !== this.originalCompany?.[key];
+              });
             });
 
           return this.companyService.getUserList(this.tableParams, {}, company.id);
