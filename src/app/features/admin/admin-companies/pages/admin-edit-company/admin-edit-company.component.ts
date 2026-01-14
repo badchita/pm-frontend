@@ -3,7 +3,6 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
@@ -80,7 +79,6 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
   };
   tableParams: TableParams = {
     search: '',
-    state: null,
     sort: [
       {
         key: '',

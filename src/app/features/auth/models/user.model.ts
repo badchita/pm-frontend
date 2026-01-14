@@ -8,7 +8,7 @@ export interface User {
   password: string;
   role: UserRole;
   isApproved: string;
-  companyId?: number;
+  companyId: number | null;
   company?: Company;
   createdAt: Date | string;
 }

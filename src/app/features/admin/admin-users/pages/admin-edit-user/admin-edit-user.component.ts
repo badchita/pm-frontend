@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Company } from '@app/features/admin/admin-companies/models/company.model';
 import { CompanyService } from '@app/features/admin/admin-companies/services/company.service';
+import { User } from '@app/features/auth/models/user.model';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import {
   NOTIFICATION_MESSAGE,
@@ -14,6 +15,7 @@ import { EmailValidator, RequiredValidator } from '@app/shared/constants/validat
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { UserStatusOptions } from '@app/shared/enums/search.enum';
 import { UserRoleOptions } from '@app/shared/enums/user-role.enum';
+import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { UserService } from '@app/shared/services/api/user.service';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -24,7 +26,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSelectItemInterface, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { finalize, forkJoin, Observable, Subject, takeUntil } from 'rxjs';
+import { finalize, forkJoin, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-admin-edit-user',
@@ -63,6 +65,18 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
   originalUser: any;
   companies!: { label: string; value: number }[];
   disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
+  tableParams: TableParams = {
+    search: '',
+    sort: [
+      {
+        key: '',
+        value: '',
+      },
+    ],
+    page: 1,
+    pageSize: 10,
+    sortDirection: 'desc',
+  };
 
   isLoading = false;
   roleOptions = this.genericUtilityService.objectToArray(UserRoleOptions, false, true);
@@ -99,12 +113,7 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
     })
       .pipe(
         takeUntil(this._destroying$),
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe({
-        next: ({ user, companies }) => {
+        switchMap(({ user, companies }) => {
           this.userStatus = user.isApproved;
           this.userCreated = user.createdAt;
           this.originalUser = { ...user };
@@ -119,6 +128,22 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
           });
 
           this.setCompanies(companies);
+
+          if (user.isApproved === 'N') {
+            return of(null);
+          }
+
+          return this.companyService.getUserList(this.tableParams, {}, user.companyId, user.id);
+        }),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (userTable: DataTable<User> | null) => {
+          if (userTable) {
+            console.log(userTable);
+          }
         },
         error: (error) => {
           this.catchError = error;
@@ -132,12 +157,7 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
 
   searchCompanies(searchValue: string) {
     this.loadCompanies({ search: searchValue })
-      .pipe(
-        takeUntil(this._destroying$),
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
+      .pipe(takeUntil(this._destroying$))
       .subscribe({
         next: (companies) => {
           this.setCompanies(companies);

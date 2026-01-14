@@ -42,7 +42,19 @@ export class CompanyService {
     return this.http.get<Company[]>(`${this.api}/search`, { params });
   }
 
-  getUserList(tableParams: TableParams, filters: any, companyId: number): Observable<DataTable<User>> {
+  getUserList(
+    tableParams: TableParams,
+    filters: any,
+    companyId: number | null,
+    excludeUserId = 0
+  ): Observable<DataTable<User>> {
+    if (excludeUserId > 0) {
+      filters = {
+        ...filters,
+        excludeUserId: excludeUserId.toString(),
+      };
+    }
+
     const params = this.tableUtilityService.buildParams(tableParams, filters);
 
     return this.http.get<DataTable<User>>(`${this.api}/${companyId}/users`, { params });
