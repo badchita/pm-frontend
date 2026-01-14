@@ -1,9 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Company } from '@app/features/admin/admin-companies/models/company.model';
 import { CompanyService } from '@app/features/admin/admin-companies/services/company.service';
+import { AdminAssignableUserTableComponent } from '@app/features/admin/shared/components/admin-assignable-user-table/admin-assignable-user-table.component';
 import { User } from '@app/features/auth/models/user.model';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import {
@@ -25,6 +26,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSelectItemInterface, NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { finalize, forkJoin, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 
@@ -42,6 +44,7 @@ import { finalize, forkJoin, Observable, of, Subject, switchMap, takeUntil } fro
     NzButtonModule,
     ErrorAlertComponent,
     DatePipe,
+    AdminAssignableUserTableComponent,
   ],
   templateUrl: './admin-edit-user.component.html',
   styleUrl: './admin-edit-user.component.scss',
@@ -65,6 +68,12 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
   originalUser: any;
   companies!: { label: string; value: number }[];
   disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
+  userDataTable: DataTable<User> = {
+    data: [],
+    totalCount: 0,
+    page: 1,
+    pageSize: 10,
+  };
   tableParams: TableParams = {
     search: '',
     sort: [
@@ -79,6 +88,8 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
   };
 
   isLoading = false;
+  isTableError = false;
+  isTableLoading = false;
   roleOptions = this.genericUtilityService.objectToArray(UserRoleOptions, false, true);
   statusOptions = this.genericUtilityService.objectToArray(UserStatusOptions);
   hasChanges = false;
@@ -142,11 +153,46 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (userTable: DataTable<User> | null) => {
           if (userTable) {
-            console.log(userTable);
+            this.setTableData(userTable);
           }
         },
         error: (error) => {
           this.catchError = error;
+        },
+      });
+  }
+
+  setTableData(tableData: DataTable<User>) {
+    this.userDataTable = tableData;
+  }
+
+  tableUpdate(params?: NzTableQueryParams) {
+    this.isTableError = false;
+    this.isTableLoading = true;
+    let filters;
+
+    if (params) {
+      this.tableParams.page = params.pageIndex;
+      this.tableParams.pageSize = params.pageSize;
+      this.tableParams.sort = params.sort;
+      filters = Object.assign({}, ...params.filter);
+    }
+
+    this.companyService
+      .getUserList(this.tableParams, filters, this.companyId?.value, this.id?.value)
+      .pipe(
+        takeUntil(this._destroying$),
+        finalize(() => {
+          this.isTableLoading = false;
+        })
+      )
+      .subscribe({
+        next: (userTable) => {
+          this.setTableData(userTable);
+        },
+        error: (error) => {
+          this.catchError = error;
+          this.isTableError = true;
         },
       });
   }
@@ -215,5 +261,12 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._destroying$.next(undefined);
     this._destroying$.complete();
+  }
+
+  get id(): AbstractControl | null | undefined {
+    return this.editUserForm?.get('id');
+  }
+  get companyId(): AbstractControl | null | undefined {
+    return this.editUserForm?.get('companyId');
   }
 }

@@ -82,6 +82,15 @@
           </nz-col>
         </nz-row>
 
+        @if (userStatus === 'Y') {
+        <div class="header user-header">
+          <span>Members</span>
+        </div>
+
+        <app-admin-assignable-user-table [dataTable]="userDataTable" [dataList]="userDataTable.data"
+          [loading]="isTableLoading" (onUpdateTable)="tableUpdate($event)"></app-admin-assignable-user-table>
+        }
+
         <div class="buttons-form-container">
           <button nz-button class="create-button" nzSize="large" nzShape="round" [nzType]="'primary'"
             [disabled]="editUserForm.invalid || !hasChanges" (click)="save()">
