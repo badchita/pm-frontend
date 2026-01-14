@@ -157,8 +157,10 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe((users) => {
-        this.users = this.setUsersOptions(users);
+      .subscribe({
+        next: (users) => {
+          this.users = this.setUsersOptions(users);
+        },
       });
   }
 
@@ -197,8 +199,8 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (task) => {
+      .subscribe({
+        next: (task) => {
           if (task && this.id() === 0) {
             this.onSave.emit(task.taskIdNumber);
             return;
@@ -220,10 +222,10 @@ export class TaskFormComponent implements OnInit, OnDestroy {
           );
           this.createEditTaskForm.patchValue(task, { emitEvent: false });
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   refresh() {

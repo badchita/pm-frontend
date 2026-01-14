@@ -141,8 +141,8 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (project) => {
+      .subscribe({
+        next: (project) => {
           if (project.tasks) {
             this.projectName = project.projectName;
             this.projectIdNumber = project.projectIdNumber;
@@ -156,10 +156,10 @@ export class TaskBoardPageComponent implements OnInit, OnDestroy {
             this.mapTasksToColumns();
           }
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   private mapTasksToColumns() {

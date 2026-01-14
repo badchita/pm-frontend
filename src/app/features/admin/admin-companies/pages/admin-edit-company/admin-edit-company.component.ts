@@ -224,7 +224,6 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
             }
           );
           this.companyStatus = company.isApproved;
-
           this.originalCompany = { ...company };
 
           this.editCompanyForm.patchValue(company, { emitEvent: false });
