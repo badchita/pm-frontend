@@ -15,7 +15,7 @@ import {
 import { EmailValidator, RequiredValidator } from '@app/shared/constants/validators';
 import { PopoverFormValidatorDirective } from '@app/shared/directives/popover-form-validator.directive';
 import { UserStatusOptions } from '@app/shared/enums/search.enum';
-import { UserRoleOptions } from '@app/shared/enums/user-role.enum';
+import { UserRole, UserRoleOptions } from '@app/shared/enums/user-role.enum';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { UserService } from '@app/shared/services/api/user.service';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
@@ -65,6 +65,7 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
   catchError!: any;
   userStatus!: string;
   userCreated!: Date | string;
+  userRole!: string;
   originalUser: any;
   companies!: { label: string; value: number }[];
   disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
@@ -125,8 +126,11 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this._destroying$),
         switchMap(({ user, companies }) => {
-          this.userStatus = user.isApproved;
-          this.userCreated = user.createdAt;
+          const { isApproved, createdAt, role } = user;
+
+          this.userRole = UserRole[role];
+          this.userStatus = isApproved;
+          this.userCreated = createdAt;
           this.originalUser = { ...user };
           this.editUserForm.patchValue(user, { emitEvent: false });
           this.editUserForm.markAsPristine();
@@ -247,10 +251,15 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
             }
           );
           this.userStatus = user.isApproved;
+          this.originalUser = { ...user };
 
           this.editUserForm.patchValue(user, { emitEvent: false });
           this.editUserForm.markAsPristine();
           this.editUserForm.markAsUntouched();
+
+          if (user.isApproved === 'Y') {
+            this.tableUpdate();
+          }
         },
         error: (error) => {
           this.catchError = error;

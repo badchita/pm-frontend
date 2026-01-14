@@ -2,6 +2,7 @@
   <div class="container">
     <div class="header">
       <span>Date Joined: {{ userCreated | date : 'MMM dd, yyyy' }}</span>
+      <nz-tag nzColor="#840bdc">{{ userRole }}</nz-tag>
       @if (userStatus === 'Y') {
       <nz-tag nzColor="success">Approved</nz-tag>
       } @else {
