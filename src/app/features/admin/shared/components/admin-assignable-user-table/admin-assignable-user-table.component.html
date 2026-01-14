@@ -1,5 +1,12 @@
 <div class="filter-container">
-  <form nz-form nzLayout="inline" [formGroup]="searchCompanyUsersForm" (submit)="updateTable()">
+  <form nz-form nzLayout="inline" [formGroup]="searchAssignableUsersForm" (submit)="updateTable()">
+    <nz-form-item>
+      <nz-form-control>
+        <nz-select class="select-search" formControlName="role" nzPlaceHolder="Select Role" [nzAllowClear]="true"
+          [nzOptions]="userRolesOptions">
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
     <nz-form-item>
       <nz-form-control>
         <nz-select class="select-search" formControlName="isApproved" nzPlaceHolder="Select Status"
@@ -12,6 +19,7 @@
         <input class="input-search" nz-input formControlName="search" placeholder="Search" />
       </nz-form-control>
     </nz-form-item>
+    <button class="reset-search-button" nz-button (click)="reset()">Reset</button>
   </form>
 </div>
 

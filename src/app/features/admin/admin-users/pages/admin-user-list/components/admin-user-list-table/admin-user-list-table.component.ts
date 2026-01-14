@@ -26,6 +26,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { UserService } from '@app/shared/services/api/user.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { CompanyService } from '@app/features/admin/admin-companies/services/company.service';
+import { UserRoleOptions } from '@app/shared/enums/user-role.enum';
 
 @Component({
   selector: 'app-admin-user-list-table',
@@ -68,9 +69,11 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
   disableFilter: (input: string, option: NzSelectItemInterface) => boolean = () => true;
 
   userStatusOptions = this.genericUtilityService.objectToArray(UserStatusOptions);
+  userRolesOptions = this.genericUtilityService.objectToArray(UserRoleOptions);
   isDeleted = 'N';
 
   ngOnInit() {
+    this.userRolesOptions = this.genericUtilityService.objectToArray(UserRoleOptions).slice(0, -1);
     this.buildForm();
   }
 
@@ -79,6 +82,7 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
       search: [null],
       isApproved: [null],
       companyId: [null],
+      role: [null],
     });
 
     this.searchUserForm
@@ -93,6 +97,11 @@ export class AdminUserListTableComponent implements OnInit, OnDestroy {
 
     this.searchUserForm
       .get('companyId')
+      ?.valueChanges.pipe(debounceTime(500))
+      .subscribe(() => this.updateTable());
+
+    this.searchUserForm
+      .get('role')
       ?.valueChanges.pipe(debounceTime(500))
       .subscribe(() => this.updateTable());
   }

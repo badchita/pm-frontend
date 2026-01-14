@@ -1,6 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import {
@@ -19,15 +24,15 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { finalize, Subject, switchMap, takeUntil } from 'rxjs';
+import { finalize, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { CompanyService } from '../../services/company.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
-import { AdminCompanyUserListTableComponent } from './components/admin-company-user-list-table/admin-company-user-list-table.component';
 import { User } from '@app/features/auth/models/user.model';
 import { DataTable, TableParams } from '@app/shared/models/data-table.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { AdminAssignableUserTableComponent } from '@app/features/admin/shared/components/admin-assignable-user-table/admin-assignable-user-table.component';
 
 @Component({
   selector: 'app-admin-edit-company',
@@ -45,7 +50,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
     DatePipe,
     NzIconModule,
     NzTooltipModule,
-    AdminCompanyUserListTableComponent,
+    AdminAssignableUserTableComponent,
   ],
   templateUrl: './admin-edit-company.component.html',
   styleUrl: './admin-edit-company.component.scss',
@@ -74,7 +79,6 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
   };
   tableParams: TableParams = {
     search: '',
-    state: null,
     sort: [
       {
         key: '',
@@ -134,6 +138,10 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
               });
             });
 
+          if (company.isApproved === 'N') {
+            return of(null);
+          }
+
           return this.companyService.getUserList(this.tableParams, {}, company.id);
         }),
         finalize(() => {
@@ -141,8 +149,10 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe({
-        next: (userTable: DataTable<User>) => {
-          this.setTableData(userTable);
+        next: (userTable: DataTable<User> | null) => {
+          if (userTable) {
+            this.setTableData(userTable);
+          }
         },
         error: (error) => {
           console.error('Failed to load company or users', error);
@@ -174,15 +184,15 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
           this.isTableLoading = false;
         })
       )
-      .subscribe(
-        (tasks) => {
-          this.setTableData(tasks);
+      .subscribe({
+        next: (userTable) => {
+          this.setTableData(userTable);
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
           this.isTableError = true;
-        }
-      );
+        },
+      });
   }
 
   close() {
@@ -215,10 +225,15 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
           );
           this.companyStatus = company.isApproved;
 
+          this.originalCompany = { ...company };
+
           this.editCompanyForm.patchValue(company, { emitEvent: false });
           this.editCompanyForm.markAsPristine();
           this.editCompanyForm.markAsUntouched();
-          this.tableUpdate();
+
+          if (company.isApproved === 'Y') {
+            this.tableUpdate();
+          }
         },
         error: (error) => {
           this.catchError = error;

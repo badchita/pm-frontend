@@ -4,8 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserRolePipe } from '@app/features/admin/admin-users/pages/admin-user-list/pipes/user-role.pipe';
 import { User } from '@app/features/auth/models/user.model';
 import { UserStatusOptions } from '@app/shared/enums/search.enum';
+import { UserRoleOptions } from '@app/shared/enums/user-role.enum';
 import { DataTable } from '@app/shared/models/data-table.model';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -14,7 +16,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { debounceTime } from 'rxjs';
 
 @Component({
-  selector: 'app-admin-company-user-list-table',
+  selector: 'app-admin-assignable-user-table',
   imports: [
     NzTableModule,
     NzTagModule,
@@ -25,11 +27,12 @@ import { debounceTime } from 'rxjs';
     ReactiveFormsModule,
     NzInputModule,
     NzSelectModule,
+    NzButtonModule,
   ],
-  templateUrl: './admin-company-user-list-table.component.html',
-  styleUrl: './admin-company-user-list-table.component.scss',
+  templateUrl: './admin-assignable-user-table.component.html',
+  styleUrl: './admin-assignable-user-table.component.scss',
 })
-export class AdminCompanyUserListTableComponent implements OnInit {
+export class AdminAssignableUserTableComponent implements OnInit {
   readonly dataTable = input.required<DataTable<any>>();
   readonly dataList = input.required<User[] | []>();
   readonly loading = input.required<boolean>();
@@ -38,34 +41,41 @@ export class AdminCompanyUserListTableComponent implements OnInit {
   private readonly genericUtilityService = inject(GenericUtilityService);
   private readonly formBuilder = inject(FormBuilder);
 
-  searchCompanyUsersForm!: FormGroup;
+  searchAssignableUsersForm!: FormGroup;
 
   userStatusOptions = this.genericUtilityService.objectToArray(UserStatusOptions);
+  userRolesOptions = this.genericUtilityService.objectToArray(UserRoleOptions);
 
   ngOnInit() {
+    this.userRolesOptions = this.genericUtilityService.objectToArray(UserRoleOptions).slice(0, -1);
     this.buildForm();
   }
 
   buildForm() {
-    this.searchCompanyUsersForm = this.formBuilder.group({
+    this.searchAssignableUsersForm = this.formBuilder.group({
       search: [null],
       isApproved: [null],
-      companyId: [null],
+      role: [null],
     });
 
-    this.searchCompanyUsersForm
+    this.searchAssignableUsersForm
       .get('search')
       ?.valueChanges.pipe(debounceTime(500))
       .subscribe(() => this.updateTable());
 
-    this.searchCompanyUsersForm
+    this.searchAssignableUsersForm
       .get('isApproved')
+      ?.valueChanges.pipe(debounceTime(500))
+      .subscribe(() => this.updateTable());
+
+    this.searchAssignableUsersForm
+      .get('role')
       ?.valueChanges.pipe(debounceTime(500))
       .subscribe(() => this.updateTable());
   }
 
   updateTable(params?: NzTableQueryParams) {
-    const searchFormValues = this.searchCompanyUsersForm.getRawValue();
+    const searchFormValues = this.searchAssignableUsersForm.getRawValue();
     const isFiltering =
       searchFormValues.search || searchFormValues.description || searchFormValues.assignedTo;
     const filter: NzTableQueryParams['filter'] = [{ ...searchFormValues }];
@@ -78,5 +88,9 @@ export class AdminCompanyUserListTableComponent implements OnInit {
     };
 
     this.onUpdateTable.emit(tableParams);
+  }
+
+  reset() {
+    this.searchAssignableUsersForm.reset();
   }
 }
