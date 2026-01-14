@@ -96,34 +96,36 @@ export class PortalComponent implements OnInit, OnDestroy {
     this.projectService
       .getList()
       .pipe(takeUntil(this._destroying$))
-      .subscribe((dataTable) => {
-        const { data } = dataTable;
-        const publishedProjects = data.filter((project) => project.isPublished === 'Y');
+      .subscribe({
+        next: (dataTable) => {
+          const { data } = dataTable;
+          const publishedProjects = data.filter((project) => project.isPublished === 'Y');
 
-        let taskBoardIndex = this.navItems.findIndex((item) => item.title === 'Task Board');
+          let taskBoardIndex = this.navItems.findIndex((item) => item.title === 'Task Board');
 
-        if (publishedProjects.length === 0) {
-          if (taskBoardIndex !== -1) {
-            this.navItems.splice(taskBoardIndex, 1);
-          }
-        } else {
-          const taskBoardItem = {
-            title: 'Task Board',
-            icon: 'paper-clip',
-            route: '/portal/task-board',
-            child: publishedProjects.map((project) => ({
-              title: project.projectIdNumber,
-              icon: '',
-              route: `/portal/task-board/${project.id}`,
-            })),
-          };
-
-          if (taskBoardIndex === -1) {
-            this.navItems.splice(2, 0, taskBoardItem);
+          if (publishedProjects.length === 0) {
+            if (taskBoardIndex !== -1) {
+              this.navItems.splice(taskBoardIndex, 1);
+            }
           } else {
-            this.navItems[taskBoardIndex] = taskBoardItem;
+            const taskBoardItem = {
+              title: 'Task Board',
+              icon: 'paper-clip',
+              route: '/portal/task-board',
+              child: publishedProjects.map((project) => ({
+                title: project.projectIdNumber,
+                icon: '',
+                route: `/portal/task-board/${project.id}`,
+              })),
+            };
+
+            if (taskBoardIndex === -1) {
+              this.navItems.splice(2, 0, taskBoardItem);
+            } else {
+              this.navItems[taskBoardIndex] = taskBoardItem;
+            }
           }
-        }
+        },
       });
   }
 

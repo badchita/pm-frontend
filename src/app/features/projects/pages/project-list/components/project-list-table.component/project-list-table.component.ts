@@ -164,22 +164,29 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
         this.projectService
           .softDelete(id, isDeleted)
           .pipe(takeUntil(this._destroying$))
-          .subscribe(() => {
-            const notificationTitle =
-              isDeleted === 'Y'
-                ? NOTIFICATION_TITLE.SoftDeleteSuccess.replace('{{1}}', 'Project')
-                : NOTIFICATION_TITLE.RestoreSuccess.replace('{{1}}', 'Project');
-            const notificationDescription =
-              isDeleted === 'Y'
-                ? NOTIFICATION_MESSAGE.SoftDeleteMessageSuccess.replace('{{1}}', 'project')
-                : NOTIFICATION_MESSAGE.RestoreMessageSuccess.replace('{{1}}', 'project');
+          .subscribe({
+            next: () => {
+              const notificationTitle =
+                isDeleted === 'Y'
+                  ? NOTIFICATION_TITLE.SoftDeleteSuccess.replace('{{1}}', 'Project')
+                  : NOTIFICATION_TITLE.RestoreSuccess.replace('{{1}}', 'Project');
+              const notificationDescription =
+                isDeleted === 'Y'
+                  ? NOTIFICATION_MESSAGE.SoftDeleteMessageSuccess.replace('{{1}}', 'project')
+                  : NOTIFICATION_MESSAGE.RestoreMessageSuccess.replace('{{1}}', 'project');
 
-            this.notificationService.create('success', notificationTitle, notificationDescription, {
-              nzClass: 'form-notification',
-              nzDuration: 5000,
-            });
-            this.updateTable();
-            this.projectService.projectPublished();
+              this.notificationService.create(
+                'success',
+                notificationTitle,
+                notificationDescription,
+                {
+                  nzClass: 'form-notification',
+                  nzDuration: 5000,
+                }
+              );
+              this.updateTable();
+              this.projectService.projectPublished();
+            },
           });
       },
       nzCancelText: 'No',
@@ -197,18 +204,20 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
         this.projectService
           .delete(id)
           .pipe(takeUntil(this._destroying$))
-          .subscribe(() => {
-            this.notificationService.create(
-              'success',
-              NOTIFICATION_TITLE.PermanentlyDeleteSuccess.replace('{{1}}', 'Project'),
-              NOTIFICATION_MESSAGE.PermanentlyDeleteMessageSuccess.replace('{{1}}', 'project'),
-              {
-                nzClass: 'form-notification',
-                nzDuration: 5000,
-              }
-            );
-            this.updateTable();
-            this.projectService.projectPublished();
+          .subscribe({
+            next: () => {
+              this.notificationService.create(
+                'success',
+                NOTIFICATION_TITLE.PermanentlyDeleteSuccess.replace('{{1}}', 'Project'),
+                NOTIFICATION_MESSAGE.PermanentlyDeleteMessageSuccess.replace('{{1}}', 'project'),
+                {
+                  nzClass: 'form-notification',
+                  nzDuration: 5000,
+                }
+              );
+              this.updateTable();
+              this.projectService.projectPublished();
+            },
           });
       },
       nzCancelText: 'No',

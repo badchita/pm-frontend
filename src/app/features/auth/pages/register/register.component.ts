@@ -92,16 +92,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           if (response) {
             this.registerSucessful(response.name);
           }
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   registerSucessful(name: string) {

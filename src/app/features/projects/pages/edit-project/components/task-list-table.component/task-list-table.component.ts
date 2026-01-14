@@ -118,17 +118,19 @@ export class TaskListTableComponent implements OnInit, OnDestroy {
         this.taskService
           .delete(projectId, id)
           .pipe(takeUntil(this._destroying$))
-          .subscribe(() => {
-            this.notificationService.create(
-              'success',
-              NOTIFICATION_TITLE.PermanentlyDeleteSuccess.replace('{{1}}', 'Task'),
-              NOTIFICATION_MESSAGE.PermanentlyDeleteMessageSuccess.replace('{{1}}', 'task'),
-              {
-                nzClass: 'form-notification',
-                nzDuration: 5000,
-              }
-            );
-            this.updateTable();
+          .subscribe({
+            next: () => {
+              this.notificationService.create(
+                'success',
+                NOTIFICATION_TITLE.PermanentlyDeleteSuccess.replace('{{1}}', 'Task'),
+                NOTIFICATION_MESSAGE.PermanentlyDeleteMessageSuccess.replace('{{1}}', 'task'),
+                {
+                  nzClass: 'form-notification',
+                  nzDuration: 5000,
+                }
+              );
+              this.updateTable();
+            },
           });
       },
       nzCancelText: 'No',

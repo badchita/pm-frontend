@@ -53,8 +53,8 @@ export class TaskFormHistoryComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (histories) => {
+      .subscribe({
+        next: (histories) => {
           this.taskHistories = histories.map((history) => {
             const historyLabel = STATE_HISTORY_LABEL.MovedTo.replace(
               '{{1}}',
@@ -73,10 +73,10 @@ export class TaskFormHistoryComponent implements OnInit, OnDestroy {
             };
           });
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   ngOnDestroy() {

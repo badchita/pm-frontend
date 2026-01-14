@@ -108,14 +108,14 @@ export class ProjectListComponent implements OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (dataTable) => {
+      .subscribe({
+        next: (dataTable) => {
           this.projectDataTable = dataTable;
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   tableUpdate(tableParams: NzTableQueryParams) {

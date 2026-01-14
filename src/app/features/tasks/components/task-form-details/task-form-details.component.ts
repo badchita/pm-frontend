@@ -264,15 +264,15 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
           this.isCommentsLoading = false;
         })
       )
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.createTaskCommentForm.get('content')?.reset();
           this.loadComments();
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   loadComments() {
@@ -284,8 +284,8 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
           this.isCommentsLoading = false;
         })
       )
-      .subscribe(
-        (comments) => {
+      .subscribe({
+        next: (comments) => {
           this.onGetTotalComments.emit(comments.length);
           this.taskComments = comments.map((comment) => {
             this.taskCommentsReactions = comment.reactions ?? [];
@@ -321,10 +321,10 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
             };
           });
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   likeDislike(reaction: TaskCommentReactionType, taskCommentId: number) {
@@ -343,14 +343,14 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
     this.taskService
       .updateTaskCommentReaction(payload, this.taskId(), taskCommentId)
       .pipe(takeUntil(this._destroying$))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.loadComments();
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   hasUserReacted(taskCommentId: number, reactionType: TaskCommentReactionType): boolean {

@@ -64,16 +64,16 @@ export class CreateProjectModalComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (project) => {
+      .subscribe({
+        next: (project) => {
           if (project) {
             this.modalRef.close(project.projectIdNumber);
           }
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   ngOnDestroy() {

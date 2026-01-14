@@ -76,8 +76,8 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           const { token, user } = response;
           this.authService.setAccessToken(token);
           this.authService.setUserDetails(user);
@@ -85,10 +85,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
           this.router.navigate(['/portal']);
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   ngOnDestroy() {

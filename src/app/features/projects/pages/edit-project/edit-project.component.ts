@@ -175,8 +175,10 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe((users) => {
-        this.setUsers(users);
+      .subscribe({
+        next: (users) => {
+          this.setUsers(users);
+        },
       });
   }
 
@@ -218,8 +220,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (project) => {
+      .subscribe({
+        next: (project) => {
           if (project) {
             this.notificationService.create(
               'success',
@@ -235,10 +237,10 @@ export class EditProjectComponent implements OnInit, OnDestroy {
             this.editProjectForm.markAsUntouched();
           }
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   publish() {
@@ -258,8 +260,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         })
       )
-      .subscribe(
-        (project) => {
+      .subscribe({
+        next: (project) => {
           if (project) {
             this.notificationService.create(
               'success',
@@ -275,10 +277,10 @@ export class EditProjectComponent implements OnInit, OnDestroy {
             this.close();
           }
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
-        }
-      );
+        },
+      });
   }
 
   addNewTask() {
@@ -330,15 +332,15 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           this.isTableLoading = false;
         })
       )
-      .subscribe(
-        (tasks) => {
+      .subscribe({
+        next: (tasks) => {
           this.setTableData(tasks);
         },
-        (error) => {
+        error: (error) => {
           this.catchError = error;
           this.isTableError = true;
-        }
-      );
+        },
+      });
   }
 
   setTableData(tableData: DataTable<Task>) {
