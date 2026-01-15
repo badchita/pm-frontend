@@ -9,12 +9,16 @@ import { Permission } from '../enums/permission.enum';
 export class PermissionService {
   private readonly authService = inject(AuthService);
 
-  has(permission: Permission): boolean {
+  has(permission: Permission | undefined): boolean {
     const user = this.authService.currentUser();
     if (!user) return false;
 
     const rolePermissions = PERMISSIONS[user.role] || [];
 
-    return rolePermissions.includes(permission);
+    if (permission) {
+      return rolePermissions.includes(permission);
+    }
+
+    return false;
   }
 }

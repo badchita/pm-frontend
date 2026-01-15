@@ -4,7 +4,7 @@ import { Permission } from './enums/permission.enum';
 export const PERMISSIONS: Record<UserRole, Permission[]> = {
   [UserRole.Member]: [],
 
-  [UserRole.Manager]: [],
+  [UserRole.Manager]: [Permission.VIEW_PROJECTS_PAGE],
 
   [UserRole.Admin]: [Permission.VIEW_ADMIN_PAGE],
 };

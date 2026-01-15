@@ -23,7 +23,7 @@ import { filter, Subject, takeUntil } from 'rxjs';
     NzIconModule,
     NzButtonComponent,
     NgClass,
-    HasPermissionDirective
+    HasPermissionDirective,
   ],
   templateUrl: './portal.component.html',
   styleUrl: './portal.component.scss',
@@ -46,6 +46,7 @@ export class PortalComponent implements OnInit, OnDestroy {
       title: 'Project List',
       icon: 'unordered-list',
       route: '/portal/projects',
+      permission: Permission.VIEW_PROJECTS_PAGE,
     },
     {
       title: 'Task Board',

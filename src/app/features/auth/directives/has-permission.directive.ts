@@ -10,8 +10,16 @@ export class HasPermissionDirective {
   private readonly vcr = inject(ViewContainerRef);
   private readonly permissionService = inject(PermissionService);
 
-  @Input('hasPermission') set permission(value: Permission | Permission[]) {
+  @Input('hasPermission')
+  set permission(value: Permission | Permission[] | undefined) {
     this.vcr.clear();
+
+    console.log(value)
+
+    if (!value) {
+      this.vcr.createEmbeddedView(this.tpl);
+      return;
+    }
 
     const permissions = Array.isArray(value) ? value : [value];
 

@@ -18,7 +18,8 @@ export const PORTAL_ROUTES: Routes = [
       },
       {
         path: 'projects',
-        canActivate: [AuthorizedGuard],
+        canActivate: [AuthorizedGuard, permissionGuard],
+        data: { permission: Permission.VIEW_PROJECTS_PAGE },
         loadComponent: () =>
           import('@app/features/projects/pages/project-list/project-list.component').then(
             (m) => m.ProjectListComponent
