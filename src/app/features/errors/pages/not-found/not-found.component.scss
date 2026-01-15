@@ -1,0 +1,23 @@
+:host {
+  .container {
+    margin: auto;
+    height: 90vh;
+    padding: 30px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .title {
+      font-size: 90px;
+      font-weight: 500;
+      color: #ff4d4f;
+    }
+
+    .message {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--pm-primary);
+    }
+  }
+}
