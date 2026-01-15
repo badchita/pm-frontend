@@ -27,13 +27,19 @@
           }
           }
 
-          @if (userRole === USER_ROLE.Admin) {
+          <!-- @if (userRole === USER_ROLE.Admin) {
           <li class="admin-menu-item" nz-menu-item (click)="navigate(adminNavItem.route)"
             [nzSelected]="currentRoute.includes(adminNavItem.route)">
             <nz-icon [nzType]="adminNavItem.icon" />
             <span>{{ adminNavItem.title }}</span>
           </li>
-          }
+          } -->
+
+          <li *hasPermission="[Permission.VIEW_ADMIN_PAGE]" class="admin-menu-item" nz-menu-item
+            (click)="navigate(adminNavItem.route)" [nzSelected]="currentRoute.includes(adminNavItem.route)">
+            <nz-icon [nzType]="adminNavItem.icon" />
+            <span>{{ adminNavItem.title }}</span>
+          </li>
         </ul>
 
 

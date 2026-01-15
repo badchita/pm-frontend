@@ -14,6 +14,7 @@ export class PermissionService {
     if (!user) return false;
 
     const rolePermissions = PERMISSIONS[user.role] || [];
+
     return rolePermissions.includes(permission);
   }
 }

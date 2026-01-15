@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   currentUser(): User | null {
-    const userRoleSession = sessionStorage.getItem('user_role');
-    return userRoleSession ? JSON.parse(userRoleSession) : null;
+    const userSession = sessionStorage.getItem('user_details');
+    return userSession ? JSON.parse(userSession) : null;
   }
 }
