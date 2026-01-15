@@ -14,8 +14,6 @@ export class HasPermissionDirective {
   set permission(value: Permission | Permission[] | undefined) {
     this.vcr.clear();
 
-    console.log(value)
-
     if (!value) {
       this.vcr.createEmbeddedView(this.tpl);
       return;
