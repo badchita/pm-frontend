@@ -36,4 +36,9 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!sessionStorage.getItem('access_token');
   }
+
+  currentUser(): User | null {
+    const userRoleSession = sessionStorage.getItem('user_role');
+    return userRoleSession ? JSON.parse(userRoleSession) : null;
+  }
 }
