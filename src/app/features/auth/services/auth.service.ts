@@ -36,4 +36,9 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!sessionStorage.getItem('access_token');
   }
+
+  currentUser(): User | null {
+    const userSession = sessionStorage.getItem('user_details');
+    return userSession ? JSON.parse(userSession) : null;
+  }
 }

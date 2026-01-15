@@ -2,6 +2,8 @@ import { NgClass } from '@angular/common';
 import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@app/core/layout/header/header.component';
+import { HasPermissionDirective } from '@app/features/auth/directives/has-permission.directive';
+import { Permission } from '@app/features/auth/enums/permission.enum';
 import { ProjectService } from '@app/features/projects/services/project.service';
 import { UserRole } from '@app/shared/enums/user-role.enum';
 import { NavItem } from '@app/shared/models/nav-item.model';
@@ -21,6 +23,7 @@ import { filter, Subject, takeUntil } from 'rxjs';
     NzIconModule,
     NzButtonComponent,
     NgClass,
+    HasPermissionDirective,
   ],
   templateUrl: './portal.component.html',
   styleUrl: './portal.component.scss',
@@ -37,12 +40,13 @@ export class PortalComponent implements OnInit, OnDestroy {
     {
       title: 'Dashboard',
       icon: 'dashboard',
-      route: '/portal/dashboard',
+      route: '/portal',
     },
     {
       title: 'Project List',
       icon: 'unordered-list',
       route: '/portal/projects',
+      permission: Permission.VIEW_PROJECTS_PAGE,
     },
     {
       title: 'Task Board',
@@ -72,6 +76,7 @@ export class PortalComponent implements OnInit, OnDestroy {
   USER_ROLE = UserRole;
   isCollapsed = false;
   isWhiteBackground = false;
+  Permission = Permission;
 
   constructor() {
     this.router.events

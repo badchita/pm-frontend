@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
 import { PortalComponent } from './portal.component';
+import { AuthorizedGuard } from '@app/features/auth/guards/authorized.guard';
+import { permissionGuard } from '@app/features/auth/guards/permission.guard';
+import { Permission } from '@app/features/auth/enums/permission.enum';
 
 export const PORTAL_ROUTES: Routes = [
   {
@@ -9,11 +12,14 @@ export const PORTAL_ROUTES: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
+        canActivate: [AuthorizedGuard],
         loadComponent: () =>
           import('@app/features/dashboard/pages/home/home.component').then((m) => m.HomeComponent),
       },
       {
         path: 'projects',
+        canActivate: [AuthorizedGuard, permissionGuard],
+        data: { permission: Permission.VIEW_PROJECTS_PAGE },
         loadComponent: () =>
           import('@app/features/projects/pages/project-list/project-list.component').then(
             (m) => m.ProjectListComponent
@@ -21,6 +27,8 @@ export const PORTAL_ROUTES: Routes = [
       },
       {
         path: 'projects/:id',
+        canActivate: [AuthorizedGuard, permissionGuard],
+        data: { permission: Permission.VIEW_PROJECTS_PAGE },
         loadComponent: () =>
           import('@app/features/projects/pages/edit-project/edit-project.component').then(
             (m) => m.EditProjectComponent
@@ -28,6 +36,7 @@ export const PORTAL_ROUTES: Routes = [
       },
       {
         path: 'tasks/:projectId/:id',
+        canActivate: [AuthorizedGuard],
         loadComponent: () =>
           import('@app/features/tasks/pages/edit-task/edit-task.component').then(
             (m) => m.EditTaskComponent
@@ -35,6 +44,7 @@ export const PORTAL_ROUTES: Routes = [
       },
       {
         path: 'task-board/:projectId',
+        canActivate: [AuthorizedGuard],
         loadComponent: () =>
           import('@app/features/task-board/pages/task-board-page/task-board-page.component').then(
             (m) => m.TaskBoardPageComponent
@@ -43,6 +53,8 @@ export const PORTAL_ROUTES: Routes = [
 
       {
         path: 'admin',
+        canActivate: [AuthorizedGuard, permissionGuard],
+        data: { permission: Permission.VIEW_ADMIN_PAGE },
         loadChildren: () => import('@app/features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
       },
     ],

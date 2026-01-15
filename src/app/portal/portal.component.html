@@ -9,7 +9,8 @@
         <ul nz-menu class="sidebar-menu" nzMode="inline">
           @for (nav of navItems; track nav.route) {
           @if (nav.child?.length) {
-          <li nz-submenu [nzTitle]="nav.title" [nzIcon]="nav.icon" [nzOpen]="currentRoute.includes(nav.route)">
+          <li *hasPermission="nav?.permission" nz-submenu [nzTitle]="nav.title" [nzIcon]="nav.icon"
+            [nzOpen]="currentRoute.includes(nav.route)">
             <ul>
               @for (child of nav.child; track child.route) {
               <li nz-menu-item [nzSelected]="currentRoute.includes(child.route)" (click)="navigate(child.route)">
@@ -20,20 +21,19 @@
           </li>
           }
           @else {
-          <li nz-menu-item (click)="navigate(nav.route)" [nzSelected]="currentRoute.includes(nav.route)">
+          <li *hasPermission="nav?.permission" nz-menu-item (click)="navigate(nav.route)"
+            [nzSelected]="currentRoute.includes(nav.route)">
             <nz-icon [nzType]="nav.icon" />
             <span>{{ nav.title }}</span>
           </li>
           }
           }
 
-          @if (userRole === USER_ROLE.Admin) {
-          <li class="admin-menu-item" nz-menu-item (click)="navigate(adminNavItem.route)"
-            [nzSelected]="currentRoute.includes(adminNavItem.route)">
+          <li *hasPermission="[Permission.VIEW_ADMIN_PAGE]" class="admin-menu-item" nz-menu-item
+            (click)="navigate(adminNavItem.route)" [nzSelected]="currentRoute.includes(adminNavItem.route)">
             <nz-icon [nzType]="adminNavItem.icon" />
             <span>{{ adminNavItem.title }}</span>
           </li>
-          }
         </ul>
 
 

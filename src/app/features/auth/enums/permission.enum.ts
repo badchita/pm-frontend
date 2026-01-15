@@ -1,0 +1,4 @@
+export enum Permission {
+  VIEW_ADMIN_PAGE = 'VIEW_ADMIN_PAGE',
+  VIEW_PROJECTS_PAGE = 'VIEW_PROJECTS_PAGE',
+}
