@@ -27,7 +27,8 @@ export const PORTAL_ROUTES: Routes = [
       },
       {
         path: 'projects/:id',
-        canActivate: [AuthorizedGuard],
+        canActivate: [AuthorizedGuard, permissionGuard],
+        data: { permission: Permission.VIEW_PROJECTS_PAGE },
         loadComponent: () =>
           import('@app/features/projects/pages/edit-project/edit-project.component').then(
             (m) => m.EditProjectComponent
