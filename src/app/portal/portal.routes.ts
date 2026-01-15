@@ -57,7 +57,7 @@ export const PORTAL_ROUTES: Routes = [
         loadChildren: () => import('@app/features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
       },
       {
-        path: '404',
+        path: 'not-found',
         loadComponent: () =>
           import('@app/features/errors/pages/not-found/not-found.component').then(
             (m) => m.NotFoundComponent
@@ -65,7 +65,7 @@ export const PORTAL_ROUTES: Routes = [
       },
       {
         path: '**',
-        redirectTo: '404',
+        redirectTo: 'not-found',
       },
     ],
   },
