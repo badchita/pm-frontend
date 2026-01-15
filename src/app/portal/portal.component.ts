@@ -37,7 +37,7 @@ export class PortalComponent implements OnInit, OnDestroy {
     {
       title: 'Dashboard',
       icon: 'dashboard',
-      route: '/portal/dashboard',
+      route: '/portal',
     },
     {
       title: 'Project List',
