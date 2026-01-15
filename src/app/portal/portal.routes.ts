@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { PortalComponent } from './portal.component';
 import { AuthorizedGuard } from '@app/features/auth/guards/authorized.guard';
+import { permissionGuard } from '@app/features/auth/guards/permission.guard';
+import { Permission } from '@app/features/auth/enums/permission.enum';
 
 export const PORTAL_ROUTES: Routes = [
   {
@@ -49,7 +51,8 @@ export const PORTAL_ROUTES: Routes = [
 
       {
         path: 'admin',
-        canActivate: [AuthorizedGuard],
+        canActivate: [AuthorizedGuard, permissionGuard],
+        data: { permission: Permission.VIEW_ADMIN_PAGE },
         loadChildren: () => import('@app/features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
       },
     ],

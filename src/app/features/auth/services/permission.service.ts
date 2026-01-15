@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { Permission, PERMISSIONS } from '../permissions';
+import { PERMISSIONS } from '../permissions';
+import { Permission } from '../enums/permission.enum';
 
 @Injectable({
   providedIn: 'root',

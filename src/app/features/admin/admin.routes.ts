@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { AuthorizedGuard } from '../auth/guards/authorized.guard';
+import { permissionGuard } from '../auth/guards/permission.guard';
+import { Permission } from '../auth/enums/permission.enum';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -10,8 +12,8 @@ export const ADMIN_ROUTES: Routes = [
       { path: '', redirectTo: 'users', pathMatch: 'full' },
       {
         path: 'users',
-        canActivate: [AuthorizedGuard],
-
+        canActivate: [AuthorizedGuard, permissionGuard],
+        data: { permission: Permission.VIEW_ADMIN_PAGE },
         loadComponent: () =>
           import(
             '@app/features/admin/admin-users/pages/admin-user-list/admin-user-list.component'
