@@ -50,12 +50,22 @@ export const PORTAL_ROUTES: Routes = [
             (m) => m.TaskBoardPageComponent
           ),
       },
-
       {
         path: 'admin',
         canActivate: [AuthorizedGuard, permissionGuard],
         data: { permission: Permission.VIEW_ADMIN_PAGE },
         loadChildren: () => import('@app/features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
+      },
+      {
+        path: '404',
+        loadComponent: () =>
+          import('@app/features/errors/pages/not-found/not-found.component').then(
+            (m) => m.NotFoundComponent
+          ),
+      },
+      {
+        path: '**',
+        redirectTo: '404',
       },
     ],
   },

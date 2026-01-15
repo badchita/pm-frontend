@@ -22,5 +22,16 @@ export const routes: Routes = [
       ),
     canActivate: [NotAuthorizedGuard],
   },
+  {
+    path: '404',
+    loadComponent: () =>
+      import('@app/features/errors/pages/not-found/not-found.component').then(
+        (m) => m.NotFoundComponent
+      ),
+  },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: '**',
+    redirectTo: '404',
+  },
 ];
