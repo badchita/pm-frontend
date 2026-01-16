@@ -161,7 +161,9 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           this.catchError = error;
 
           if (error.status === 404) {
-            this.router.navigate(['portal/not-found']);
+            this.router.navigate(['portal/admin/not-found'], {
+              queryParams: { from: '/portal/projects' },
+            });
           }
         },
       });
