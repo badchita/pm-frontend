@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 
@@ -8,4 +9,10 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
   templateUrl: './forbidden.component.html',
   styleUrl: './forbidden.component.scss',
 })
-export class ForbiddenComponent {}
+export class ForbiddenComponent {
+  private readonly router = inject(Router);
+
+  goToDashboard() {
+    this.router.navigate(['/portal']);
+  }
+}
