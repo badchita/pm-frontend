@@ -61,6 +61,13 @@ export const PORTAL_ROUTES: Routes = [
           ),
       },
       {
+        path: 'forbidden',
+        loadComponent: () =>
+          import('@app/features/errors/pages/forbidden/forbidden.component').then(
+            (m) => m.ForbiddenComponent
+          ),
+      },
+      {
         path: '**',
         redirectTo: 'not-found',
       },
