@@ -15,9 +15,6 @@ export const permissionGuard: CanActivateFn = (route) => {
     return true;
   }
 
-  sessionStorage.clear();
-  router.navigate(['/login'], {
-    queryParams: { message: 'not-authenticated' },
-  });
+  router.navigate(['/portal/forbidden']);
   return false;
 };
