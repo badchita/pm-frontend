@@ -27,6 +27,7 @@ import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-al
 import { UserService } from '@app/shared/services/api/user.service';
 import { User } from '@app/features/auth/models/user.model';
 import { TaskFormHistoryComponent } from '../task-form-history/task-form-history.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-form',
@@ -65,6 +66,7 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   private readonly userService = inject(UserService);
   private readonly notificationService = inject(NzNotificationService);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   private readonly _destroying$ = new Subject<void>();
 
@@ -141,6 +143,10 @@ export class TaskFormComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.catchError = error;
+
+          if (error.status === 404) {
+            this.router.navigate(['portal/not-found']);
+          }
         },
       });
   }

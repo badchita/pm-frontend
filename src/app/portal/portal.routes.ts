@@ -8,11 +8,11 @@ export const PORTAL_ROUTES: Routes = [
   {
     path: '',
     component: PortalComponent,
+    canActivateChild: [AuthorizedGuard, permissionGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        canActivate: [AuthorizedGuard],
         loadComponent: () =>
           import('@app/features/dashboard/pages/home/home.component').then((m) => m.HomeComponent),
       },
@@ -36,7 +36,6 @@ export const PORTAL_ROUTES: Routes = [
       },
       {
         path: 'tasks/:projectId/:id',
-        canActivate: [AuthorizedGuard],
         loadComponent: () =>
           import('@app/features/tasks/pages/edit-task/edit-task.component').then(
             (m) => m.EditTaskComponent
@@ -44,7 +43,6 @@ export const PORTAL_ROUTES: Routes = [
       },
       {
         path: 'task-board/:projectId',
-        canActivate: [AuthorizedGuard],
         loadComponent: () =>
           import('@app/features/task-board/pages/task-board-page/task-board-page.component').then(
             (m) => m.TaskBoardPageComponent
@@ -52,7 +50,6 @@ export const PORTAL_ROUTES: Routes = [
       },
       {
         path: 'admin',
-        canActivate: [AuthorizedGuard, permissionGuard],
         data: { permission: Permission.VIEW_ADMIN_PAGE },
         loadChildren: () => import('@app/features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
       },

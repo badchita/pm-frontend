@@ -8,7 +8,7 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: '',
     component: AdminComponent,
-    canActivateChild: [AuthorizedGuard, permissionGuard], // applies to all children
+    canActivateChild: [AuthorizedGuard, permissionGuard],
     children: [
       { path: '', redirectTo: 'users', pathMatch: 'full' },
       {

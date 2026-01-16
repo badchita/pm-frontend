@@ -1,11 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import {
@@ -155,7 +150,13 @@ export class AdminEditCompanyComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
-          console.error('Failed to load company or users', error);
+          this.catchError = error;
+
+          if (error.status === 404) {
+            this.router.navigate(['portal/admin/not-found'], {
+              queryParams: { from: '/portal/admin/companies' },
+            });
+          }
         },
       });
   }
