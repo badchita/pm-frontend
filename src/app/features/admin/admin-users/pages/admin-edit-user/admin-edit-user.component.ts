@@ -162,6 +162,12 @@ export class AdminEditUserComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.catchError = error;
+
+          if (error.status === 404) {
+            this.router.navigate(['portal/admin/not-found'], {
+              queryParams: { from: '/portal/admin/users' },
+            });
+          }
         },
       });
   }

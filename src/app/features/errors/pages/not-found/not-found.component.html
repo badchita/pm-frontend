@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="error-container">
+    <span class="title">404 Not Found</span>
+    <p class="message">
+      The page you are looking for does not exist.
+      It might have been moved or deleted.
+    </p>
+    <div class="buttons-container">
+      @if (!isLoggedIn) {
+      <button nz-button nzSize="large" nzShape="round" [nzType]="'primary'" (click)="login()">
+        <nz-icon nzType="login" nzTheme="outline" />
+        Login
+      </button>
+      } @else {
+      <button nz-button nzSize="large" nzShape="round" [nzType]="'primary'" (click)="goBack()">
+        <nz-icon nzType="arrow-left" nzTheme="outline" />
+        Go Back
+      </button>
+      }
+    </div>
+  </div>
+</div>

@@ -22,7 +22,7 @@
           }
           @else {
           <li *hasPermission="nav?.permission" nz-menu-item (click)="navigate(nav.route)"
-            [nzSelected]="currentRoute.includes(nav.route)">
+            [nzSelected]="isSelected(nav.route)">
             <nz-icon [nzType]="nav.icon" />
             <span>{{ nav.title }}</span>
           </li>

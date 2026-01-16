@@ -158,7 +158,11 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           this.setTableData(tasksTable);
         },
         error: (error) => {
-          console.error('Failed to load project or users', error);
+          this.catchError = error;
+
+          if (error.status === 404) {
+            this.router.navigate(['portal/not-found']);
+          }
         },
       });
   }

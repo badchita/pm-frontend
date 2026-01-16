@@ -3,6 +3,7 @@ import { AuthorizedGuard } from '@app/features/auth/guards/authorized.guard';
 import { NotAuthorizedGuard } from '@app/features/auth/guards/not-authorized.guard';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'portal',
     loadChildren: () => import('@app/portal/portal.routes').then((m) => m.PORTAL_ROUTES),
@@ -22,5 +23,15 @@ export const routes: Routes = [
       ),
     canActivate: [NotAuthorizedGuard],
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: 'not-found',
+    loadComponent: () =>
+      import('@app/features/errors/pages/not-found/not-found.component').then(
+        (m) => m.NotFoundComponent
+      ),
+  },
+  {
+    path: '**',
+    redirectTo: 'not-found',
+  },
 ];

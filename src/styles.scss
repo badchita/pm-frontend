@@ -1,12 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 @import '../node_modules/quill/dist/quill.snow.css';
 @import '../node_modules/quill/dist/quill.bubble.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;700&display=swap');
 :root {
   --pm-primary: #840bdc;
   --pm-secondary: #e3cef2;
   --pm-grey: #d3d3d3;
   --pm-green: #52c41a;
   --pm-muted-grey: #6c757d;
+
+  body,
+  html {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
   .ant-spin-dot-item {
     background-color: var(--pm-primary);
@@ -128,7 +137,7 @@
 
     .ant-select-clear {
       height: 30px;
-      top: 70%
+      top: 70%;
     }
   }
 

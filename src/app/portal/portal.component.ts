@@ -134,6 +134,14 @@ export class PortalComponent implements OnInit, OnDestroy {
       });
   }
 
+  isSelected(route: string): boolean {
+    if (route === '/portal') {
+      return this.currentRoute === '/portal' || this.currentRoute === '/portal/dashboard';
+    }
+
+    return this.currentRoute.startsWith(route);
+  }
+
   navigate(url: string) {
     this.router.navigate([url]);
   }
