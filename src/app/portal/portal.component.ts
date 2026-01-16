@@ -1,6 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@app/core/layout/header/header.component';
 import { HasPermissionDirective } from '@app/features/auth/directives/has-permission.directive';
 import { Permission } from '@app/features/auth/enums/permission.enum';
@@ -24,8 +24,6 @@ import { filter, Subject, takeUntil } from 'rxjs';
     NzButtonComponent,
     NgClass,
     HasPermissionDirective,
-    RouterLinkActive,
-    RouterLink,
   ],
   templateUrl: './portal.component.html',
   styleUrl: './portal.component.scss',
