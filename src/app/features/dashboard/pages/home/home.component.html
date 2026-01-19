@@ -6,14 +6,20 @@
     </div>
 
     <div class="content">
-      <div class="data-contents">
-        <app-dashboard-active-projects [totalActiveProjects]="activeProjectsCount"
-          [projectsInProgress]="activeProjects"></app-dashboard-active-projects>
-        <app-dashboard-upcoming-deadlines
-          [upcomingProjectsDeadline]="upcomingProjects"></app-dashboard-upcoming-deadlines>
-        <app-dashboard-task-completed [projectTasksCompleted]="tasksCompletedByProject"></app-dashboard-task-completed>
-      </div>
-
+      <nz-row>
+        <nz-col nzSpan="8">
+          <app-dashboard-active-projects [totalActiveProjects]="activeProjectsCount"
+            [projectsInProgress]="activeProjects"></app-dashboard-active-projects>
+        </nz-col>
+        <nz-col nzSpan="8" class="upcoming-deadlines-col">
+          <app-dashboard-upcoming-deadlines
+            [upcomingProjectsDeadline]="upcomingProjects"></app-dashboard-upcoming-deadlines>
+        </nz-col>
+        <nz-col nzSpan="8">
+          <app-dashboard-task-completed
+            [projectTasksCompleted]="tasksCompletedByProject"></app-dashboard-task-completed>
+        </nz-col>
+      </nz-row>
       <app-dashboard-quick-access></app-dashboard-quick-access>
     </div>
   </div>
