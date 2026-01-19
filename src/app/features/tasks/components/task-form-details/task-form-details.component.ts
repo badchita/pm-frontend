@@ -2,7 +2,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   inject,
   input,
   OnDestroy,
@@ -25,7 +24,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { RequiredValidator } from '@app/shared/constants/validators';
 import { TaskService } from '../../services/task.service';
 import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
-import { finalize, Subject, take, takeUntil, tap } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import { TaskComment } from '../../models/task-comment.model';
 import { formatDistance } from 'date-fns';
