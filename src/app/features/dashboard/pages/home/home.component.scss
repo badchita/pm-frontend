@@ -15,10 +15,24 @@
     .content {
       padding-top: 34px;
 
-      .data-contents {
+      nz-row {
+        padding-bottom: 30px;
         display: flex;
         justify-content: space-between;
-        padding-bottom: 30px;
+
+        .upcoming-deadlines-col {
+          padding-right: 15px;
+          padding-left: 15px;
+        }
+
+        nz-col {
+          &:first-child {
+            padding-right: 30px;
+          }
+          &:last-child {
+            padding-left: 30px;
+          }
+        }
       }
     }
   }

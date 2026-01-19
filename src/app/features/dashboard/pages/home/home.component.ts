@@ -17,6 +17,7 @@ import { CreateProjectModalComponent } from '@app/features/projects/pages/projec
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +29,7 @@ import { GenericUtilityService } from '@app/shared/services/generic-utility.serv
     DashboardQuickAccessComponent,
     NzSpinModule,
     NzModalModule,
+    NzGridModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
