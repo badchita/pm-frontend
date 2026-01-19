@@ -200,16 +200,18 @@
                 </p>
               </nz-comment-content>
               <nz-comment-action>
-                <nz-icon nzType="like" [nzTheme]="hasUserLiked ? 'twotone' : 'outline'"
-                  (click)="likeDislike(TaskCommentReactionType.Like, comment.id)" />
+                <nz-icon nzType="like" [nzTheme]="comment.hasUserLiked ? 'twotone' : 'outline'"
+                  (click)="likeDislike(TaskCommentReactionType.Like, comment)" />
                 <span class="count like" nz-tooltip
-                  [nzTooltipTitle]="reactionLikeUsers.length > 0 ? userLikeReactionTemplate : null">{{comment.totalLikeReaction}}</span>
+                  [nzTooltipTitle]="(comment?.reactionLikeUsers?.length ?? 0) > 0  ? userReactionTemplate : null"
+                  [nzTooltipTitleContext]="{ $implicit: comment.reactionLikeUsers}">{{comment.totalLikeReaction}}</span>
               </nz-comment-action>
               <nz-comment-action>
-                <nz-icon nzType="dislike" [nzTheme]="hasUserDisliked ? 'twotone' : 'outline'"
-                  (click)="likeDislike(TaskCommentReactionType.Dislike, comment.id)" />
+                <nz-icon nzType="dislike" [nzTheme]="comment.hasUserDisLiked ? 'twotone' : 'outline'"
+                  (click)="likeDislike(TaskCommentReactionType.Dislike, comment)" />
                 <span class="count dislike" nz-tooltip
-                  [nzTooltipTitle]="reactionDislikeUsers.length > 0 ? userDislikeReactionTemplate : null">{{
+                  [nzTooltipTitle]="(comment?.reactionDislikeUsers?.length ?? 0) > 0  ? userReactionTemplate : null"
+                  [nzTooltipTitleContext]="{ $implicit: comment.reactionDislikeUsers}">{{
                   comment.totalDislikeReaction }}</span>
               </nz-comment-action>
             </nz-comment>
@@ -223,14 +225,8 @@
   }
 </div>
 
-<ng-template #userLikeReactionTemplate>
-  @for (user of reactionLikeUsers; track user) {
-  <span>{{ user.name }}</span> <br />
-  }
-</ng-template>
-
-<ng-template #userDislikeReactionTemplate>
-  @for (user of reactionDislikeUsers; track user) {
+<ng-template #userReactionTemplate let-users>
+  @for (user of users; track user) {
   <span>{{ user.name }}</span> <br />
   }
 </ng-template>

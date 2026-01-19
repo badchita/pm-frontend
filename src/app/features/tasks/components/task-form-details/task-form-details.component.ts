@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   inject,
   input,
   OnDestroy,
@@ -24,7 +25,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { RequiredValidator } from '@app/shared/constants/validators';
 import { TaskService } from '../../services/task.service';
 import { SPINNER_TIP } from '@app/shared/constants/ui.constants';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, take, takeUntil, tap } from 'rxjs';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import { TaskComment } from '../../models/task-comment.model';
 import { formatDistance } from 'date-fns';
@@ -75,7 +76,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   createTaskCommentForm!: FormGroup;
   catchError!: any;
   taskComments: TaskComment[] = [];
-  taskCommentsReactions: TaskCommentReaction[] = [];
+  taskCommentsReactions!: TaskCommentReaction[];
   reactionLikeUsers: User[] = [];
   reactionDislikeUsers: User[] = [];
   userDetails!: User;
@@ -290,15 +291,18 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
           this.taskComments = comments.map((comment) => {
             this.taskCommentsReactions = comment.reactions ?? [];
             this.buildUserReactionMap();
-            this.hasUserLiked = this.hasUserReacted(comment.id, TaskCommentReactionType.Like);
-            this.hasUserDisliked = this.hasUserReacted(comment.id, TaskCommentReactionType.Dislike);
+            const hasUserLiked = this.hasUserReacted(comment.id, TaskCommentReactionType.Like);
+            const hasUserDisliked = this.hasUserReacted(
+              comment.id,
+              TaskCommentReactionType.Dislike
+            );
 
             if (comment.reactions?.length) {
-              this.reactionLikeUsers = comment.reactions
+              comment.reactionLikeUsers = comment.reactions
                 .filter((r) => r.user && r.reactionType === this.TaskCommentReactionType.Like)
                 .map((r) => r.user!);
 
-              this.reactionDislikeUsers = comment.reactions
+              comment.reactionDislikeUsers = comment.reactions
                 .filter((r) => r.user && r.reactionType === this.TaskCommentReactionType.Dislike)
                 .map((r) => r.user!);
             }
@@ -318,6 +322,8 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
               }),
               totalLikeReaction: likeReactions?.length,
               totalDislikeReaction: disLikeReactions?.length,
+              hasUserLiked: hasUserLiked,
+              hasUserDisLiked: hasUserDisliked,
             };
           });
         },
@@ -327,11 +333,15 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  likeDislike(reaction: TaskCommentReactionType, taskCommentId: number) {
+  likeDislike(reaction: TaskCommentReactionType, comment: TaskComment) {
     const userId = this.userDetails.id;
-    const userReaction = this.taskCommentsReactions.find((reaction) => reaction.userId === userId);
+    let userReaction;
+    if (comment?.reactions) {
+      userReaction = comment?.reactions.find((reaction) => reaction.userId === userId);
+    }
+
     const payload: TaskCommentReaction = {
-      taskCommentId: taskCommentId,
+      taskCommentId: comment.id,
       userId: userId,
       reactionType: userReaction?.reactionType === reaction ? null : reaction,
     };
@@ -341,7 +351,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.taskService
-      .updateTaskCommentReaction(payload, this.taskId(), taskCommentId)
+      .updateTaskCommentReaction(payload, this.taskId(), comment.id)
       .pipe(takeUntil(this._destroying$))
       .subscribe({
         next: () => {
@@ -354,6 +364,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   }
 
   hasUserReacted(taskCommentId: number, reactionType: TaskCommentReactionType): boolean {
+    console.log(this.taskComments);
     return this.userReactionsByComment.get(taskCommentId) === reactionType;
   }
 

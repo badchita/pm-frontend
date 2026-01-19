@@ -12,6 +12,10 @@ export interface TaskComment {
   reactions?: TaskCommentReaction[];
   totalLikeReaction?: number;
   totalDislikeReaction?: number;
+  hasUserLiked?: boolean;
+  hasUserDisLiked?: boolean;
+  reactionLikeUsers: User[];
+  reactionDislikeUsers: User[];
   createdAt: Date;
   updatedAt: Date;
   displayTime?: string;
