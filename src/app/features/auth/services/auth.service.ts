@@ -56,7 +56,7 @@ export class AuthService {
   }
 
   currentUser(): User | null {
-    const userSession = localStorage.getItem('user_details');
-    return userSession ? JSON.parse(userSession) : null;
+    const userLocalStorage = localStorage.getItem('user_details');
+    return userLocalStorage ? JSON.parse(userLocalStorage) : null;
   }
 }
