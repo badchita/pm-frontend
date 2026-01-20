@@ -4,7 +4,7 @@ import { environment } from '@app/environments/environment';
 import { LoginForm, LoginResponse } from '@app/features/auth/models/auth.model';
 import { User } from '@app/features/auth/models/user.model';
 import { UserRole } from '@app/shared/enums/user-role.enum';
-import { Observable } from 'rxjs';
+import { finalize, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +12,8 @@ import { Observable } from 'rxjs';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly api = `${environment.url}/auth`;
+
+  private refreshTokenInProgress$?: Observable<{ token: string; refreshToken: string }>;
 
   register(user: User): Observable<User> {
     return this.http.post<User>(`${this.api}/register`, user);
@@ -22,9 +24,23 @@ export class AuthService {
   }
 
   refreshToken(refreshToken: string): Observable<{ token: string; refreshToken: string }> {
-    return this.http.post<{ token: string; refreshToken: string }>(`${this.api}/refresh-token`, {
-      refreshToken,
-    });
+    if (this.refreshTokenInProgress$) {
+      return this.refreshTokenInProgress$;
+    }
+
+    this.refreshTokenInProgress$ = this.http
+      .post<{ token: string; refreshToken: string }>(`${this.api}/refresh-token`, { refreshToken })
+      .pipe(
+        tap((res) => {
+          localStorage.setItem('access_token', res.token);
+          localStorage.setItem('refresh_token', res.refreshToken);
+        }),
+        finalize(() => {
+          this.refreshTokenInProgress$ = undefined;
+        }),
+      );
+
+    return this.refreshTokenInProgress$;
   }
 
   logout(): Observable<void> {

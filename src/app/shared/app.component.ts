@@ -19,13 +19,15 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const refreshToken = this.authService.getRefreshToken();
 
-    if (this.authService.isLoggedIn() && refreshToken) {
+    if (refreshToken) {
       this.authService
         .refreshToken(refreshToken)
         .pipe(takeUntil(this._destroying$))
         .subscribe({
           next: () => {
-            this.router.navigate(['/portal']);
+            if (this.router.url !== '/portal') {
+              this.router.navigate(['/portal']);
+            }
           },
           error: () => this.authService.logout(),
         });
