@@ -2,9 +2,21 @@
   color: white;
 
   .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
     .header-title {
       font-size: 20px;
       font-weight: 500;
+    }
+  }
+
+  .logout-button {
+    color: #ffffff;
+
+    nz-icon {
+      font-size: 20px;
     }
   }
 }
