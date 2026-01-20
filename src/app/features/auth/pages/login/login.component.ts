@@ -74,12 +74,12 @@ export class LoginComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$),
         finalize(() => {
           this.isLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: (response) => {
-          console.log(response)
           const { token, user, refreshToken } = response;
+
           this.authService.setAccessToken(token);
           this.authService.setUserDetails(user);
           this.authService.setRefreshToken(refreshToken);
