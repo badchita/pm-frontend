@@ -4,6 +4,7 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@app/core/layout/header/header.component';
 import { HasPermissionDirective } from '@app/features/auth/directives/has-permission.directive';
 import { Permission } from '@app/features/auth/enums/permission.enum';
+import { AuthService } from '@app/features/auth/services/auth.service';
 import { ProjectService } from '@app/features/projects/services/project.service';
 import { UserRole } from '@app/shared/enums/user-role.enum';
 import { NavItem } from '@app/shared/models/nav-item.model';
@@ -30,6 +31,7 @@ import { filter, Subject, takeUntil } from 'rxjs';
 })
 export class PortalComponent implements OnInit, OnDestroy {
   private readonly projectService = inject(ProjectService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   private readonly _destroying$ = new Subject<void>();
@@ -64,6 +66,11 @@ export class PortalComponent implements OnInit, OnDestroy {
       icon: 'appstore',
       route: '/portal/application',
     },
+    {
+      title: 'Logout',
+      icon: 'logout',
+      route: '/login',
+    },
   ];
   adminNavItem: NavItem = {
     title: 'Admin',
@@ -88,7 +95,7 @@ export class PortalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const userRoleSession = sessionStorage.getItem('user_role');
+    const userRoleSession = localStorage.getItem('user_role');
     this.userRole = userRoleSession ? JSON.parse(userRoleSession) : null;
     this.loadProjects();
 
@@ -143,6 +150,21 @@ export class PortalComponent implements OnInit, OnDestroy {
   }
 
   navigate(url: string) {
+    if (url === '/login') {
+      this.authService
+        .logout()
+        .pipe(takeUntil(this._destroying$))
+        .subscribe({
+          next: () => {
+            localStorage.clear();
+
+            globalThis.location.href = '/login';
+          },
+        });
+
+      return;
+    }
+
     this.router.navigate([url]);
   }
 

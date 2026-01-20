@@ -78,9 +78,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response) => {
-          const { token, user } = response;
+          console.log(response)
+          const { token, user, refreshToken } = response;
           this.authService.setAccessToken(token);
           this.authService.setUserDetails(user);
+          this.authService.setRefreshToken(refreshToken);
           this.authService.setUserRole(user.role);
 
           this.router.navigate(['/portal']);

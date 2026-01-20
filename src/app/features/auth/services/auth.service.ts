@@ -21,24 +21,42 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.api}/login`, loginForm);
   }
 
+  refreshToken(refreshToken: string): Observable<{ token: string; refreshToken: string }> {
+    return this.http.post<{ token: string; refreshToken: string }>(`${this.api}/refresh-token`, {
+      refreshToken,
+    });
+  }
+
+  logout(): Observable<void> {
+    return this.http.post<void>(`${this.api}/logout`, {});
+  }
+
   setAccessToken(token: string) {
-    sessionStorage.setItem('access_token', token);
+    localStorage.setItem('access_token', token);
   }
 
   setUserDetails(user: User) {
-    sessionStorage.setItem('user_details', JSON.stringify(user));
+    localStorage.setItem('user_details', JSON.stringify(user));
   }
 
   setUserRole(role: UserRole) {
-    sessionStorage.setItem('user_role', JSON.stringify(role));
+    localStorage.setItem('user_role', JSON.stringify(role));
+  }
+
+  setRefreshToken(token: string) {
+    localStorage.setItem('refresh_token', token);
   }
 
   isLoggedIn(): boolean {
-    return !!sessionStorage.getItem('access_token');
+    return !!localStorage.getItem('access_token');
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refresh_token');
   }
 
   currentUser(): User | null {
-    const userSession = sessionStorage.getItem('user_details');
+    const userSession = localStorage.getItem('user_details');
     return userSession ? JSON.parse(userSession) : null;
   }
 }

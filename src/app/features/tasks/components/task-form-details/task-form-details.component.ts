@@ -131,7 +131,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   }
 
   buildForm() {
-    const userDetailsSession = sessionStorage.getItem('user_details');
+    const userDetailsSession = localStorage.getItem('user_details');
     this.userDetails = userDetailsSession ? JSON.parse(userDetailsSession) : null;
     this.createTaskCommentForm = this.formBuilder.group({
       id: [null],
