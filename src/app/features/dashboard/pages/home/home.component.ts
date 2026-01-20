@@ -18,6 +18,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NOTIFICATION_MESSAGE, NOTIFICATION_TITLE } from '@app/shared/constants/ui.constants';
 import { GenericUtilityService } from '@app/shared/services/generic-utility.service';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { UserRole } from '@app/shared/enums/user-role.enum';
 
 @Component({
   selector: 'app-home',
@@ -50,7 +51,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   isLoading = false;
 
   ngOnInit() {
-    this.loadDashboard();
+    const userRoleLocalStorage = localStorage.getItem('user_role');
+    const userRole = userRoleLocalStorage ? JSON.parse(userRoleLocalStorage) : null;
+
+    if (userRole !== UserRole.Admin) {
+      this.loadDashboard();
+    }
   }
 
   loadDashboard() {
@@ -62,7 +68,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$),
         finalize(() => {
           this.isLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: (dashboard) => {
@@ -107,7 +113,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           {
             nzClass: 'form-notification',
             nzDuration: 5000,
-          }
+          },
         );
       }
     });

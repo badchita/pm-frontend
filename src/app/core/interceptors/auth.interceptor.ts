@@ -9,6 +9,13 @@ export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
+    const isAuthEndpoint =
+      req.url.includes('/auth/login') || req.url.includes('/auth/refresh-token');
+
+    if (isAuthEndpoint) {
+      return next.handle(req);
+    }
+
     const token = localStorage.getItem('access_token');
 
     const authReq = token
@@ -19,40 +26,47 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          if (!this.isRefreshing) {
-            this.isRefreshing = true;
+        if (
+          error.status === 401 &&
+          !this.isRefreshing &&
+          !req.url.includes('/auth/refresh-token')
+        ) {
+          this.isRefreshing = true;
 
-            const refreshToken = localStorage.getItem('refresh_token');
-
-            if (refreshToken) {
-              return this.authService.refreshToken(refreshToken).pipe(
-                switchMap((res) => {
-                  this.isRefreshing = false;
-                  localStorage.setItem('access_token', res.token);
-                  localStorage.setItem('refresh_token', res.refreshToken);
-
-                  const retryReq = req.clone({
-                    setHeaders: { Authorization: `Bearer ${res.token}` },
-                  });
-                  return next.handle(retryReq);
-                }),
-                catchError((err) => {
-                  this.isRefreshing = false;
-                  localStorage.removeItem('access_token');
-                  localStorage.removeItem('refresh_token');
-                  return throwError(() => err);
-                })
-              );
-            } else {
-              localStorage.removeItem('access_token');
-              return throwError(() => error);
-            }
+          const refreshToken = localStorage.getItem('refresh_token');
+          if (!refreshToken) {
+            this.forceLogout();
+            return throwError(() => error);
           }
+
+          return this.authService.refreshToken(refreshToken).pipe(
+            switchMap((res) => {
+              this.isRefreshing = false;
+
+              localStorage.setItem('access_token', res.token);
+              localStorage.setItem('refresh_token', res.refreshToken);
+
+              const retryReq = req.clone({
+                setHeaders: { Authorization: `Bearer ${res.token}` },
+              });
+
+              return next.handle(retryReq);
+            }),
+            catchError((err) => {
+              this.isRefreshing = false;
+              this.forceLogout();
+              return throwError(() => err);
+            }),
+          );
         }
 
         return throwError(() => error);
-      })
+      }),
     );
+  }
+
+  private forceLogout() {
+    localStorage.clear();
+    globalThis.location.href = '/login';
   }
 }
