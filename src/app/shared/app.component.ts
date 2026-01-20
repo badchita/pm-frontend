@@ -1,12 +1,39 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { AuthService } from '@app/features/auth/services/auth.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
   protected readonly title = signal('pm-frontend');
+
+  private readonly _destroying$ = new Subject<void>();
+
+  ngOnInit() {
+    const refreshToken = this.authService.getRefreshToken();
+
+    if (this.authService.isLoggedIn() && refreshToken) {
+      this.authService
+        .refreshToken(refreshToken)
+        .pipe(takeUntil(this._destroying$))
+        .subscribe({
+          next: () => {
+            this.router.navigate(['/portal']);
+          },
+          error: () => this.authService.logout(),
+        });
+    }
+  }
+
+  ngOnDestroy() {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
+  }
 }

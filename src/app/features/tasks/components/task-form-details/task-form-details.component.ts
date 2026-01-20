@@ -131,8 +131,8 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
   }
 
   buildForm() {
-    const userDetailsSession = sessionStorage.getItem('user_details');
-    this.userDetails = userDetailsSession ? JSON.parse(userDetailsSession) : null;
+    const userDetailsLocalStorage = localStorage.getItem('user_details');
+    this.userDetails = userDetailsLocalStorage ? JSON.parse(userDetailsLocalStorage) : null;
     this.createTaskCommentForm = this.formBuilder.group({
       id: [null],
       content: [null, RequiredValidator],
@@ -262,7 +262,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$),
         finalize(() => {
           this.isCommentsLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: () => {
@@ -282,7 +282,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$),
         finalize(() => {
           this.isCommentsLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: (comments) => {
@@ -293,7 +293,7 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
             const hasUserLiked = this.hasUserReacted(comment.id, TaskCommentReactionType.Like);
             const hasUserDisliked = this.hasUserReacted(
               comment.id,
-              TaskCommentReactionType.Dislike
+              TaskCommentReactionType.Dislike,
             );
 
             if (comment.reactions?.length) {
@@ -307,11 +307,11 @@ export class TaskFormDetailsComponent implements OnInit, OnDestroy {
             }
 
             const likeReactions = comment.reactions?.filter(
-              (reaction) => reaction.reactionType === this.TaskCommentReactionType.Like
+              (reaction) => reaction.reactionType === this.TaskCommentReactionType.Like,
             );
 
             const disLikeReactions = comment.reactions?.filter(
-              (reaction) => reaction.reactionType === this.TaskCommentReactionType.Dislike
+              (reaction) => reaction.reactionType === this.TaskCommentReactionType.Dislike,
             );
 
             return {

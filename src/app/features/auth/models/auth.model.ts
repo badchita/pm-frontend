@@ -7,5 +7,6 @@ export interface LoginForm {
 
 export interface LoginResponse {
   token: string;
+  refreshToken: string;
   user: User;
 }
