@@ -13,6 +13,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { debounceTime } from 'rxjs';
 
 @Component({
@@ -31,6 +32,7 @@ import { debounceTime } from 'rxjs';
     NzInputModule,
     NzSelectModule,
     NzModalModule,
+    NzTooltipModule,
   ],
   templateUrl: './admin-project-list-table.component.html',
   styleUrl: './admin-project-list-table.component.scss',
@@ -45,6 +47,7 @@ export class AdminProjectListTableComponent implements OnInit {
 
   searchUserForm!: FormGroup;
 
+  showTooltipDescription = false;
   isDeleted = 'N';
 
   ngOnInit() {
@@ -78,6 +81,10 @@ export class AdminProjectListTableComponent implements OnInit {
       .get('role')
       ?.valueChanges.pipe(debounceTime(500))
       .subscribe(() => this.updateTable());
+  }
+
+  checkOverflow(el: HTMLElement) {
+    this.showTooltipDescription = el.scrollWidth > el.clientWidth;
   }
 
   updateTable(params?: NzTableQueryParams) {

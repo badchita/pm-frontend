@@ -15,10 +15,18 @@
     <tbody>
       @for (data of table.data; track data.id) {
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td nzAlign="center"></td>
+        <td>{{ data.projectIdNumber }}</td>
+        <td>{{ data.projectName }}</td>
+        <td>{{ data.company?.name }}</td>
+        <td #description class="description" nzEllipsis nz-tooltip nzTooltipPlacement="top"
+          [nzTooltipTitle]="showTooltipDescription ? data.description : null" [nzTooltipVisible]="false"
+          [nzTooltipArrowPointAtCenter]="true" [nzTooltipOverlayStyle]="{
+              'max-width': '600px',
+              'white-space': 'normal',
+              'word-break': 'break-word'
+            }" (mouseenter)="checkOverflow(description)">
+          {{ data.description }}
+        </td>
         <td class="table-action-buttons" nzAlign="center">
           <button class="edit-button" nz-button nzType="link">
             <nz-icon nzType="edit" nzTheme="outline" />
