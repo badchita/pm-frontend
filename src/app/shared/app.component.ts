@@ -11,7 +11,6 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
   protected readonly title = signal('pm-frontend');
 
   private readonly _destroying$ = new Subject<void>();
@@ -24,11 +23,6 @@ export class AppComponent implements OnInit, OnDestroy {
         .refreshToken(refreshToken)
         .pipe(takeUntil(this._destroying$))
         .subscribe({
-          next: () => {
-            if (this.router.url !== '/portal') {
-              this.router.navigate(['/portal']);
-            }
-          },
           error: () => this.authService.logout(),
         });
     }
