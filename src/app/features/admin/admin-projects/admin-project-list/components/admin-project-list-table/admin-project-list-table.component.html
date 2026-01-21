@@ -1,1 +1,40 @@
-<p>admin-project-list-table.component works!</p>
+<div class="table-container">
+  <nz-table #table class="table" nzTableLayout="fixed" [nzFrontPagination]="false" [nzShowSizeChanger]="true">
+    <thead>
+      <tr>
+        <th nzWidth="15%" [nzSortFn]="true" id="projectIdNumber" nzColumnKey="projectIdNumber">Project ID Number</th>
+        <th nzWidth="15%" [nzSortFn]="true" id="projectName" nzColumnKey="projectName">Project Name</th>
+        <th nzWidth="15%" id="company">Company</th>
+        <th nzWidth="35%" id="description">Description</th>
+        <th nzWidth="10%" id="actions" nzAlign="center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of table.data; track data.id) {
+      <tr>
+        <td>{{ data.name }}</td>
+        <td>{{ data.email }}</td>
+        <td>{{ data.company?.name }}</td>
+        <td nzAlign="center">{{ data.role | userRole }}</td>
+        <td nzAlign="center">
+          @if (data.isApproved == "Y") {
+          <nz-tag nzColor="success">Appoved</nz-tag>
+          } @else
+          {
+          <nz-tag nzColor="warning">Pending</nz-tag>
+          }
+        </td>
+        <td nzAlign="center">{{ data.createdAt | date : 'MMM dd, yyyy' }}</td>
+        <td class="table-action-buttons" nzAlign="center">
+          <button class="edit-button" nz-button nzType="link">
+            <nz-icon nzType="edit" nzTheme="outline" />
+          </button>
+          <button class="delete-button" nz-button nzType="link" nzDanger>
+            <nz-icon nzType="delete" nzTheme="outline" />
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </nz-table>
+</div>
