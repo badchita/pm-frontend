@@ -91,7 +91,9 @@ export class PortalComponent implements OnInit, OnDestroy {
     const userRoleLocalStorage = localStorage.getItem('user_role');
     this.userRole = userRoleLocalStorage ? JSON.parse(userRoleLocalStorage) : null;
 
-    if (this.userRole !== UserRole.Admin) {
+    if (this.userRole === UserRole.Admin) {
+      this.navItems = this.navItems.filter((_, index) => index !== 2);
+    } else {
       this.loadProjects();
 
       this.projectService.projectPublished$.pipe(takeUntil(this._destroying$)).subscribe(() => {
