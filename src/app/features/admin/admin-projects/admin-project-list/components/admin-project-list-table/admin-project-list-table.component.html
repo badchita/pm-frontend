@@ -1,3 +1,44 @@
+<div class="filter-container">
+  <form nz-form nzLayout="inline" [formGroup]="searchProjectForm" (submit)="updateTable()">
+    <nz-form-item>
+      <nz-form-control>
+        <nz-select class="select-search" formControlName="companyId" nzPlaceHolder="Select Company"
+          [nzAllowClear]="true" nzShowSearch (nzOnSearch)="loadCompanies($event)" [nzFilterOption]="disableFilter">
+          @for (company of companies; track company.value) {
+          <nz-option nzCustomContent [nzLabel]="company.label" [nzValue]="company.value">
+            <div class="assigned-to-options">
+              <span class="user-name">{{ company.label }}</span>
+            </div>
+          </nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-select class="select-search" formControlName="isPublished" nzPlaceHolder="Select Status"
+          [nzAllowClear]="true" [nzOptions]="statusOptions">
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <input class="input-search" nz-input formControlName="search" placeholder="Search" />
+      </nz-form-control>
+    </nz-form-item>
+    <button class="reset-search-button" nz-button (click)="reset()">Reset</button>
+    @if (isDeleted === 'N') {
+    <button class="recycle-bin-button" nz-button nzType="link" (click)="recycleBin($event, 'Y')">
+      <img alt="recycle-bin" src="/assets/icons/recycle-bin.svg" width="20" />
+    </button>
+    } @else {
+    <button class="recycle-bin-button" nz-button nzType="link" (click)="recycleBin($event)">
+      <nz-icon nzType="unordered-list" nzTheme="outline" />
+    </button>
+    }
+  </form>
+</div>
+
 <div class="table-container">
   <nz-table #table class="table" nzTableLayout="fixed" [nzData]="dataList() || []" [nzShowPagination]="true"
     [nzFrontPagination]="false" [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate"
@@ -9,6 +50,7 @@
         <th nzWidth="15%" [nzSortFn]="true" id="projectName" nzColumnKey="projectName">Project Name</th>
         <th nzWidth="15%" id="company">Company</th>
         <th nzWidth="35%" id="description">Description</th>
+        <th nzWidth="15%" id="isPublished" nzAlign="center">Status</th>
         <th nzWidth="10%" id="actions" nzAlign="center">Actions</th>
       </tr>
     </thead>
@@ -26,6 +68,14 @@
               'word-break': 'break-word'
             }" (mouseenter)="checkOverflow(description)">
           {{ data.description }}
+        </td>
+        <td nzAlign="center">
+          @if (data.isPublished == "Y") {
+          <nz-tag nzColor="success">Active</nz-tag>
+          } @else
+          {
+          <nz-tag nzColor="default">Inactive</nz-tag>
+          }
         </td>
         <td class="table-action-buttons" nzAlign="center">
           <button class="edit-button" nz-button nzType="link">
