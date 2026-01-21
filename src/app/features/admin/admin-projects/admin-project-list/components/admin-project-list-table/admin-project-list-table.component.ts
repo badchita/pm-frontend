@@ -111,6 +111,10 @@ export class AdminProjectListTableComponent implements OnInit, OnDestroy {
     this.showTooltipDescription = el.scrollWidth > el.clientWidth;
   }
 
+  edit(id: number) {
+    this.router.navigate([`/portal/projects/${id}`]);
+  }
+
   updateTable(params?: NzTableQueryParams) {
     const searchFormValues = this.searchProjectForm.getRawValue();
     const isFiltering =
