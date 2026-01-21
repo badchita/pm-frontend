@@ -18,34 +18,34 @@ export const PORTAL_ROUTES: Routes = [
       },
       {
         path: 'projects',
-        canActivate: [AuthorizedGuard, permissionGuard],
         data: { permission: Permission.VIEW_PROJECTS_PAGE },
         loadComponent: () =>
           import('@app/features/projects/pages/project-list/project-list.component').then(
-            (m) => m.ProjectListComponent
+            (m) => m.ProjectListComponent,
           ),
       },
       {
         path: 'projects/:id',
-        canActivate: [AuthorizedGuard, permissionGuard],
         data: { permission: Permission.VIEW_PROJECTS_PAGE },
         loadComponent: () =>
           import('@app/features/projects/pages/edit-project/edit-project.component').then(
-            (m) => m.EditProjectComponent
+            (m) => m.EditProjectComponent,
           ),
       },
       {
         path: 'tasks/:projectId/:id',
+        data: { permission: Permission.VIEW_TASKBOARD_PAGE },
         loadComponent: () =>
           import('@app/features/tasks/pages/edit-task/edit-task.component').then(
-            (m) => m.EditTaskComponent
+            (m) => m.EditTaskComponent,
           ),
       },
       {
         path: 'task-board/:projectId',
+        data: { permission: Permission.VIEW_TASKBOARD_PAGE },
         loadComponent: () =>
           import('@app/features/task-board/pages/task-board-page/task-board-page.component').then(
-            (m) => m.TaskBoardPageComponent
+            (m) => m.TaskBoardPageComponent,
           ),
       },
       {
@@ -57,14 +57,14 @@ export const PORTAL_ROUTES: Routes = [
         path: 'not-found',
         loadComponent: () =>
           import('@app/features/errors/pages/not-found/not-found.component').then(
-            (m) => m.NotFoundComponent
+            (m) => m.NotFoundComponent,
           ),
       },
       {
         path: 'forbidden',
         loadComponent: () =>
           import('@app/features/errors/pages/forbidden/forbidden.component').then(
-            (m) => m.ForbiddenComponent
+            (m) => m.ForbiddenComponent,
           ),
       },
       {
