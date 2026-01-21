@@ -6,5 +6,8 @@
   </div>
 
   <div class="content">
+    <app-admin-project-list-table [dataTable]="projectDataTable"
+      [dataList]="projectDataTable.data.length > 0 ? projectDataTable.data : []" [loading]="isLoading"
+      (onUpdateTable)="tableUpdate($event)"></app-admin-project-list-table>
   </div>
 </div>

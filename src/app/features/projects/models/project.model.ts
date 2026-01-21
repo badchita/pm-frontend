@@ -1,3 +1,4 @@
+import { Company } from '@app/features/admin/admin-companies/models/company.model';
 import { Task } from '@app/features/tasks/models/task.model';
 
 export interface ProjectForm {
@@ -16,4 +17,5 @@ export interface Project {
   createdAt: Date;
   dueDate?: Date | string;
   tasks?: Task[];
+  company?: Company;
 }
