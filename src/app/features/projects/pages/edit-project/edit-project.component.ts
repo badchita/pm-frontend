@@ -30,6 +30,7 @@ import { TaskService } from '@app/features/tasks/services/task.service';
 import { ErrorAlertComponent } from '@app/shared/components/error-alert/error-alert.component';
 import { UserService } from '@app/shared/services/api/user.service';
 import { User } from '@app/features/auth/models/user.model';
+import { ProjectFormComponent } from '../../components/project-form/project-form.component';
 
 @Component({
   selector: 'app-edit-project',
@@ -46,6 +47,7 @@ import { User } from '@app/features/auth/models/user.model';
     TaskListTableComponent,
     NzModalModule,
     ErrorAlertComponent,
+    ProjectFormComponent,
   ],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss',
@@ -134,7 +136,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._destroying$))
             .subscribe((value) => {
               this.hasChanges = Object.keys(value).some(
-                (key) => value[key] !== this.originalProject[key]
+                (key) => value[key] !== this.originalProject[key],
               );
             });
 
@@ -151,7 +153,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         }),
         finalize(() => {
           this.isLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: (tasksTable: DataTable<Task>) => {
@@ -179,7 +181,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$),
         finalize(() => {
           this.isLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: (users) => {
@@ -224,7 +226,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$),
         finalize(() => {
           this.isLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: (project) => {
@@ -236,7 +238,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
               {
                 nzClass: 'form-notification',
                 nzDuration: 5000,
-              }
+              },
             );
             this.editProjectForm.patchValue(project, { emitEvent: false });
             this.editProjectForm.markAsPristine();
@@ -264,7 +266,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$),
         finalize(() => {
           this.isLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: (project) => {
@@ -276,7 +278,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
               {
                 nzClass: 'form-notification',
                 nzDuration: 5000,
-              }
+              },
             );
 
             this.projectService.projectPublished();
@@ -316,7 +318,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
           {
             nzClass: 'form-notification',
             nzDuration: 5000,
-          }
+          },
         );
       }
     });
@@ -336,7 +338,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
         takeUntil(this._destroying$),
         finalize(() => {
           this.isTableLoading = false;
-        })
+        }),
       )
       .subscribe({
         next: (tasks) => {
