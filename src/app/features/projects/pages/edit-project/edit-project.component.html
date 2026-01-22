@@ -1,119 +1,14 @@
-<nz-spin [nzSpinning]="isLoading" [nzTip]="spinnerTip">
-  <div class="container">
-    <div class="header">
-      <span>{{ projectName }}: {{ projectIdNumber }}</span>
-      @if (isPublished === 'Y') {
-      <nz-tag nzColor="success">Active</nz-tag>
-      } @else {
-      <nz-tag nzColor="default">In Active</nz-tag>
-      }
-    </div>
-
-    <div class="content">
-      @if (!isTableError) {
-      <app-error-alert [error]="catchError"></app-error-alert>
-      }
-
-      <form nz-form nzLayout="vertical" [formGroup]="editProjectForm">
-        <nz-row>
-          <nz-col nzSpan="12">
-            <nz-form-item>
-              <nz-form-label class="portal-input-label" nzRequired>Project Name</nz-form-label>
-              <nz-form-control>
-                <nz-input-wrapper>
-                  <input class="portal-input-form" type="text" nz-input formControlName="projectName" nzSize="large"
-                    appPopoverFormValidator />
-                </nz-input-wrapper>
-              </nz-form-control>
-            </nz-form-item>
-          </nz-col>
-          <nz-col nzSpan="12">
-            <nz-form-item>
-              <nz-form-label class="portal-input-label">Project Id Number</nz-form-label>
-              <nz-form-control>
-                <nz-input-wrapper>
-                  <input class="portal-input-form" type="text" nz-input formControlName="projectIdNumber" nzSize="large"
-                    appPopoverFormValidator />
-                </nz-input-wrapper>
-              </nz-form-control>
-            </nz-form-item>
-          </nz-col>
-        </nz-row>
-
-        <nz-row>
-          <nz-col nzSpan="12">
-            <nz-form-item>
-              <nz-form-label class="portal-input-label">Created By</nz-form-label>
-              <nz-form-control>
-                <nz-input-wrapper>
-                  <input class="portal-input-form" type="text" nz-input formControlName="createdBy" nzSize="large"
-                    appPopoverFormValidator />
-                </nz-input-wrapper>
-              </nz-form-control>
-            </nz-form-item>
-          </nz-col>
-          <nz-col nzSpan="12">
-            <nz-form-item>
-              <nz-form-label class="portal-input-label" nzRequired>Due Date</nz-form-label>
-              <nz-form-control class="due-date-control">
-                <nz-date-picker class="portal-input-form" formControlName="dueDate"
-                  nzFormat="MMM dd, yyyy"></nz-date-picker>
-              </nz-form-control>
-            </nz-form-item>
-          </nz-col>
-        </nz-row>
-
-        <nz-row>
-          <nz-col nzSpan="12">
-            <nz-form-item>
-              <nz-form-label class="portal-input-label" nzRequired>Descripton</nz-form-label>
-              <nz-form-control>
-                <nz-textarea-count [nzMaxCharacterCount]="2000">
-                  <textarea class="portal-input-textarea-form" formControlName="description" nz-input
-                    [nzAutosize]="{ minRows: 5, maxRows: 10 }" appPopoverFormValidator></textarea>
-                </nz-textarea-count>
-              </nz-form-control>
-            </nz-form-item>
-          </nz-col>
-        </nz-row>
-
-        @if (isTableError) {
-        <app-error-alert [error]="catchError"></app-error-alert>
-        }
-
-        @if (isPublished === 'Y') {
-        <div class="header task-header">
-          <span>Task List</span>
-          <button nz-button nzShape="round" nzType="primary" (click)="addNewTask()">
-            Add New Task
-          </button>
-        </div>
-
-        <app-task-list-table [dataTable]="taskDataTable" [dataList]="taskDataTable.data" [loading]="isTableLoading"
-          (onUpdateTable)="tableUpdate($event)" [userOptions]="users"
-          (onAssignedToSearch)="searchUsers($event)"></app-task-list-table>
-        }
-
-        <div class="buttons-form-container">
-          <button nz-button class="create-button" nzSize="large" nzShape="round" [nzType]="'primary'"
-            [disabled]="editProjectForm.invalid && !hasChanges" (click)="save()">
-            Save
-          </button>
-          @if (isPublished === 'N') {
-          <button nz-button class="publish-button" nzSize="large" nzShape="round" [disabled]="editProjectForm.invalid"
-            (click)="publish()">
-            Publish
-          </button>
-          } @else {
-          <button nz-button class="deactivate-button" nzSize="large" nzShape="round" (click)="publish()">
-            Deactivate
-          </button>
-          }
-          <button nz-button class="close-button" nzSize="large" nzShape="round" (click)="close()">
-            Close
-          </button>
-        </div>
-      </form>
-    </div>
+<div class="container">
+  <div class="header">
+    <span>{{ projectName }}: {{ projectIdNumber }}</span>
+    @if (isPublished === 'Y') {
+    <nz-tag nzColor="success">Active</nz-tag>
+    } @else {
+    <nz-tag nzColor="default">In Active</nz-tag>
+    }
   </div>
-</nz-spin>
+
+  <div class="content">
+    <app-project-form (onGetProject)="getProject($event)"></app-project-form>
+  </div>
+</div>
