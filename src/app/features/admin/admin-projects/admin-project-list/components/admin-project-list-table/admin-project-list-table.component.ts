@@ -112,7 +112,7 @@ export class AdminProjectListTableComponent implements OnInit, OnDestroy {
   }
 
   edit(id: number) {
-    this.router.navigate([`/portal/projects/${id}`]);
+    this.router.navigate([`/portal/admin/projects/${id}`]);
   }
 
   updateTable(params?: NzTableQueryParams) {

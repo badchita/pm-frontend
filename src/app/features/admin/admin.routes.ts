@@ -52,6 +52,14 @@ export const ADMIN_ROUTES: Routes = [
           ),
       },
       {
+        path: 'projects/:id',
+        data: { permission: Permission.VIEW_ADMIN_PAGE },
+        loadComponent: () =>
+          import('@app/features/admin/admin-projects/admin-edit-project/admin-edit-project.component').then(
+            (m) => m.AdminEditProjectComponent,
+          ),
+      },
+      {
         path: 'not-found',
         loadComponent: () =>
           import('@app/features/errors/pages/not-found/not-found.component').then(
