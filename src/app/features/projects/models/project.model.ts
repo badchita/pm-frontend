@@ -18,4 +18,5 @@ export interface Project {
   dueDate?: Date | string;
   tasks?: Task[];
   company?: Company;
+  companyId?: number;
 }

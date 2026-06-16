@@ -115,17 +115,14 @@ export class ProjectFormComponent implements OnInit, OnDestroy {
   loadData(id: string) {
     this.isLoading = true;
 
-    forkJoin({
-      project: this.projectService.getById(+id),
-      users: this.loadUsers({}),
-    })
+    this.projectService
+      .getById(+id)
       .pipe(
         takeUntil(this._destroying$),
-        switchMap(({ project, users }) => {
-          this.setUsers(users);
-
+        switchMap((project) => {
           this.onGetProject.emit(project);
-          const { projectName, projectIdNumber, isPublished } = project;
+
+          const { projectName, projectIdNumber, isPublished, companyId } = project;
           this.projectName = projectName;
           this.projectIdNumber = projectIdNumber;
           this.isPublished = isPublished;
@@ -144,21 +141,28 @@ export class ProjectFormComponent implements OnInit, OnDestroy {
 
           if (isPublished === 'N') {
             return of({
-              data: [],
-              totalCount: 0,
-              page: this.tableParams.page,
-              pageSize: this.tableParams.pageSize,
-            } as DataTable<Task>);
+              tasksTable: {
+                data: [],
+                totalCount: 0,
+                page: this.tableParams.page,
+                pageSize: this.tableParams.pageSize,
+              } as DataTable<Task>,
+              users: [],
+            });
           }
 
-          return this.taskService.getList(this.tableParams, {}, +id);
+          return forkJoin({
+            tasksTable: this.taskService.getList(this.tableParams, {}, +id),
+            users: this.loadUsers({ companyId: companyId }),
+          });
         }),
         finalize(() => {
           this.isLoading = false;
         }),
       )
       .subscribe({
-        next: (tasksTable: DataTable<Task>) => {
+        next: ({ tasksTable, users }) => {
+          this.setUsers(users);
           this.setTableData(tasksTable);
         },
         error: (error) => {

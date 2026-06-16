@@ -123,7 +123,7 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
     ];
 
     const tableParams: NzTableQueryParams = {
-      pageIndex: isFiltering ? 1 : params?.pageIndex ?? this.dataTable().page,
+      pageIndex: isFiltering ? 1 : (params?.pageIndex ?? this.dataTable().page),
       pageSize: params?.pageSize ?? this.dataTable().pageSize,
       sort: params?.sort ?? [],
       filter: filter,
@@ -182,7 +182,7 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
                 {
                   nzClass: 'form-notification',
                   nzDuration: 5000,
-                }
+                },
               );
               this.updateTable();
               this.projectService.projectPublished();
@@ -213,7 +213,7 @@ export class ProjectListTableComponent implements OnInit, OnDestroy {
                 {
                   nzClass: 'form-notification',
                   nzDuration: 5000,
-                }
+                },
               );
               this.updateTable();
               this.projectService.projectPublished();
